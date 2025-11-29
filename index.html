@@ -320,11 +320,10 @@
                         <li>Cidades (dependência: Estados)</li>
                         <li>Unidades de Medida (sem dependências)</li>
                         <li>Tipos de Documento (sem dependências)</li>
-                        <li>Regimes Tributários (dependência: Países)</li>
-                        <li>Naturezas de Operação Fiscal (dependência: Regimes Tributários)</li>
                         <li>Categorias de Fornecedores (sem dependências)</li>
                         <li>Formas de Pagamento (sem dependências)</li>
                     </ol>
+                    <p><strong>Nota:</strong> Os dados fiscais (Regimes Tributários e Naturezas de Operação) estão documentados na área <strong>FIS (Fiscal) - MAC</strong>.</p>
                 </div>
                 
                 <h3>Tabelas Globais</h3>
@@ -411,17 +410,9 @@
                     <p><strong>Pessoa Jurídica:</strong> CNPJ (validação), IE, IM</p>
                 </div>
                 
-                <!-- REGIMES TRIBUTÁRIOS -->
-                <div class="module-card">
-                    <h4>💼 8. REGIMES TRIBUTÁRIOS (Brasil)</h4>
-                    <span class="badge badge-tbg">TBG - Global</span>
-                    <span class="badge badge-aut">FIS-AUT-001</span>
-                    <p><strong>Regimes obrigatórios:</strong> Simples Nacional, Lucro Presumido, Lucro Real, MEI, Pessoa Física</p>
-                </div>
-                
                 <!-- CATEGORIAS DE FORNECEDORES -->
                 <div class="module-card">
-                    <h4>🏭 9. CATEGORIAS DE FORNECEDORES</h4>
+                    <h4>🏭 8. CATEGORIAS DE FORNECEDORES</h4>
                     <span class="badge badge-tbg">TBG - Global</span>
                     <span class="badge badge-aut">SUP-AUT-001</span>
                     <p><strong>Categorias (10):</strong> MAT (Materiais), SRV (Serviços), TRP (Transportadora), AUT (Autônomo), PUB (Órgão Público), IMP (Importação), EXP (Exportação), TEC (Tecnologia), CON (Consultoria), INF (Infraestrutura)</p>
@@ -429,7 +420,7 @@
                 
                 <!-- FORMAS DE PAGAMENTO -->
                 <div class="module-card">
-                    <h4>💳 10. FORMAS DE PAGAMENTO</h4>
+                    <h4>💳 9. FORMAS DE PAGAMENTO</h4>
                     <span class="badge badge-tbg">TBG - Global</span>
                     <span class="badge badge-aut">FIN-AUT-001</span>
                     <p><strong>Formas (10):</strong> BOL (Boleto), TED, PIX, DEB (Débito Automático), CAR (Cartão), DIN (Dinheiro), CHE (Cheque), CRE (Crediário), DOC, ADI (Adiantamento)</p>
@@ -495,6 +486,85 @@
                     <h4>(FIN) Financeiro</h4>
                     <span class="status-badge status-dev">Em Desenvolvimento</span>
                     <p>Contas a pagar/receber, fluxo de caixa, conciliação bancária e tesouraria.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(FIS) Fiscal - MAC</h4>
+                    <span class="status-badge status-ok">Dados Mestres Definidos</span>
+                    <p>Parâmetros fiscais, regimes tributários, naturezas de operação e configurações para emissão de documentos fiscais.</p>
+                    
+                    <h5 style="margin-top: 20px; color: #667eea;">📋 Dados Mestres - Área de Configuração (MAC)</h5>
+                    
+                    <div style="margin-left: 20px; margin-top: 15px;">
+                        <h6 style="color: #764ba2;">💼 Regimes Tributários (Brasil)</h6>
+                        <span class="badge badge-tbg">TBG - Global</span>
+                        <span class="badge badge-aut">FIS-AUT-001</span>
+                        <p><strong>Classificação:</strong> Tabela Global, Configuração, Módulo Fiscal</p>
+                        <p><strong>Dependência:</strong> Países</p>
+                        <p><strong>Ordem de execução SIS:</strong> Após países serem populados</p>
+                        
+                        <p><strong>Estrutura de Dados:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Id (GUID) - Identificador único</li>
+                            <li>PaisId (GUID) - País do regime</li>
+                            <li>Codigo (String 10) - Código identificador</li>
+                            <li>Descricao (String 200) - Descrição do regime</li>
+                            <li>Sigla (String 20) - Sigla do regime</li>
+                            <li>AplicavelPF (Boolean) - Se aplica a Pessoa Física</li>
+                            <li>AplicavelPJ (Boolean) - Se aplica a Pessoa Jurídica</li>
+                            <li>Ativo (Boolean) - Indica se está ativo</li>
+                        </ul>
+                        
+                        <p><strong>Regimes Obrigatórios (Brasil):</strong></p>
+                        <ol style="margin-left: 20px;">
+                            <li><strong>Simples Nacional (SN)</strong> - Regime Especial Unificado - PJ</li>
+                            <li><strong>Lucro Presumido (LP)</strong> - Regime de apuração simplificada - PJ</li>
+                            <li><strong>Lucro Real (LR)</strong> - Regime sobre o lucro contábil - PJ</li>
+                            <li><strong>MEI (MEI)</strong> - Microempreendedor Individual - PJ</li>
+                            <li><strong>Pessoa Física (PF)</strong> - Regime padrão para PF - PF</li>
+                        </ol>
+                        
+                        <p><strong>Fonte de Dados:</strong> Arquivo JSON estático (regimes_tributarios.json)</p>
+                        
+                        <h6 style="color: #764ba2; margin-top: 20px;">📑 Naturezas de Operação Fiscal</h6>
+                        <span class="badge badge-tbg">TBG - Global</span>
+                        <span class="badge badge-aut">FIS-AUT-002</span>
+                        <p><strong>Classificação:</strong> Tabela Global, Configuração, Módulo Fiscal</p>
+                        <p><strong>Dependência:</strong> Regimes Tributários</p>
+                        <p><strong>Ordem de execução SIS:</strong> Após regimes tributários serem populados</p>
+                        
+                        <p><strong>Estrutura de Dados:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Id (GUID) - Identificador único</li>
+                            <li>RegimeTributarioId (GUID) - Regime associado</li>
+                            <li>Codigo (String 20) - Código da natureza</li>
+                            <li>Descricao (String 200) - Descrição da natureza</li>
+                            <li>TipoOperacao (Enum) - Entrada, Saída, Ambos</li>
+                            <li>CFOP (String 10) - Código Fiscal de Operações</li>
+                            <li>CalculaICMS (Boolean) - Se calcula ICMS</li>
+                            <li>CalculaIPI (Boolean) - Se calcula IPI</li>
+                            <li>CalculaPIS (Boolean) - Se calcula PIS</li>
+                            <li>CalculaCOFINS (Boolean) - Se calcula COFINS</li>
+                            <li>GeraFinanceiro (Boolean) - Se gera financeiro</li>
+                            <li>GeraEstoque (Boolean) - Se movimenta estoque</li>
+                            <li>Ativo (Boolean) - Indica se está ativo</li>
+                        </ul>
+                        
+                        <p><strong>Naturezas Obrigatórias (Exemplos):</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Compra de mercadorias</strong> - CFOP 1.102/2.102 (dentro/fora do estado)</li>
+                            <li><strong>Venda de mercadorias</strong> - CFOP 5.102/6.102</li>
+                            <li><strong>Contratação de serviços</strong> - CFOP 1.949/2.949</li>
+                            <li><strong>Prestação de serviços</strong> - CFOP 5.949/6.949</li>
+                            <li><strong>Devolução de compras</strong> - CFOP 5.202/6.202</li>
+                            <li><strong>Devolução de vendas</strong> - CFOP 1.202/2.202</li>
+                            <li><strong>Transferência entre filiais</strong> - CFOP 5.152/6.152</li>
+                            <li><strong>Remessa para conserto</strong> - CFOP 5.915/6.915</li>
+                        </ul>
+                        
+                        <p><strong>Fonte de Dados:</strong> Arquivo JSON estático (naturezas_operacao.json)</p>
+                        <p><strong>Observação:</strong> As naturezas de operação devem contemplar os CFOPs mais utilizados e permitir cadastro de novas naturezas pela organização.</p>
+                    </div>
                 </div>
                 
                 <div class="module-card">
