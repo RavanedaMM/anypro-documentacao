@@ -251,7 +251,7 @@
         <div class="header">
             <h1>🚀 ANYPRO</h1>
             <div class="subtitle">Sistema ERP Modular Multi-Tenant</div>
-            <div class="version">Projeto 2026 | Última Atualização: Novembro 2025</div>
+            <div class="version">Projeto 2026 | Última Atualização: 29 de Novembro de 2025</div>
         </div>
         
         <!-- NAVIGATION -->
@@ -313,17 +313,29 @@
                 <h3>Ordem de Execução</h3>
                 <div class="info-box">
                     <ol>
-                        <li>Idiomas (sem dependências)</li>
-                        <li>Países (sem dependências)</li>
-                        <li>Moedas (dependência: Países)</li>
-                        <li>Estados (dependência: Países)</li>
-                        <li>Cidades (dependência: Estados)</li>
-                        <li>Unidades de Medida (sem dependências)</li>
-                        <li>Tipos de Documento (sem dependências)</li>
-                        <li>Categorias de Fornecedores (sem dependências)</li>
-                        <li>Formas de Pagamento (sem dependências)</li>
+                        <li><strong>Idiomas</strong> (sem dependências) - <em>Inicial: 2 idiomas (pt, en)</em></li>
+                        <li><strong>Países</strong> (sem dependências) - <em>Inicial: 1 país (Brasil)</em></li>
+                        <li><strong>Moedas</strong> (dependência: Países) - <em>Inicial: 10 moedas principais</em></li>
+                        <li><strong>Estados</strong> (dependência: Países) - <em>Inicial: 27 UFs do Brasil</em></li>
+                        <li><strong>Cidades</strong> (dependência: Estados) - <em>Carga sob demanda ou ~5.570 municípios</em></li>
+                        <li><strong>Unidades de Medida</strong> (sem dependências) - <em>Inicial: 46 unidades (8 tempo + 20 quantidade + 18 outras)</em></li>
+                        <li><strong>Tipos de Documento</strong> (sem dependências) - <em>Inicial: Documentos Brasil (CPF, CNPJ, RG, etc)</em></li>
+                        <li><strong>Categorias de Fornecedores</strong> (sem dependências) - <em>Inicial: 10 categorias</em></li>
+                        <li><strong>Formas de Pagamento</strong> (sem dependências) - <em>Inicial: 10 formas</em></li>
                     </ol>
-                    <p><strong>Nota:</strong> Os dados fiscais (Regimes Tributários e Naturezas de Operação) estão documentados na área <strong>FIS (Fiscal) - MAC</strong>.</p>
+                    <p style="margin-top: 15px;"><strong>Nota:</strong> Os dados fiscais (Regimes Tributários e Naturezas de Operação) estão documentados na área <strong>FIS (Fiscal) - MAC</strong>.</p>
+                    
+                    <div class="success-box" style="margin-top: 15px;">
+                        <strong>📊 Total de Registros Iniciais:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Idiomas: 2</li>
+                            <li>Países: 1</li>
+                            <li>Moedas: 10</li>
+                            <li>Estados: 27</li>
+                            <li>Unidades de Medida: 46</li>
+                            <li><strong>Total (sem cidades):</strong> ~96 registros base</li>
+                        </ul>
+                    </div>
                 </div>
                 
                 <h3>Tabelas Globais</h3>
@@ -334,8 +346,77 @@
                     <span class="badge badge-tbg">TBG - Global</span>
                     <span class="badge badge-aut">ADM-AUT-002</span>
                     <p><strong>Campos principais:</strong> Id, Nome, NomeOficial, CodigoISO2, CodigoISO3, CodigoNumerico, DDI, Continente, IdiomaOficial, Ativo</p>
-                    <p><strong>Fonte:</strong> API do IBGE: <code>https://servicodados.ibge.gov.br/api/v1/localidades/paises</code></p>
-                    <p><strong>Dados obrigatórios:</strong> Brasil (BRA) + 193 países membros da ONU</p>
+                    
+                    <div style="margin-top: 20px;">
+                        <h5 style="color: #764ba2;">📊 País para Seeding Inicial</h5>
+                        
+                        <table style="width: 100%; margin-top: 10px; font-size: 0.9em;">
+                            <thead style="background: #667eea; color: white;">
+                                <tr>
+                                    <th>ISO2</th>
+                                    <th>ISO3</th>
+                                    <th>Numérico</th>
+                                    <th>Nome</th>
+                                    <th>Nome Oficial</th>
+                                    <th>DDI</th>
+                                    <th>Continente</th>
+                                    <th>Idioma</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: #e8f5e9;">
+                                    <td><strong>BR</strong></td>
+                                    <td><strong>BRA</strong></td>
+                                    <td><strong>076</strong></td>
+                                    <td>Brasil</td>
+                                    <td>República Federativa do Brasil</td>
+                                    <td>+55</td>
+                                    <td>América</td>
+                                    <td>Português</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <strong>📌 Instruções para Implementação (Seeder):</strong>
+                            <ol style="margin-left: 20px; margin-top: 10px;">
+                                <li>Criar arquivo JSON: <code>/Data/SeedData/Localizacao/paises.json</code></li>
+                                <li><strong>Brasil (BRA)</strong> é o ÚNICO país a ser carregado inicialmente</li>
+                                <li>Total inicial: <strong>1 país</strong></li>
+                                <li>Campo <code>Ativo = true</code></li>
+                                <li>Códigos ISO NUNCA devem ser alterados após inserção</li>
+                                <li>Sistema está preparado para o mercado brasileiro inicialmente</li>
+                                <li>Permitir expansão futura para outros países da América Latina</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="success-box" style="margin-top: 15px;">
+                            <strong>💡 Estrutura JSON (Exemplo):</strong>
+                            <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; margin-top: 10px; overflow-x: auto;">
+[
+  {
+    "codigoISO2": "BR",
+    "codigoISO3": "BRA",
+    "codigoNumerico": "076",
+    "nome": "Brasil",
+    "nomeOficial": "República Federativa do Brasil",
+    "ddi": "+55",
+    "continente": "América",
+    "idiomaOficial": "Português",
+    "ativo": true
+  }
+]</pre>
+                        </div>
+                        
+                        <div class="warning-box" style="margin-top: 15px;">
+                            <strong>⚠️ Observações Importantes:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Este país é referenciado por outras tabelas (Moedas, Estados, Regimes Tributários)</li>
+                                <li>A relação <strong>PaisId</strong> será usada em múltiplas tabelas</li>
+                                <li>NUNCA deletar ou desativar o Brasil enquanto houver dados dependentes</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- ESTADOS -->
@@ -366,13 +447,93 @@
                     <span class="badge badge-tbg">TBG - Global</span>
                     <span class="badge badge-aut">ADM-AUT-005</span>
                     <p><strong>Tipos:</strong> Massa/Peso, Comprimento, Volume, Área, Quantidade, Tempo</p>
-                    <p><strong>Exemplos:</strong></p>
-                    <ul>
-                        <li><strong>Massa:</strong> kg (Base), g, t, lb, oz</li>
-                        <li><strong>Comprimento:</strong> m (Base), cm, km, mm, in, ft</li>
-                        <li><strong>Volume:</strong> L (Base), mL, m³, gal</li>
-                        <li><strong>Quantidade:</strong> UN (Base), DZ (12), CT (100), MI (1000)</li>
-                    </ul>
+                    
+                    <div style="margin-top: 20px;">
+                        <h5 style="color: #764ba2;">📊 Unidades por Tipo (Para Seeding Inicial)</h5>
+                        
+                        <div style="margin-left: 20px; margin-top: 15px;">
+                            <h6 style="color: #667eea;">⏱️ TEMPO (TipoMedida = Tempo)</h6>
+                            <table style="width: 100%; margin-top: 10px; font-size: 0.9em;">
+                                <thead style="background: #667eea; color: white;">
+                                    <tr>
+                                        <th>Símbolo</th>
+                                        <th>Descrição</th>
+                                        <th>Fator Conversão</th>
+                                        <th>Sistema Métrico</th>
+                                        <th>Uso Comercial</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>s</strong></td><td>Segundo (Base)</td><td>1</td><td>Sim</td><td>Não</td></tr>
+                                    <tr><td><strong>min</strong></td><td>Minuto</td><td>60</td><td>Sim</td><td>Sim</td></tr>
+                                    <tr><td><strong>h</strong></td><td>Hora</td><td>3600</td><td>Sim</td><td>Sim</td></tr>
+                                    <tr><td><strong>d</strong></td><td>Dia</td><td>86400</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>sem</strong></td><td>Semana</td><td>604800</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>mes</strong></td><td>Mês</td><td>2592000</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>ano</strong></td><td>Ano</td><td>31536000</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>ms</strong></td><td>Milissegundo</td><td>0.001</td><td>Sim</td><td>Não</td></tr>
+                                </tbody>
+                            </table>
+                            <p style="margin-top: 10px;"><strong>UnidadeBase:</strong> s (segundo) | <strong>Total inicial:</strong> 8 unidades</p>
+                            
+                            <h6 style="color: #667eea; margin-top: 25px;">🔢 QUANTIDADE (TipoMedida = Quantidade)</h6>
+                            <table style="width: 100%; margin-top: 10px; font-size: 0.9em;">
+                                <thead style="background: #667eea; color: white;">
+                                    <tr>
+                                        <th>Símbolo</th>
+                                        <th>Descrição</th>
+                                        <th>Fator Conversão</th>
+                                        <th>Sistema Métrico</th>
+                                        <th>Uso Comercial</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>UN</strong></td><td>Unidade (Base)</td><td>1</td><td>Sim</td><td>Sim</td></tr>
+                                    <tr><td><strong>PC</strong></td><td>Peça</td><td>1</td><td>Sim</td><td>Sim</td></tr>
+                                    <tr><td><strong>PAR</strong></td><td>Par</td><td>2</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>DZ</strong></td><td>Dúzia</td><td>12</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>CJ</strong></td><td>Conjunto</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>KT</strong></td><td>Kit</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>JG</strong></td><td>Jogo</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>CT</strong></td><td>Cento</td><td>100</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>CX</strong></td><td>Caixa</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>FD</strong></td><td>Fardo</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>PCT</strong></td><td>Pacote</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>SC</strong></td><td>Saco</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>MI</strong></td><td>Milheiro</td><td>1000</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>RL</strong></td><td>Rolo</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>BDJ</strong></td><td>Bandeja</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>LT</strong></td><td>Lote</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>GF</strong></td><td>Garrafa</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>LT</strong></td><td>Lata</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>BL</strong></td><td>Balde</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                    <tr><td><strong>TB</strong></td><td>Tambor</td><td>1</td><td>Não</td><td>Sim</td></tr>
+                                </tbody>
+                            </table>
+                            <p style="margin-top: 10px;"><strong>UnidadeBase:</strong> UN (unidade) | <strong>Total inicial:</strong> 20 unidades</p>
+                            
+                            <h6 style="color: #667eea; margin-top: 25px;">⚖️ Resumo de Outros Tipos</h6>
+                            <ul style="margin-left: 20px;">
+                                <li><strong>Massa:</strong> kg (Base), g, t, lb, oz - 5 unidades</li>
+                                <li><strong>Comprimento:</strong> m (Base), cm, km, mm, in, ft - 6 unidades</li>
+                                <li><strong>Volume:</strong> L (Base), mL, m³, gal - 4 unidades</li>
+                                <li><strong>Área:</strong> m² (Base), ha, ac - 3 unidades</li>
+                            </ul>
+                            
+                            <div class="warning-box" style="margin-top: 20px;">
+                                <strong>📌 Instruções para Implementação (Seeder):</strong>
+                                <ol style="margin-left: 20px; margin-top: 10px;">
+                                    <li>Criar arquivo JSON: <code>/Data/SeedData/Configuracoes/unidades_medida.json</code></li>
+                                    <li>Total de unidades iniciais: <strong>46 unidades</strong> (8 tempo + 20 quantidade + 18 outras)</li>
+                                    <li>Ordem de inserção: Massa → Comprimento → Volume → Área → Tempo → Quantidade</li>
+                                    <li>Sempre definir <code>UnidadeBase</code> para permitir conversões automáticas</li>
+                                    <li>Campo <code>UsadoComercialmente</code> indica se aparece em telas de entrada de dados</li>
+                                    <li>Unidades com <code>FatorConversao = 1</code> e diferentes símbolos são sinônimos (ex: UN, PC, CJ, KT)</li>
+                                    <li>Sistema deve permitir cadastro de unidades customizadas com prefixo <code>CUSTOM_</code></li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- MOEDAS -->
@@ -398,7 +559,72 @@
                     <span class="badge badge-tbg">TBG - Global</span>
                     <span class="badge badge-aut">ADM-AUT-007</span>
                     <p><strong>Padrão:</strong> ISO 639</p>
-                    <p><strong>Idiomas obrigatórios (7):</strong> pt (Português - padrão), en (English), es (Español), fr (Français), de (Deutsch), it (Italiano), zh (中文)</p>
+                    
+                    <div style="margin-top: 20px;">
+                        <h5 style="color: #764ba2;">📊 Idiomas para Seeding Inicial</h5>
+                        
+                        <table style="width: 100%; margin-top: 10px; font-size: 0.9em;">
+                            <thead style="background: #667eea; color: white;">
+                                <tr>
+                                    <th>ISO 639-1</th>
+                                    <th>ISO 639-2</th>
+                                    <th>Nome</th>
+                                    <th>Nome Nativo</th>
+                                    <th>Padrão</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: #e8f5e9;">
+                                    <td><strong>pt</strong></td>
+                                    <td><strong>por</strong></td>
+                                    <td>Português</td>
+                                    <td>Português</td>
+                                    <td>✅ <strong>Sim</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>en</strong></td>
+                                    <td><strong>eng</strong></td>
+                                    <td>Inglês</td>
+                                    <td>English</td>
+                                    <td>Não</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <strong>📌 Instruções para Implementação (Seeder):</strong>
+                            <ol style="margin-left: 20px; margin-top: 10px;">
+                                <li>Criar arquivo JSON: <code>/Data/SeedData/Configuracoes/idiomas.json</code></li>
+                                <li><strong>Português (pt)</strong> deve ser inserido PRIMEIRO - é o idioma padrão do sistema</li>
+                                <li>Total inicial: <strong>2 idiomas</strong></li>
+                                <li>Ordem de inserção: pt → en</li>
+                                <li>Campo <code>Ativo = true</code> para ambos</li>
+                                <li>Sistema deve usar <code>pt</code> como idioma padrão em toda a aplicação</li>
+                                <li>Permitir expansão futura para outros idiomas (es, fr, de, etc)</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="success-box" style="margin-top: 15px;">
+                            <strong>💡 Estrutura JSON (Exemplo):</strong>
+                            <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; margin-top: 10px; overflow-x: auto;">
+[
+  {
+    "codigoISO639_1": "pt",
+    "codigoISO639_2": "por",
+    "nome": "Português",
+    "nomeNativo": "Português",
+    "ativo": true
+  },
+  {
+    "codigoISO639_1": "en",
+    "codigoISO639_2": "eng",
+    "nome": "Inglês",
+    "nomeNativo": "English",
+    "ativo": true
+  }
+]</pre>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- TIPOS DE DOCUMENTO -->
