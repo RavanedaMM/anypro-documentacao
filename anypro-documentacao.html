@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANYPRO - Documentação do Projeto 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        
+        .header .version {
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .nav {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            border-bottom: 3px solid #667eea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        section {
+            margin-bottom: 60px;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h3 {
+            color: #764ba2;
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 1.4em;
+            margin: 25px 0 12px 0;
+        }
+        
+        h5 {
+            color: #666;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        
+        .badge-tbg { background: #e3f2fd; color: #1976d2; }
+        .badge-tbp { background: #f3e5f5; color: #7b1fa2; }
+        .badge-aut { background: #fff3e0; color: #e65100; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #f57c00;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #388e3c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .module-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s;
+        }
+        
+        .module-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .module-card h4 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .status-dev { background: #fff3e0; color: #e65100; }
+        .status-ok { background: #e8f5e9; color: #388e3c; }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2em; }
+            .content { padding: 20px; }
+            .nav { padding: 15px 20px; }
+            table { font-size: 0.85em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🚀 ANYPRO</h1>
+            <div class="subtitle">Sistema ERP Modular Multi-Tenant</div>
+            <div class="version">Projeto 2026 | Última Atualização: Novembro 2025</div>
+        </div>
+        
+        <!-- NAVIGATION -->
+        <nav class="nav">
+            <ul class="nav-links">
+                <li><a href="#visao-geral">Visão Geral</a></li>
+                <li><a href="#sis">Sistema (SIS)</a></li>
+                <li><a href="#modulos">Módulos</a></li>
+                <li><a href="#referencias">Referências</a></li>
+            </ul>
+        </nav>
+        
+        <!-- CONTENT -->
+        <div class="content">
+            
+            <!-- VISÃO GERAL -->
+            <section id="visao-geral">
+                <h2>🎯 Visão Geral</h2>
+                <p>O sistema tem como objetivo apresentar uma nova experiência aos usuários utilizando recursos de tecnologia e experiência de negócios. Composto pelos módulos de <strong>suprimentos</strong>, <strong>comercial</strong>, <strong>CRM</strong>, <strong>contabilidade</strong>, <strong>financeiro</strong>, <strong>recursos humanos</strong>, <strong>projetos</strong> e <strong>central de chamados</strong>, integra todas as áreas de forma prática e inteligente.</p>
+                
+                <h3>Características Principais</h3>
+                <div class="info-box">
+                    <ul>
+                        <li>🏢 <strong>Multi-Tenant</strong>: Suporta múltiplas organizações em uma única instância</li>
+                        <li>🔧 <strong>Modular</strong>: Módulos podem ser ativados/desativados por organização</li>
+                        <li>🌐 <strong>SaaS</strong>: Comercializado no modelo Software as a Service</li>
+                        <li>🐘 <strong>PostgreSQL</strong>: Banco de dados robusto e escalável</li>
+                        <li>🐳 <strong>Docker</strong>: Containerizado para fácil deploy</li>
+                        <li>🔐 <strong>Segurança</strong>: Sistema completo de autorizações e auditoria</li>
+                    </ul>
+                </div>
+                
+                <h3>📊 Menu da Área de Trabalho (MAT)</h3>
+                <p>Ao acessar o sistema o usuário tem acesso direto a área de trabalho. Nesta área o usuário possui informações em dashboards específicos que são apresentados de acordo com as autorizações concedidas para cada usuário através dos perfis de acesso.</p>
+                
+                <h3>⚙️ Menu da Área de Configuração (MAC)</h3>
+                <p>Os usuários com autorização para configurações podem acessar esta área para definir parâmetros de negócio para o sistema. As configurações são apresentadas por áreas de negócio.</p>
+            </section>
+            
+            <!-- SISTEMA (SIS) -->
+            <section id="sis">
+                <h2>🔧 (SIS) Sistema - Inicialização de Dados</h2>
+                
+                <div class="success-box">
+                    <h4>Sistema de Inicialização de Dados (SIS)</h4>
+                    <p>O Sistema de Inicialização de Dados (SIS) é responsável por garantir que todas as tabelas essenciais do Anypro estejam populadas com dados globais e parâmetros necessários para o funcionamento do sistema. Este processo deve ocorrer <strong>automaticamente</strong> durante a inicialização da aplicação, sem intervenção manual.</p>
+                </div>
+                
+                <h3>Características do SIS</h3>
+                <ul>
+                    <li>✅ <strong>Automático</strong>: Executa sem intervenção humana durante o startup</li>
+                    <li>✅ <strong>Idempotente</strong>: Pode ser executado múltiplas vezes sem causar duplicação</li>
+                    <li>✅ <strong>Versionado</strong>: Controla versões de dados para permitir atualizações</li>
+                    <li>✅ <strong>Multi-instância</strong>: Suporta execução em ambientes com múltiplas instâncias</li>
+                    <li>✅ <strong>Seguro</strong>: Utiliza mecanismos de lock para evitar conflitos</li>
+                    <li>✅ <strong>Auditável</strong>: Registra todas as operações realizadas</li>
+                </ul>
+                
+                <h3>Ordem de Execução</h3>
+                <div class="info-box">
+                    <ol>
+                        <li>Idiomas (sem dependências)</li>
+                        <li>Países (sem dependências)</li>
+                        <li>Moedas (dependência: Países)</li>
+                        <li>Estados (dependência: Países)</li>
+                        <li>Cidades (dependência: Estados)</li>
+                        <li>Unidades de Medida (sem dependências)</li>
+                        <li>Tipos de Documento (sem dependências)</li>
+                        <li>Regimes Tributários (dependência: Países)</li>
+                        <li>Naturezas de Operação Fiscal (dependência: Regimes Tributários)</li>
+                        <li>Categorias de Fornecedores (sem dependências)</li>
+                        <li>Formas de Pagamento (sem dependências)</li>
+                    </ol>
+                </div>
+                
+                <h3>Tabelas Globais</h3>
+                
+                <!-- PAÍSES -->
+                <div class="module-card">
+                    <h4>🌎 1. PAÍSES</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-002</span>
+                    <p><strong>Campos principais:</strong> Id, Nome, NomeOficial, CodigoISO2, CodigoISO3, CodigoNumerico, DDI, Continente, IdiomaOficial, Ativo</p>
+                    <p><strong>Fonte:</strong> API do IBGE: <code>https://servicodados.ibge.gov.br/api/v1/localidades/paises</code></p>
+                    <p><strong>Dados obrigatórios:</strong> Brasil (BRA) + 193 países membros da ONU</p>
+                </div>
+                
+                <!-- ESTADOS -->
+                <div class="module-card">
+                    <h4>📍 2. ESTADOS/UF</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-003</span>
+                    <p><strong>Campos principais:</strong> Id, PaisId, Nome, Sigla, CodigoIBGE, RegiaoGeografica, Ativo</p>
+                    <p><strong>Fonte:</strong> API do IBGE: <code>https://servicodados.ibge.gov.br/api/v1/localidades/estados</code></p>
+                    <p><strong>Dados obrigatórios:</strong> 26 Estados brasileiros + Distrito Federal</p>
+                </div>
+                
+                <!-- CIDADES -->
+                <div class="module-card">
+                    <h4>🏙️ 3. CIDADES/MUNICÍPIOS</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-004</span>
+                    <p><strong>Campos principais:</strong> Id, EstadoId, Nome, CodigoIBGE, CapitalEstadual, Ativo</p>
+                    <p><strong>Volume:</strong> 5.570 municípios do Brasil (2024)</p>
+                    <div class="warning-box">
+                        <strong>⚠️ Estratégia recomendada:</strong> Carregar sob demanda quando usuário seleciona o estado
+                    </div>
+                </div>
+                
+                <!-- UNIDADES DE MEDIDA -->
+                <div class="module-card">
+                    <h4>📏 4. UNIDADES DE MEDIDA</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-005</span>
+                    <p><strong>Tipos:</strong> Massa/Peso, Comprimento, Volume, Área, Quantidade, Tempo</p>
+                    <p><strong>Exemplos:</strong></p>
+                    <ul>
+                        <li><strong>Massa:</strong> kg (Base), g, t, lb, oz</li>
+                        <li><strong>Comprimento:</strong> m (Base), cm, km, mm, in, ft</li>
+                        <li><strong>Volume:</strong> L (Base), mL, m³, gal</li>
+                        <li><strong>Quantidade:</strong> UN (Base), DZ (12), CT (100), MI (1000)</li>
+                    </ul>
+                </div>
+                
+                <!-- MOEDAS -->
+                <div class="module-card">
+                    <h4>💰 5. MOEDAS</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-006</span>
+                    <p><strong>Padrão:</strong> ISO 4217</p>
+                    <p><strong>Moedas principais (10):</strong></p>
+                    <ul>
+                        <li>BRL (986) - Real Brasileiro - R$ - 2 casas</li>
+                        <li>USD (840) - Dólar Americano - $ - 2 casas</li>
+                        <li>EUR (978) - Euro - € - 2 casas</li>
+                        <li>GBP (826) - Libra Esterlina - £ - 2 casas</li>
+                        <li>JPY (392) - Iene - ¥ - 0 casas</li>
+                    </ul>
+                    <p><strong>Total inicial:</strong> 30-40 moedas mais relevantes</p>
+                </div>
+                
+                <!-- IDIOMAS -->
+                <div class="module-card">
+                    <h4>🌐 6. IDIOMAS</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-007</span>
+                    <p><strong>Padrão:</strong> ISO 639</p>
+                    <p><strong>Idiomas obrigatórios (7):</strong> pt (Português - padrão), en (English), es (Español), fr (Français), de (Deutsch), it (Italiano), zh (中文)</p>
+                </div>
+                
+                <!-- TIPOS DE DOCUMENTO -->
+                <div class="module-card">
+                    <h4>📄 7. TIPOS DE DOCUMENTO (Brasil)</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-008</span>
+                    <p><strong>Pessoa Física:</strong> CPF (validação), RG, CNH, Passaporte</p>
+                    <p><strong>Pessoa Jurídica:</strong> CNPJ (validação), IE, IM</p>
+                </div>
+                
+                <!-- REGIMES TRIBUTÁRIOS -->
+                <div class="module-card">
+                    <h4>💼 8. REGIMES TRIBUTÁRIOS (Brasil)</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">FIS-AUT-001</span>
+                    <p><strong>Regimes obrigatórios:</strong> Simples Nacional, Lucro Presumido, Lucro Real, MEI, Pessoa Física</p>
+                </div>
+                
+                <!-- CATEGORIAS DE FORNECEDORES -->
+                <div class="module-card">
+                    <h4>🏭 9. CATEGORIAS DE FORNECEDORES</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">SUP-AUT-001</span>
+                    <p><strong>Categorias (10):</strong> MAT (Materiais), SRV (Serviços), TRP (Transportadora), AUT (Autônomo), PUB (Órgão Público), IMP (Importação), EXP (Exportação), TEC (Tecnologia), CON (Consultoria), INF (Infraestrutura)</p>
+                </div>
+                
+                <!-- FORMAS DE PAGAMENTO -->
+                <div class="module-card">
+                    <h4>💳 10. FORMAS DE PAGAMENTO</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">FIN-AUT-001</span>
+                    <p><strong>Formas (10):</strong> BOL (Boleto), TED, PIX, DEB (Débito Automático), CAR (Cartão), DIN (Dinheiro), CHE (Cheque), CRE (Crediário), DOC, ADI (Adiantamento)</p>
+                </div>
+                
+                <h3>Checklist de Implementação</h3>
+                <div class="info-box">
+                    <h4>Fase 1 - Infraestrutura Base</h4>
+                    <ul>
+                        <li>☐ Criar interface ISeeder</li>
+                        <li>☐ Criar classe abstrata BaseSeeder&lt;T&gt;</li>
+                        <li>☐ Criar classe SeederManager</li>
+                        <li>☐ Implementar mecanismo de lock distribuído</li>
+                        <li>☐ Integrar com startup da aplicação</li>
+                    </ul>
+                    
+                    <h4>Fase 2 - Seeders Básicos</h4>
+                    <ul>
+                        <li>☐ IdiomaSeeder v1.0.0</li>
+                        <li>☐ PaisSeeder v1.0.0</li>
+                        <li>☐ UnidadeMedidaSeeder v1.0.0</li>
+                        <li>☐ TipoDocumentoSeeder v1.0.0</li>
+                    </ul>
+                    
+                    <h4>Fase 3 - Seeders com Dependências</h4>
+                    <ul>
+                        <li>☐ MoedaSeeder v1.0.0 (Depende: Países)</li>
+                        <li>☐ EstadoSeeder v1.0.0 (Depende: Países)</li>
+                        <li>☐ RegimeTributarioSeeder v1.0.0 (Depende: Países)</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- MÓDULOS -->
+            <section id="modulos">
+                <h2>🏗️ Módulos do Sistema</h2>
+                
+                <div class="module-card">
+                    <h4>(ADM) Administração</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Gestão de organizações, empresas, usuários, perfis, autorizações e parâmetros globais.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(SUP) Suprimentos</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Cadastro de fornecedores, gestão de compras, controle de estoque, cotações e pedidos.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(COM) Comercial</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Gestão de clientes, propostas comerciais, pedidos de venda e faturamento.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(CON) Contabilidade</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Plano de contas, lançamentos contábeis, conciliação e relatórios gerenciais.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(FIN) Financeiro</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Contas a pagar/receber, fluxo de caixa, conciliação bancária e tesouraria.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(RHU) Recursos Humanos</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Cadastro de funcionários, folha de pagamento, ponto, benefícios e férias.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(PRO) Projetos</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Planejamento, controle de tarefas, alocação de recursos e gestão de custos.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(CRM) CRM</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Gestão de leads, oportunidades, histórico de interações e campanhas.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(CSU) Central de Suporte</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Abertura de tickets, atendimento ao cliente, base de conhecimento e SLA.</p>
+                </div>
+            </section>
+            
+            <!-- REFERÊNCIAS -->
+            <section id="referencias">
+                <h2>📚 Referências Técnicas</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Símbolo</th>
+                            <th>Significado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>(-)</strong></td>
+                            <td>Item não relacionado a outras funcionalidades - pode ser estacionado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(+)</strong></td>
+                            <td>Item necessário para implementação imediata</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(p1-p5)</strong></td>
+                            <td>Fases para implementação por prioridade</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(DMAT)</strong></td>
+                            <td>Dados Mestres - Área de Trabalho</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(DMAC)</strong></td>
+                            <td>Dados Mestres - Área de Configuração</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(TBP/TBG)</strong></td>
+                            <td>Tabelas Privadas (com Tenant) ou Globais (sem Tenant)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(AUT-XXX-999)</strong></td>
+                            <td>Código de autorização necessária</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Fontes de Dados Externas</h3>
+                <ul>
+                    <li><strong>API IBGE:</strong> <a href="https://servicodados.ibge.gov.br/api/docs/localidades" target="_blank">https://servicodados.ibge.gov.br/api/docs/localidades</a></li>
+                    <li><strong>ISO 3166 (Países):</strong> <a href="https://www.iso.org/iso-3166-country-codes.html" target="_blank">https://www.iso.org/iso-3166-country-codes.html</a></li>
+                    <li><strong>ISO 4217 (Moedas):</strong> <a href="https://www.iso.org/iso-4217-currency-codes.html" target="_blank">https://www.iso.org/iso-4217-currency-codes.html</a></li>
+                    <li><strong>ISO 639 (Idiomas):</strong> <a href="https://www.iso.org/iso-639-language-codes.html" target="_blank">https://www.iso.org/iso-639-language-codes.html</a></li>
+                </ul>
+            </section>
+            
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p>Projeto 2026 | Documentação Técnica</p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.8;">Última atualização: Novembro 2025</p>
+        </div>
+    </div>
+</body>
+</html>
