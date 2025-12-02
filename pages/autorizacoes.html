@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autorizações - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Sistema de Autorizações</h1>
+            <div class="subtitle">RBAC, Perfis e Controle Granular de Permissões</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Autorizações</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <h3>🎯 Visão Geral</h3>
+            <div class="info-box">
+                <p>O ANYPRO implementa um sistema robusto de <strong>Role-Based Access Control (RBAC)</strong> com controle granular de permissões em três níveis:</p>
+                <ul>
+                    <li>✅ <strong>Nível de Módulo:</strong> Controle de acesso aos módulos do sistema (ADM, SUP, FIN, etc)</li>
+                    <li>✅ <strong>Nível de Tela:</strong> Controle de acesso às telas dentro de cada módulo</li>
+                    <li>✅ <strong>Nível de Ação:</strong> Controle de operações específicas (Criar, Ler, Atualizar, Excluir, Aprovar, Cancelar, Exportar)</li>
+                </ul>
+                
+                <p>Com mais de <strong>999+ autorizações</strong> disponíveis, o sistema permite configurar perfis de acesso extremamente personalizados para cada tipo de usuário.</p>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <h3>👤 Criar um Novo Perfil de Acesso</h3>
+            <div class="info-box">
+                <ol>
+                    <li>Acesse <strong>ADM → Perfis de Acesso</strong></li>
+                    <li>Clique em <strong>Novo Perfil</strong></li>
+                    <li>Informe nome e descrição (ex: "Vendedor Júnior")</li>
+                    <li>Selecione as autorizações por módulo/tela/ação</li>
+                    <li>Defina se herda de outro perfil (opcional)</li>
+                    <li>Salve e associe aos usuários desejados</li>
+                </ol>
+            </div>
+
+            <h3>🔑 Implementar Autorização em Endpoint</h3>
+            <div class="code-block">// API/Controllers/ProdutoController.cs
+[Authorize]
+[ApiController]
+[Route("api/v1/[controller]")]
+public class ProdutoController : ControllerBase
+{
+    [HttpPost]
+    [Authorize(Policy = "EST.Produto.Criar")]  // Módulo.Tela.Ação
+    public async Task&lt;IActionResult&gt; Create([FromBody] CreateProdutoCommand cmd)
+    {
+        // ...
+    }
+    
+    [HttpDelete("{id}")]
+    [Authorize(Policy = "EST.Produto.Excluir")]
+    public async Task&lt;IActionResult&gt; Delete(Guid id)
+    {
+        // ...
+    }
+}</div>
+
+            <h3>⚙️ Configurar Policy-Based Authorization</h3>
+            <div class="code-block">// Program.cs ou Startup.cs
+builder.Services.AddAuthorization(options =>
+{
+    // Gera policies dinâmicas a partir das autorizações do banco
+    var autorizacoes = GetAutorizacoesFromDb();
+    foreach (var auth in autorizacoes)
+    {
+        options.AddPolicy(auth.Codigo, policy =>
+            policy.RequireClaim("Autorizacao", auth.Codigo));
+    }
+});</div>
+
+            <h3>✅ Checklist de Segurança</h3>
+            <div class="warning-box">
+                <ul>
+                    <li>☐ Todos os endpoints sensíveis têm [Authorize]</li>
+                    <li>☐ Políticas granulares por módulo/tela/ação</li>
+                    <li>☐ JWT com expiração curta (15-30 min)</li>
+                    <li>☐ Refresh token com rotação</li>
+                    <li>☐ Rate limiting por usuário/IP</li>
+                    <li>☐ Logs de auditoria para ações críticas</li>
+                </ul>
+            </div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+
+            <h2>📚 Referência</h2>
+            <h3>🧩 Componentes do Sistema</h3>
+            
+            <h3>1. Usuário</h3>
+            <div class="info-box">
+                <p>Representa uma pessoa física que acessa o sistema. Cada usuário está vinculado a:</p>
+                <ul>
+                    <li>Uma <strong>Organização</strong> (TenantId)</li>
+                    <li>Um <strong>Perfil</strong> de acesso</li>
+                    <li>Status (Ativo/Inativo/Bloqueado)</li>
+                </ul>
+            </div>
+            
+            <div class="code-block">public class Usuario : TenantEntityBase
+{
+    public string NomeCompleto { get; private set; }
+    public string Email { get; private set; }
+    public string SenhaHash { get; private set; }
+    
+    // Vinculação ao perfil
+    public Guid PerfilId { get; private set; }
+    public virtual Perfil Perfil { get; private set; }
+    
+    // Controle de acesso
+    public bool EmailVerificado { get; private set; }
+    public bool Bloqueado { get; private set; }
+    public int TentativasLogin { get; private set; }
+    public DateTime? UltimoAcesso { get; private set; }
+}</div>
+            
+            <h3>2. Perfil (Role)</h3>
+            <div class="info-box">
+                <p>Agrupa um conjunto de autorizações. Exemplos de perfis:</p>
+                <ul>
+                    <li><strong>Administrador:</strong> Acesso total ao sistema</li>
+                    <li><strong>Gerente Financeiro:</strong> Acesso completo ao módulo FIN</li>
+                    <li><strong>Operador de Vendas:</strong> Acesso limitado ao módulo VEN (criar pedidos, visualizar clientes)</li>
+                    <li><strong>Auditor:</strong> Apenas visualização (read-only) em todos os módulos</li>
+                </ul>
+                
+                <p><strong>Herança de Perfis:</strong> Um perfil pode herdar autorizações de um perfil pai.</p>
+            </div>
+            
+            <div class="code-block">public class Perfil : TenantEntityBase
+{
+    public string Nome { get; private set; }
+    public string Descricao { get; private set; }
+    
+    // Herança de perfis
+    public Guid? PerfilPaiId { get; private set; }
+    public virtual Perfil? PerfilPai { get; private set; }
+    
+    // Relacionamento com autorizações
+    public virtual ICollection<PerfilAutorizacao> Autorizacoes { get; private set; }
+    
+    public bool Ativo { get; private set; }
+}</div>
+            
+            <h3>3. Autorização (Permission)</h3>
+            <div class="info-box">
+                <p>Representa uma permissão específica no sistema. Cada autorização possui:</p>
+                <ul>
+                    <li><strong>Código Único:</strong> Ex: <code>ADM-USR-001</code>, <code>FIN-LAN-010</code></li>
+                    <li><strong>Módulo:</strong> ADM, SUP, FIN, VEN, etc</li>
+                    <li><strong>Categoria:</strong> Usuario, Produto, NotaFiscal, etc</li>
+                    <li><strong>Tipo de Ação:</strong> Visualizar, Criar, Editar, Excluir, Aprovar, Cancelar, Exportar</li>
+                    <li><strong>Descrição:</strong> Descrição legível da permissão</li>
+                </ul>
+            </div>
+            
+            <div class="code-block">public class Autorizacao : EntityBase
+{
+    public string Codigo { get; private set; }          // Ex: ADM-USR-001
+    public string Modulo { get; private set; }          // Ex: ADM
+    public string Categoria { get; private set; }       // Ex: Usuario
+    public string Descricao { get; private set; }       // Ex: Visualizar Usuários
+    public TipoAcao TipoAcao { get; private set; }     // Enum: Visualizar, Criar, Editar, etc
+    public bool Ativo { get; private set; }
+}
+
+public enum TipoAcao
+{
+    Visualizar = 1,
+    Criar = 2,
+    Editar = 3,
+    Excluir = 4,
+    Aprovar = 5,
+    Cancelar = 6,
+    Exportar = 7,
+    Importar = 8,
+    Imprimir = 9
+}</div>
+            
+            <h3>4. PerfilAutorizacao (Role-Permission Junction)</h3>
+            <div class="info-box">
+                <p>Tabela de relacionamento entre Perfil e Autorização. Define se uma autorização está <strong>Permitida</strong> ou <strong>Negada</strong> para um perfil específico.</p>
+            </div>
+            
+            <div class="code-block">public class PerfilAutorizacao : TenantEntityBase
+{
+    public Guid PerfilId { get; private set; }
+    public virtual Perfil Perfil { get; private set; }
+    
+    public Guid AutorizacaoId { get; private set; }
+    public virtual Autorizacao Autorizacao { get; private set; }
+    
+    // Permitir ou Negar
+    public bool Permitir { get; private set; } = true;
+}</div>
+            
+            <h2>🧪 Exemplos</h2>
+            <h3>🔑 Exemplos de Autorizações</h3>
+            
+            <h3>Módulo Administração (ADM)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Categoria</th>
+                        <th>Descrição</th>
+                        <th>Tipo Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>ADM-ORG-001</code></td>
+                        <td>Organização</td>
+                        <td>Visualizar Organizações</td>
+                        <td>Visualizar</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-ORG-002</code></td>
+                        <td>Organização</td>
+                        <td>Criar Organização</td>
+                        <td>Criar</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-USR-001</code></td>
+                        <td>Usuário</td>
+                        <td>Visualizar Usuários</td>
+                        <td>Visualizar</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-USR-002</code></td>
+                        <td>Usuário</td>
+                        <td>Criar Usuário</td>
+                        <td>Criar</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-USR-003</code></td>
+                        <td>Usuário</td>
+                        <td>Editar Usuário</td>
+                        <td>Editar</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-USR-004</code></td>
+                        <td>Usuário</td>
+                        <td>Excluir Usuário</td>
+                        <td>Excluir</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-PER-001</code></td>
+                        <td>Perfil</td>
+                        <td>Visualizar Perfis</td>
+                        <td>Visualizar</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-PER-002</code></td>
+                        <td>Perfil</td>
+                        <td>Criar Perfil</td>
+                        <td>Criar</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-AUD-001</code></td>
+                        <td>Auditoria</td>
+                        <td>Visualizar Logs de Auditoria</td>
+                        <td>Visualizar</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-AUD-007</code></td>
+                        <td>Auditoria</td>
+                        <td>Exportar Logs de Auditoria</td>
+                        <td>Exportar</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Módulo Financeiro (FIN)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Categoria</th>
+                        <th>Descrição</th>
+                        <th>Tipo Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>FIN-LAN-001</code></td>
+                        <td>Lançamento</td>
+                        <td>Visualizar Lançamentos</td>
+                        <td>Visualizar</td>
+                    </tr>
+                    <tr>
+                        <td><code>FIN-LAN-002</code></td>
+                        <td>Lançamento</td>
+                        <td>Criar Lançamento</td>
+                        <td>Criar</td>
+                    </tr>
+                    <tr>
+                        <td><code>FIN-LAN-005</code></td>
+                        <td>Lançamento</td>
+                        <td>Aprovar Lançamento</td>
+                        <td>Aprovar</td>
+                    </tr>
+                    <tr>
+                        <td><code>FIN-PAG-001</code></td>
+                        <td>Pagamento</td>
+                        <td>Visualizar Pagamentos</td>
+                        <td>Visualizar</td>
+                    </tr>
+                    <tr>
+                        <td><code>FIN-PAG-005</code></td>
+                        <td>Pagamento</td>
+                        <td>Aprovar Pagamento</td>
+                        <td>Aprovar</td>
+                    </tr>
+                    <tr>
+                        <td><code>FIN-REL-007</code></td>
+                        <td>Relatório</td>
+                        <td>Exportar Relatório Financeiro</td>
+                        <td>Exportar</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Módulo Vendas (VEN)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Categoria</th>
+                        <th>Descrição</th>
+                        <th>Tipo Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>VEN-CLI-001</code></td>
+                        <td>Cliente</td>
+                        <td>Visualizar Clientes</td>
+                        <td>Visualizar</td>
+                    </tr>
+                    <tr>
+                        <td><code>VEN-PED-001</code></td>
+                        <td>Pedido</td>
+                        <td>Visualizar Pedidos</td>
+                        <td>Visualizar</td>
+                    </tr>
+                    <tr>
+                        <td><code>VEN-PED-002</code></td>
+                        <td>Pedido</td>
+                        <td>Criar Pedido</td>
+                        <td>Criar</td>
+                    </tr>
+                    <tr>
+                        <td><code>VEN-PED-005</code></td>
+                        <td>Pedido</td>
+                        <td>Aprovar Pedido</td>
+                        <td>Aprovar</td>
+                    </tr>
+                    <tr>
+                        <td><code>VEN-PED-006</code></td>
+                        <td>Pedido</td>
+                        <td>Cancelar Pedido</td>
+                        <td>Cancelar</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>🛡️ Fluxo de Autenticação e Autorização</h3>
+            
+            <div class="warning-box">
+                <h4>1. Autenticação (Login)</h4>
+                <ol>
+                    <li>Usuário fornece <code>email</code> e <code>senha</code></li>
+                    <li>Sistema valida credenciais</li>
+                    <li>Se válido, gera <strong>JWT Token</strong> contendo:
+                        <ul>
+                            <li><code>userId</code></li>
+                            <li><code>tenantId</code></li>
+                            <li><code>perfilId</code></li>
+                            <li><code>claims</code> com autorizações do usuário</li>
+                        </ul>
+                    </li>
+                    <li>Retorna <strong>Access Token</strong> (15 minutos) e <strong>Refresh Token</strong> (7 dias)</li>
+                </ol>
+            </div>
+            
+            <div class="success-box">
+                <h4>2. Autorização (Verificação de Permissões)</h4>
+                <ol>
+                    <li>Requisição HTTP inclui token JWT no header: <code>Authorization: Bearer {token}</code></li>
+                    <li>Middleware extrai <code>userId</code> e <code>tenantId</code> do token</li>
+                    <li>Sistema busca autorizações do perfil do usuário</li>
+                    <li>Action Filter <code>[Authorize("ADM-USR-001")]</code> valida se usuário possui a permissão</li>
+                    <li>Se autorizado, executa a ação; caso contrário, retorna <code>403 Forbidden</code></li>
+                </ol>
+            </div>
+            
+            <h3>🔧 Implementação Técnica</h3>
+            
+            <h3>1. Authorization Attribute Customizado</h3>
+            <div class="code-block">[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public class AutorizacaoAttribute : AuthorizeAttribute, IAuthorizationFilter
+{
+    private readonly string _codigoAutorizacao;
+    
+    public AutorizacaoAttribute(string codigoAutorizacao)
+    {
+        _codigoAutorizacao = codigoAutorizacao;
+    }
+    
+    public void OnAuthorization(AuthorizationFilterContext context)
+    {
+        var user = context.HttpContext.User;
+        
+        if (!user.Identity.IsAuthenticated)
+        {
+            context.Result = new UnauthorizedResult();
+            return;
+        }
+        
+        var hasPermission = user.HasClaim("autorizacao", _codigoAutorizacao);
+        
+        if (!hasPermission)
+        {
+            context.Result = new ForbidResult();
+        }
+    }
+}</div>
+            
+            <h3>2. Uso em Controllers</h3>
+            <div class="code-block">[ApiController]
+[Route("api/v1/[controller]")]
+public class UsuariosController : ControllerBase
+{
+    [HttpGet]
+    [Autorizacao("ADM-USR-001")] // Visualizar Usuários
+    public async Task<IActionResult> ListarUsuarios()
+    {
+        // ...
+    }
+    
+    [HttpPost]
+    [Autorizacao("ADM-USR-002")] // Criar Usuário
+    public async Task<IActionResult> CriarUsuario([FromBody] CriarUsuarioCommand command)
+    {
+        // ...
+    }
+    
+    [HttpPut("{id}")]
+    [Autorizacao("ADM-USR-003")] // Editar Usuário
+    public async Task<IActionResult> AtualizarUsuario(Guid id, [FromBody] AtualizarUsuarioCommand command)
+    {
+        // ...
+    }
+    
+    [HttpDelete("{id}")]
+    [Autorizacao("ADM-USR-004")] // Excluir Usuário
+    public async Task<IActionResult> ExcluirUsuario(Guid id)
+    {
+        // ...
+    }
+}</div>
+            
+            <h3>3. JWT Token Generation</h3>
+            <div class="code-block">public string GerarToken(Usuario usuario, List<string> autorizacoes)
+{
+    var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+        new Claim("tenantId", usuario.TenantId.ToString()),
+        new Claim("perfilId", usuario.PerfilId.ToString()),
+        new Claim(ClaimTypes.Email, usuario.Email),
+        new Claim(ClaimTypes.Name, usuario.NomeCompleto)
+    };
+    
+    // Adicionar autorizações como claims
+    foreach (var autorizacao in autorizacoes)
+    {
+        claims.Add(new Claim("autorizacao", autorizacao));
+    }
+    
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+    
+    var token = new JwtSecurityToken(
+        issuer: _configuration["Jwt:Issuer"],
+        audience: _configuration["Jwt:Audience"],
+        claims: claims,
+        expires: DateTime.UtcNow.AddMinutes(15),
+        signingCredentials: creds
+    );
+    
+    return new JwtSecurityTokenHandler().WriteToken(token);
+}</div>
+            
+            <h3>📋 Matriz de Autorizações por Perfil</h3>
+            <div class="info-box">
+                <p>Exemplo de configuração de perfis:</p>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Autorização</th>
+                        <th>Administrador</th>
+                        <th>Gerente</th>
+                        <th>Operador</th>
+                        <th>Auditor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>ADM-USR-001</code> Visualizar Usuários</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>❌</td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-USR-002</code> Criar Usuário</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>❌</td>
+                        <td>❌</td>
+                    </tr>
+                    <tr>
+                        <td><code>ADM-USR-004</code> Excluir Usuário</td>
+                        <td>✅</td>
+                        <td>❌</td>
+                        <td>❌</td>
+                        <td>❌</td>
+                    </tr>
+                    <tr>
+                        <td><code>FIN-LAN-002</code> Criar Lançamento</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>❌</td>
+                    </tr>
+                    <tr>
+                        <td><code>FIN-LAN-005</code> Aprovar Lançamento</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>❌</td>
+                        <td>❌</td>
+                    </tr>
+                    <tr>
+                        <td><code>VEN-PED-002</code> Criar Pedido</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>❌</td>
+                    </tr>
+                    <tr>
+                        <td><code>VEN-PED-006</code> Cancelar Pedido</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                        <td>❌</td>
+                        <td>❌</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>🔒 Segurança e Melhores Práticas</h3>
+            <div class="warning-box">
+                <ul>
+                    <li>✅ <strong>Princípio do Menor Privilégio:</strong> Usuários devem ter apenas as permissões necessárias</li>
+                    <li>✅ <strong>Auditoria Completa:</strong> Todas as operações sensíveis são logadas</li>
+                    <li>✅ <strong>Token Expiration:</strong> Access tokens expiram em 15 minutos</li>
+                    <li>✅ <strong>Refresh Token Rotation:</strong> Refresh tokens são rotacionados a cada uso</li>
+                    <li>✅ <strong>Bloqueio por Tentativas:</strong> Usuário bloqueado após 5 tentativas de login falhas</li>
+                    <li>✅ <strong>Validação em Múltiplas Camadas:</strong> Frontend + API + Domain Layer</li>
+                    <li>✅ <strong>HTTPS Obrigatório:</strong> Toda comunicação via TLS 1.3+</li>
+                </ul>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../index.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+<script src="../js/section-nav.js" defer></script>
+<script src="../js/nav-active.js" defer></script>
+</body>
+</html>

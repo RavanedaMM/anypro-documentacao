@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema SIS - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Sistema SIS (Seeders e Inicialização)</h1>
+            <div class="subtitle">Carga Inicial de Dados Globais</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Sistema (SIS)</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <h3>🌱 O que é o Sistema SIS?</h3>
+            <div class="info-box">
+                <p>O <strong>Sistema SIS (Seeders de Inicialização do Sistema)</strong> é responsável pela carga inicial de dados globais (tabelas TBG) necessários para o funcionamento do ANYPRO.</p>
+                
+                <p>Esses dados são compartilhados entre todas as organizações (tenants) e incluem:</p>
+                <ul>
+                    <li>🌍 Dados de localização (Países, Estados, Cidades)</li>
+                    <li>💱 Configurações monetárias (Moedas)</li>
+                    <li>🗣️ Idiomas suportados</li>
+                    <li>📏 Unidades de medida</li>
+                    <li>📄 Tipos de documentos</li>
+                    <li>🔐 Autorizações do sistema</li>
+                    <li>💼 Regimes tributários e naturezas de operação</li>
+                </ul>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            
+            <h3>1. Executar Seeders via CLI</h3>
+            <pre><code># Executar todos os seeders em ordem
+dotnet run --project src/Anypro.Infrastructure -- seed --all
+
+# Executar seeder específico
+dotnet run --project src/Anypro.Infrastructure -- seed --name TbgPaisSeeder
+
+# Verificar status dos seeders
+dotnet run --project src/Anypro.Infrastructure -- seed --status
+
+# Output esperado:
+# ✅ TbgPaisSeeder          - 195 registros
+# ✅ TbgEstadoSeeder        - 27 registros  
+# ✅ TbgCidadeSeeder        - 5570 registros
+# ✅ TbgMoedaSeeder         - 15 registros
+# ⏳ TbgIdiomaSeeder        - Pendente</code></pre>
+            
+            <h3>2. Criar um Novo Seeder</h3>
+            <pre><code>// src/Anypro.Infrastructure/Persistence/Seeders/TbgExemploSeeder.cs
+public class TbgExemploSeeder : ISeeder
+{
+    public int Order => 50; // Ordem de execução
+    public string Name => "TbgExemploSeeder";
+    
+    private readonly ApplicationDbContext _context;
+    
+    public TbgExemploSeeder(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+    
+    public async Task SeedAsync(CancellationToken ct = default)
+    {
+        if (await _context.TbgExemplos.AnyAsync(ct))
+            return; // Já executado
+        
+        var dados = new List&lt;TbgExemplo&gt;
+        {
+            new("EX001", "Exemplo 1", true),
+            new("EX002", "Exemplo 2", true),
+            new("EX003", "Exemplo 3", false)
+        };
+        
+        await _context.TbgExemplos.AddRangeAsync(dados, ct);
+        await _context.SaveChangesAsync(ct);
+        
+        Console.WriteLine($"✅ {Name}: {dados.Count} registros inseridos");
+    }
+}
+
+// Registrar no DI
+services.AddScoped&lt;ISeeder, TbgExemploSeeder&gt;();</code></pre>
+            
+            <h3>3. Seeder com Dados de Arquivo JSON</h3>
+            <pre><code>// Para tabelas grandes como Cidades (5570+ registros)
+public class TbgCidadeSeeder : ISeeder
+{
+    public int Order => 3;
+    
+    public async Task SeedAsync(CancellationToken ct = default)
+    {
+        if (await _context.TbgCidades.AnyAsync(ct))
+            return;
+        
+        // Carregar dados de arquivo JSON
+        var jsonPath = Path.Combine(
+            AppContext.BaseDirectory, 
+            "Seeders", "Data", "cidades.json"
+        );
+        
+        var json = await File.ReadAllTextAsync(jsonPath, ct);
+        var cidades = JsonSerializer.Deserialize&lt;List&lt;CidadeDto&gt;&gt;(json);
+        
+        // Inserir em lotes para performance
+        const int batchSize = 500;
+        for (int i = 0; i &lt; cidades.Count; i += batchSize)
+        {
+            var batch = cidades.Skip(i).Take(batchSize)
+                .Select(c => new TbgCidade(c.Codigo, c.Nome, c.EstadoId, c.CodigoIbge))
+                .ToList();
+            
+            await _context.TbgCidades.AddRangeAsync(batch, ct);
+            await _context.SaveChangesAsync(ct);
+        }
+    }
+}</code></pre>
+            
+            <h3>4. Executar via Migration (Produção)</h3>
+            <pre><code>// Migrations/20240115_SeedInitialData.cs
+public partial class SeedInitialData : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        // Países
+        migrationBuilder.InsertData(
+            table: "tbg_paises",
+            columns: new[] { "codigo", "nome", "sigla", "ativo" },
+            values: new object[,]
+            {
+                { "BR", "Brasil", "BRA", true },
+                { "US", "Estados Unidos", "USA", true },
+                { "PT", "Portugal", "PRT", true }
+            }
+        );
+        
+        // Moedas
+        migrationBuilder.InsertData(
+            table: "tbg_moedas",
+            columns: new[] { "codigo", "nome", "simbolo", "casas_decimais" },
+            values: new object[,]
+            {
+                { "BRL", "Real Brasileiro", "R$", 2 },
+                { "USD", "Dólar Americano", "$", 2 },
+                { "EUR", "Euro", "€", 2 }
+            }
+        );
+    }
+}</code></pre>
+            
+            <h3>5. Checklist de Bootstrap</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Tabela</th>
+                        <th>Registros</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Localização</td>
+                        <td>tbg_paises</td>
+                        <td>~195</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Localização</td>
+                        <td>tbg_estados</td>
+                        <td>~27</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Localização</td>
+                        <td>tbg_cidades</td>
+                        <td>~5570</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Monetário</td>
+                        <td>tbg_moedas</td>
+                        <td>~15</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Sistema</td>
+                        <td>tbg_autorizacoes</td>
+                        <td>~50</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Fiscal</td>
+                        <td>tbg_regimes_tributarios</td>
+                        <td>~4</td>
+                        <td>⬜</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>📚 Referência</h2>
+            <h3>📋 Ordem de Execução dos Seeders</h3>
+            <div class="warning-box">
+                <p><strong>⚠️ Importante:</strong> Os seeders devem ser executados na ordem abaixo para respeitar as dependências entre tabelas (foreign keys).</p>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ordem</th>
+                        <th>Seeder</th>
+                        <th>Tabela</th>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><code>PaisSeeder</code></td>
+                        <td>Pais</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>Países do mundo (ISO 3166) - 195 países</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><code>EstadoSeeder</code></td>
+                        <td>Estado</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>Estados/Províncias (27 estados do Brasil)</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><code>CidadeSeeder</code></td>
+                        <td>Cidade</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>Municípios brasileiros (5570+ cidades)</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><code>MoedaSeeder</code></td>
+                        <td>Moeda</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>Moedas mundiais (ISO 4217) - 180+ moedas</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td><code>IdiomaSeeder</code></td>
+                        <td>Idioma</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>Idiomas suportados (ISO 639) - PT-BR, EN, ES</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td><code>UnidadeMedidaSeeder</code></td>
+                        <td>UnidadeMedida</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>Unidades (kg, L, m, UN, CX, etc)</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td><code>TipoDocumentoSeeder</code></td>
+                        <td>TipoDocumento</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>Tipos de documentos (CPF, CNPJ, RG, Passaporte)</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td><code>RegimeTributarioSeeder</code></td>
+                        <td>RegimeTributario</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>Regimes tributários (Simples, Lucro Real, Presumido)</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td><code>NaturezaOperacaoSeeder</code></td>
+                        <td>NaturezaOperacao</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>CFOP - Código Fiscal de Operações</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td><code>AutorizacaoSeeder</code></td>
+                        <td>Autorizacao</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                        <td>Autorizações do sistema (120+ autorizações)</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>💻 Executando os Seeders</h3>
+            
+            <h4>Via EF Core Migration</h4>
+            <div class="code-block">// Adicione no arquivo de migration após criar as tabelas
+protected override void Up(MigrationBuilder migrationBuilder)
+{
+    // Criação das tabelas...
+    
+    // Execução dos seeders
+    SeedersRunner.ExecutarTodos(migrationBuilder);
+}
+
+// SeedersRunner.cs
+public static class SeedersRunner
+{
+    public static void ExecutarTodos(MigrationBuilder migrationBuilder)
+    {
+        new PaisSeeder().Seed(migrationBuilder);
+        new EstadoSeeder().Seed(migrationBuilder);
+        new CidadeSeeder().Seed(migrationBuilder);
+        new MoedaSeeder().Seed(migrationBuilder);
+        new IdiomaSeeder().Seed(migrationBuilder);
+        new UnidadeMedidaSeeder().Seed(migrationBuilder);
+        new TipoDocumentoSeeder().Seed(migrationBuilder);
+        new RegimeTributarioSeeder().Seed(migrationBuilder);
+        new NaturezaOperacaoSeeder().Seed(migrationBuilder);
+        new AutorizacaoSeeder().Seed(migrationBuilder);
+    }
+}</div>
+            
+            <h4>Via Command Line</h4>
+            <div class="code-block">dotnet ef database update
+# Ou
+dotnet run --project Anypro.API -- seed</div>
+            
+            <h2>🧪 Exemplos</h2>
+            <h3>📦 Exemplo de Seeder: PaisSeeder</h3>
+            <div class="code-block">public class PaisSeeder : ISeeder
+{
+    public void Seed(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.InsertData(
+            table: "Pais",
+            columns: new[] { "Id", "Nome", "Codigo", "CodigoISO2", "CodigoISO3", "DDI", "Ativo", "CriadoEm" },
+            values: new object[,]
+            {
+                { Guid.NewGuid(), "Brasil", "076", "BR", "BRA", "+55", true, DateTime.UtcNow },
+                { Guid.NewGuid(), "Estados Unidos", "840", "US", "USA", "+1", true, DateTime.UtcNow },
+                { Guid.NewGuid(), "Argentina", "032", "AR", "ARG", "+54", true, DateTime.UtcNow },
+                { Guid.NewGuid(), "Chile", "152", "CL", "CHL", "+56", true, DateTime.UtcNow },
+                { Guid.NewGuid(), "Uruguai", "858", "UY", "URY", "+598", true, DateTime.UtcNow },
+                { Guid.NewGuid(), "Paraguai", "600", "PY", "PRY", "+595", true, DateTime.UtcNow },
+                { Guid.NewGuid(), "Portugal", "620", "PT", "PRT", "+351", true, DateTime.UtcNow },
+                { Guid.NewGuid(), "Espanha", "724", "ES", "ESP", "+34", true, DateTime.UtcNow },
+                // ... mais países
+            });
+    }
+}</div>
+            
+            <h3>🔐 Exemplo: AutorizacaoSeeder (Módulo ADM)</h3>
+            <div class="code-block">public class AutorizacaoSeeder : ISeeder
+{
+    public void Seed(MigrationBuilder migrationBuilder)
+    {
+        var autorizacoes = new List<Autorizacao>
+        {
+            // Módulo ADM - Usuários
+            new Autorizacao("ADM.USU.LISTAR", "Listar usuários", "ADM"),
+            new Autorizacao("ADM.USU.VISUALIZAR", "Visualizar detalhes do usuário", "ADM"),
+            new Autorizacao("ADM.USU.CRIAR", "Criar novo usuário", "ADM"),
+            new Autorizacao("ADM.USU.EDITAR", "Editar usuário", "ADM"),
+            new Autorizacao("ADM.USU.EXCLUIR", "Excluir usuário", "ADM"),
+            new Autorizacao("ADM.USU.ATIVAR", "Ativar/Desativar usuário", "ADM"),
+            new Autorizacao("ADM.USU.RESETAR_SENHA", "Resetar senha do usuário", "ADM"),
+            
+            // Módulo ADM - Perfis
+            new Autorizacao("ADM.PER.LISTAR", "Listar perfis de acesso", "ADM"),
+            new Autorizacao("ADM.PER.VISUALIZAR", "Visualizar detalhes do perfil", "ADM"),
+            new Autorizacao("ADM.PER.CRIAR", "Criar novo perfil", "ADM"),
+            new Autorizacao("ADM.PER.EDITAR", "Editar perfil", "ADM"),
+            new Autorizacao("ADM.PER.EXCLUIR", "Excluir perfil", "ADM"),
+            
+            // Módulo ADM - Organizações
+            new Autorizacao("ADM.ORG.LISTAR", "Listar organizações", "ADM"),
+            new Autorizacao("ADM.ORG.VISUALIZAR", "Visualizar detalhes da organização", "ADM"),
+            new Autorizacao("ADM.ORG.CRIAR", "Criar nova organização", "ADM"),
+            new Autorizacao("ADM.ORG.EDITAR", "Editar organização", "ADM"),
+            new Autorizacao("ADM.ORG.EXCLUIR", "Excluir organização", "ADM"),
+            
+            // Módulo SUP - Fornecedores
+            new Autorizacao("SUP.FOR.LISTAR", "Listar fornecedores", "SUP"),
+            new Autorizacao("SUP.FOR.VISUALIZAR", "Visualizar detalhes do fornecedor", "SUP"),
+            new Autorizacao("SUP.FOR.CRIAR", "Criar novo fornecedor", "SUP"),
+            new Autorizacao("SUP.FOR.EDITAR", "Editar fornecedor", "SUP"),
+            new Autorizacao("SUP.FOR.EXCLUIR", "Excluir fornecedor", "SUP"),
+            
+            // Módulo SUP - Produtos
+            new Autorizacao("SUP.PRO.LISTAR", "Listar produtos", "SUP"),
+            new Autorizacao("SUP.PRO.VISUALIZAR", "Visualizar detalhes do produto", "SUP"),
+            new Autorizacao("SUP.PRO.CRIAR", "Criar novo produto", "SUP"),
+            new Autorizacao("SUP.PRO.EDITAR", "Editar produto", "SUP"),
+            new Autorizacao("SUP.PRO.EXCLUIR", "Excluir produto", "SUP"),
+            
+            // ... mais autorizações dos demais módulos
+        };
+        
+        foreach (var auth in autorizacoes)
+        {
+            migrationBuilder.InsertData(
+                table: "Autorizacao",
+                columns: new[] { "Id", "Codigo", "Descricao", "Modulo", "Ativo", "CriadoEm" },
+                values: new object[] { auth.Id, auth.Codigo, auth.Descricao, auth.Modulo, true, DateTime.UtcNow }
+            );
+        }
+    }
+}</div>
+            
+            <h3>📊 Estatísticas de Dados Globais</h3>
+            <div class="info-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tabela</th>
+                            <th>Quantidade de Registros</th>
+                            <th>Tamanho Aproximado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pais</td>
+                            <td>~195</td>
+                            <td>15 KB</td>
+                        </tr>
+                        <tr>
+                            <td>Estado (Brasil)</td>
+                            <td>27</td>
+                            <td>2 KB</td>
+                        </tr>
+                        <tr>
+                            <td>Cidade (Brasil)</td>
+                            <td>~5.570</td>
+                            <td>450 KB</td>
+                        </tr>
+                        <tr>
+                            <td>Moeda</td>
+                            <td>~180</td>
+                            <td>12 KB</td>
+                        </tr>
+                        <tr>
+                            <td>Idioma</td>
+                            <td>3 (PT-BR, EN, ES)</td>
+                            <td>1 KB</td>
+                        </tr>
+                        <tr>
+                            <td>UnidadeMedida</td>
+                            <td>~50</td>
+                            <td>4 KB</td>
+                        </tr>
+                        <tr>
+                            <td>TipoDocumento</td>
+                            <td>~10</td>
+                            <td>1 KB</td>
+                        </tr>
+                        <tr>
+                            <td>RegimeTributario</td>
+                            <td>~8</td>
+                            <td>1 KB</td>
+                        </tr>
+                        <tr>
+                            <td>NaturezaOperacao (CFOP)</td>
+                            <td>~500</td>
+                            <td>40 KB</td>
+                        </tr>
+                        <tr>
+                            <td>Autorizacao</td>
+                            <td>~120</td>
+                            <td>10 KB</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>Total aproximado:</strong> 536 KB de dados globais compartilhados</p>
+            </div>
+            
+            <h2>🔄 Atualização dos Seeders</h2>
+            <div class="warning-box">
+                <h4>Quando atualizar os seeders?</h4>
+                <ul>
+                    <li>✅ Novos países/estados/cidades adicionados</li>
+                    <li>✅ Alterações em códigos fiscais (CFOP)</li>
+                    <li>✅ Novos idiomas suportados</li>
+                    <li>✅ Novas autorizações de módulos</li>
+                    <li>✅ Mudanças em regimes tributários</li>
+                </ul>
+                
+                <h4>Como atualizar?</h4>
+                <div class="code-block"># 1. Criar nova migration
+dotnet ef migrations add AtualizacaoSeeder_YYYYMMDD
+
+# 2. Editar migration e adicionar/alterar dados no método Up()
+
+# 3. Aplicar migration
+dotnet ef database update</div>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+<script src="../js/section-nav.js" defer></script>
+<script src="../js/nav-active.js" defer></script>
+</body>
+</html>

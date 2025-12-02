@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes Automatizados - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Testes Automatizados</h1>
+            <div class="subtitle">Estratégia e Cobertura de Testes</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Testes</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <h3>🎯 Estratégia de Testes</h3>
+            <div class="info-box">
+                <p>O ANYPRO segue a <strong>Pirâmide de Testes</strong> para garantir qualidade, confiabilidade e manutenibilidade do código.</p>
+                
+                <p><strong>Objetivos:</strong></p>
+                <ul>
+                    <li>✅ Cobertura mínima de <strong>80%</strong> em código crítico</li>
+                    <li>✅ Testes rápidos e confiáveis (feedback em segundos)</li>
+                    <li>✅ CI/CD integrado com GitHub Actions</li>
+                    <li>✅ Testes isolados (sem dependências externas)</li>
+                </ul>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <h3>📦 Instalar Pacotes de Teste</h3>
+            <div class="code-block"># Projeto de testes unitários
+dotnet add tests/Anypro.UnitTests package xunit
+dotnet add tests/Anypro.UnitTests package xunit.runner.visualstudio
+dotnet add tests/Anypro.UnitTests package Moq
+dotnet add tests/Anypro.UnitTests package FluentAssertions
+
+# Projeto de testes de integração
+dotnet add tests/Anypro.IntegrationTests package Testcontainers
+dotnet add tests/Anypro.IntegrationTests package Microsoft.AspNetCore.Mvc.Testing</div>
+
+            <h3>🧪 Estrutura de Projeto de Testes</h3>
+            <div class="code-block">tests/
+├── Anypro.UnitTests/
+│   ├── Domain/
+│   │   └── UsuarioTests.cs
+│   ├── Application/
+│   │   └── Commands/
+│   │       └── CreateUsuarioCommandHandlerTests.cs
+│   └── Helpers/
+│       └── TestDataBuilder.cs
+├── Anypro.IntegrationTests/
+│   ├── Fixtures/
+│   │   └── DatabaseFixture.cs
+│   ├── Controllers/
+│   │   └── UsuarioControllerTests.cs
+│   └── appsettings.Test.json
+└── Anypro.E2ETests/
+    └── cypress/
+        └── e2e/
+            └── login.cy.ts</div>
+
+            <h3>✍️ Exemplo de Teste Unitário</h3>
+            <div class="code-block">public class CreateUsuarioCommandHandlerTests
+{
+    private readonly Mock&lt;IUsuarioRepository&gt; _repoMock;
+    private readonly CreateUsuarioCommandHandler _handler;
+    
+    public CreateUsuarioCommandHandlerTests()
+    {
+        _repoMock = new Mock&lt;IUsuarioRepository&gt;();
+        _handler = new CreateUsuarioCommandHandler(_repoMock.Object);
+    }
+    
+    [Fact]
+    public async Task Handle_ValidCommand_ShouldCreateUsuario()
+    {
+        // Arrange
+        var command = new CreateUsuarioCommand("João", "joao@email.com");
+        
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+        
+        // Assert
+        result.Should().NotBeEmpty();
+        _repoMock.Verify(r => r.AddAsync(It.IsAny&lt;Usuario&gt;(), It.IsAny&lt;CancellationToken&gt;()), Times.Once);
+    }
+}</div>
+
+            <h3>▶️ Executar Testes</h3>
+            <div class="code-block"># Rodar todos os testes
+dotnet test
+
+# Rodar com cobertura
+dotnet test --collect:"XPlat Code Coverage"
+
+# Rodar testes específicos
+dotnet test --filter "FullyQualifiedName~CreateUsuario"
+
+# Gerar relatório de cobertura (com reportgenerator)
+reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coverage-report"</div>
+
+            <h3>🔄 CI/CD com GitHub Actions</h3>
+            <div class="code-block"># .github/workflows/tests.yml
+name: Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --collect:"XPlat Code Coverage"
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v3</div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+
+            <h2>📚 Referência</h2>
+            <h3>🔺 Pirâmide de Testes</h3>
+            <div class="test-pyramid">
+                <div class="pyramid-level pyramid-e2e">
+                    <strong>E2E (10%)</strong>
+                    <p>Cypress - Testes de ponta a ponta</p>
+                </div>
+                <div class="pyramid-level pyramid-integration">
+                    <strong>Integração (30%)</strong>
+                    <p>xUnit + Testcontainers - API + BD</p>
+                </div>
+                <div class="pyramid-level pyramid-unit">
+                    <strong>Unitários (60%)</strong>
+                    <p>xUnit + Moq + FluentAssertions</p>
+                </div>
+            </div>
+            
+            <h3>🧩 Testes Unitários (60%)</h3>
+            <div class="info-box">
+                <p><strong>Stack:</strong> xUnit, Moq, FluentAssertions, Bogus</p>
+                <p><strong>Escopo:</strong> Entidades, Value Objects, Serviços de Domínio, Handlers (CQRS)</p>
+                
+                <h4>Exemplo: Teste de Entidade Usuario</h4>
+                <div class="code-block">public class UsuarioTests
+{
+    [Fact]
+    public void Criar_DeveCriarUsuarioValido()
+    {
+        // Arrange
+        var tenantId = Guid.NewGuid();
+        var nome = "João Silva";
+        var email = "joao@empresa.com.br";
+        var senhaHash = "hashed_password";
+        var perfilId = Guid.NewGuid();
+        var criadoPor = Guid.NewGuid();
+        
+        // Act
+        var usuario = Usuario.Criar(tenantId, nome, email, senhaHash, perfilId, criadoPor);
+        
+        // Assert
+        usuario.Should().NotBeNull();
+        usuario.Id.Should().NotBeEmpty();
+        usuario.TenantId.Should().Be(tenantId);
+        usuario.NomeCompleto.Should().Be(nome);
+        usuario.Email.Should().Be(email.ToLowerInvariant());
+        usuario.Ativo.Should().BeTrue();
+        usuario.EmailVerificado.Should().BeFalse();
+        usuario.Bloqueado.Should().BeFalse();
+    }
+    
+    [Fact]
+    public void IncrementarTentativasLogin_DeveBloqueApos5Tentativas()
+    {
+        // Arrange
+        var usuario = CriarUsuarioValido();
+        
+        // Act
+        for (int i = 0; i < 5; i++)
+        {
+            usuario.IncrementarTentativasLogin();
+        }
+        
+        // Assert
+        usuario.TentativasLogin.Should().Be(5);
+        usuario.Bloqueado.Should().BeTrue();
+    }
+    
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData(null)]
+    public void Criar_DeveValidarNomeObrigatorio(string nomeInvalido)
+    {
+        // Act
+        Action act = () => Usuario.Criar(Guid.NewGuid(), nomeInvalido, "email@test.com", "hash", Guid.NewGuid(), Guid.NewGuid());
+        
+        // Assert
+        act.Should().Throw<DomainException>()
+            .WithMessage("*nome*obrigatório*");
+    }
+}</div>
+            </div>
+            
+            <h3>🔗 Testes de Integração (30%)</h3>
+            <div class="info-box">
+                <p><strong>Stack:</strong> xUnit, Testcontainers, WebApplicationFactory</p>
+                <p><strong>Escopo:</strong> Repositórios, APIs (Controllers), Banco de Dados, Cache</p>
+                
+                <h4>Exemplo: Teste de API de Usuários</h4>
+                <div class="code-block">public class UsuariosControllerIntegrationTests : IClassFixture&lt;CustomWebApplicationFactory&gt;
+{
+    private readonly HttpClient _client;
+    private readonly CustomWebApplicationFactory _factory;
+    
+    public UsuariosControllerIntegrationTests(CustomWebApplicationFactory factory)
+    {
+        _factory = factory;
+        _client = factory.CreateClient();
+    }
+    
+    [Fact]
+    public async Task POST_CriarUsuario_DeveRetornar201Created()
+    {
+        // Arrange
+        var token = await ObterTokenAutenticacao();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
+        var command = new
+        {
+            NomeCompleto = "Maria Oliveira",
+            Email = "maria@empresa.com.br",
+            Telefone = "(11) 98765-4321",
+            Senha = "SenhaForte@2025",
+            PerfilId = Guid.NewGuid()
+        };
+        
+        // Act
+        var response = await _client.PostAsJsonAsync("/v1/usuarios", command);
+        
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        
+        var result = await response.Content.ReadFromJsonAsync&lt;UsuarioDTO&gt;();
+        result.Should().NotBeNull();
+        result.Email.Should().Be(command.Email.ToLowerInvariant());
+        result.Ativo.Should().BeTrue();
+    }
+    
+    [Fact]
+    public async Task GET_ListarUsuarios_DeveRetornarPaginado()
+    {
+        // Arrange
+        var token = await ObterTokenAutenticacao();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
+        // Act
+        var response = await _client.GetAsync("/v1/usuarios?page=1&size=10");
+        
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        
+        var result = await response.Content.ReadFromJsonAsync&lt;PagedResult&lt;UsuarioDTO&gt;&gt;();
+        result.Should().NotBeNull();
+        result.Data.Should().NotBeEmpty();
+        result.Page.Should().Be(1);
+        result.Size.Should().Be(10);
+    }
+}</div>
+                
+                <h4>Exemplo: Testcontainers para PostgreSQL</h4>
+                <div class="code-block">public class CustomWebApplicationFactory : WebApplicationFactory&lt;Program&gt;
+{
+    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
+        .WithDatabase("anypro_test")
+        .WithUsername("postgres")
+        .WithPassword("test_password")
+        .Build();
+    
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        _dbContainer.StartAsync().Wait();
+        
+        builder.ConfigureTestServices(services =>
+        {
+            // Remover DbContext real
+            services.RemoveAll&lt;DbContextOptions&lt;AppDbContext&gt;&gt;();
+            
+            // Adicionar DbContext de teste com Testcontainers
+            services.AddDbContext&lt;AppDbContext&gt;(options =>
+            {
+                options.UseNpgsql(_dbContainer.GetConnectionString());
+            });
+            
+            // Executar migrations
+            var sp = services.BuildServiceProvider();
+            using var scope = sp.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService&lt;AppDbContext&gt;();
+            db.Database.Migrate();
+        });
+    }
+    
+    public override async ValueTask DisposeAsync()
+    {
+        await _dbContainer.DisposeAsync();
+        await base.DisposeAsync();
+    }
+}</div>
+            </div>
+            
+            <h3>🌐 Testes E2E (10%)</h3>
+            <div class="info-box">
+                <p><strong>Stack:</strong> Cypress</p>
+                <p><strong>Escopo:</strong> Fluxos críticos do usuário (login, cadastro, vendas)</p>
+                
+                <h4>Exemplo: Cypress - Fluxo de Login</h4>
+                <div class="code-block">describe('Login', () => {
+  beforeEach(() => {
+    cy.visit('/login');
+  });
+  
+  it('Deve fazer login com credenciais válidas', () => {
+    cy.get('[data-testid="email-input"]').type('admin@anypro.com.br');
+    cy.get('[data-testid="password-input"]').type('Admin@2025');
+    cy.get('[data-testid="login-button"]').click();
+    
+    cy.url().should('include', '/dashboard');
+    cy.get('[data-testid="user-menu"]').should('contain', 'Administrador');
+    cy.get('[data-testid="welcome-message"]').should('be.visible');
+  });
+  
+  it('Deve exibir erro com credenciais inválidas', () => {
+    cy.get('[data-testid="email-input"]').type('usuario@invalido.com');
+    cy.get('[data-testid="password-input"]').type('senhaErrada');
+    cy.get('[data-testid="login-button"]').click();
+    
+    cy.get('[data-testid="error-message"]')
+      .should('be.visible')
+      .and('contain', 'Email ou senha inválidos');
+  });
+  
+  it('Deve bloquear após 5 tentativas incorretas', () => {
+    for (let i = 0; i < 5; i++) {
+      cy.get('[data-testid="email-input"]').clear().type('teste@anypro.com.br');
+      cy.get('[data-testid="password-input"]').clear().type('senhaErrada');
+      cy.get('[data-testid="login-button"]').click();
+      cy.wait(500);
+    }
+    
+    cy.get('[data-testid="error-message"]')
+      .should('contain', 'Usuário bloqueado por múltiplas tentativas');
+  });
+});</div>
+            </div>
+            
+            <h3>📊 Ferramentas e Bibliotecas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ferramenta</th>
+                        <th>Tipo</th>
+                        <th>Finalidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>xUnit</strong></td>
+                        <td>Framework de Testes (.NET)</td>
+                        <td>Testes unitários e integração</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Moq</strong></td>
+                        <td>Mocking Library</td>
+                        <td>Mock de interfaces e dependências</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FluentAssertions</strong></td>
+                        <td>Assertions Library</td>
+                        <td>Assertions legíveis e expressivas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bogus</strong></td>
+                        <td>Fake Data Generator</td>
+                        <td>Geração de dados de teste</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Testcontainers</strong></td>
+                        <td>Docker Containers para Testes</td>
+                        <td>BD/Redis isolados para integração</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cypress</strong></td>
+                        <td>E2E Testing Framework</td>
+                        <td>Testes de interface do usuário</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Jest</strong></td>
+                        <td>JavaScript Testing Framework</td>
+                        <td>Testes unitários React/TypeScript</td>
+                    </tr>
+                    <tr>
+                        <td><strong>React Testing Library</strong></td>
+                        <td>React Component Testing</td>
+                        <td>Testes de componentes React</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>🎯 Metas de Cobertura</h2>
+            <div class="info-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Camada</th>
+                            <th>Meta de Cobertura</th>
+                            <th>Situação Atual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-row-success">
+                            <td>Domain Layer (Entities, VOs)</td>
+                            <td>≥ 90%</td>
+                            <td><strong>85%</strong> ✅</td>
+                        </tr>
+                        <tr class="table-row-success">
+                            <td>Application Layer (Handlers, Validators)</td>
+                            <td>≥ 85%</td>
+                            <td><strong>78%</strong> ⚠️</td>
+                        </tr>
+                        <tr>
+                            <td>Infrastructure Layer (Repositories)</td>
+                            <td>≥ 70%</td>
+                            <td><strong>65%</strong> ⚠️</td>
+                        </tr>
+                        <tr>
+                            <td>API Layer (Controllers)</td>
+                            <td>≥ 75%</td>
+                            <td><strong>60%</strong> ⚠️</td>
+                        </tr>
+                        <tr class="table-row-success">
+                            <td>Frontend (Components)</td>
+                            <td>≥ 70%</td>
+                            <td><strong>55%</strong> ❌</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h2>▶️ Executando os Testes</h2>
+            
+            <h3>Backend (.NET)</h3>
+            <div class="code-block"># Todos os testes
+dotnet test
+
+# Com cobertura de código
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+# Apenas testes unitários
+dotnet test --filter Category=Unit
+
+# Apenas testes de integração
+dotnet test --filter Category=Integration
+
+# Relatório de cobertura HTML
+reportgenerator -reports:coverage.opencover.xml -targetdir:coverage-report</div>
+            
+            <h3>Frontend (React + Jest)</h3>
+            <div class="code-block"># Todos os testes
+npm test
+
+# Com cobertura
+npm test -- --coverage
+
+# Watch mode
+npm test -- --watch
+
+# E2E com Cypress
+npm run cypress:open
+npm run cypress:run</div>
+            
+            <h2>🚀 CI/CD Integration</h2>
+            <div class="code-block"># .github/workflows/tests.yml
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet restore
+      - run: dotnet build
+      - run: dotnet test /p:CollectCoverage=true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        
+  frontend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: npm test -- --coverage
+      - run: npm run cypress:run</div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+<script src="../js/section-nav.js" defer></script>
+<script src="../js/nav-active.js" defer></script>
+</body>
+</html>

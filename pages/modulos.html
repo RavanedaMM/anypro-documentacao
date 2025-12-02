@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulos do Sistema - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Módulos do Sistema</h1>
+            <div class="subtitle">15+ Módulos Integrados do ERP ANYPRO</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Módulos</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <h3>🎯 Visão Geral dos Módulos</h3>
+            <div class="info-box">
+                <p>O ANYPRO é composto por <strong>15+ módulos integrados</strong> que cobrem todas as áreas operacionais de uma empresa:</p>
+                <ul>
+                    <li>✅ <strong>Módulos Core:</strong> ADM, SIS (essenciais para funcionamento)</li>
+                    <li>✅ <strong>Módulos Operacionais:</strong> SUP, COM, FIN, EST, FIS, RHU</li>
+                    <li>✅ <strong>Módulos Estratégicos:</strong> CRM, PRO, QLD, MAN</li>
+                    <li>✅ <strong>Módulos de Suporte:</strong> CSU, REL</li>
+                </ul>
+                
+                <p>Cada módulo pode ser <strong>ativado/desativado por organização</strong> conforme o plano contratado.</p>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            
+            <h3>1. Ativar um Módulo para Organização</h3>
+            <pre><code>// POST /api/v1/organizations/{orgId}/modules
+{
+  "moduleCode": "FIN",
+  "plan": "Professional",
+  "activatedAt": "2024-01-15T00:00:00Z"
+}
+
+// Backend - ModuleActivationCommand.cs
+public class ActivateModuleCommand : IRequest&lt;Result&gt;
+{
+    public Guid OrganizationId { get; set; }
+    public string ModuleCode { get; set; }
+    public string Plan { get; set; }
+}
+
+public class ActivateModuleHandler : IRequestHandler&lt;ActivateModuleCommand, Result&gt;
+{
+    public async Task&lt;Result&gt; Handle(ActivateModuleCommand request, CancellationToken ct)
+    {
+        var org = await _orgRepository.GetByIdAsync(request.OrganizationId, ct);
+        var module = Module.FromCode(request.ModuleCode);
+        
+        org.ActivateModule(module, request.Plan);
+        await _orgRepository.UpdateAsync(org, ct);
+        
+        // Criar schema do módulo se necessário
+        await _schemaManager.EnsureModuleSchemaAsync(org.SchemaName, module);
+        
+        return Result.Success();
+    }
+}</code></pre>
+            
+            <h3>2. Verificar Módulos Ativos</h3>
+            <pre><code>// GET /api/v1/organizations/{orgId}/modules
+
+// Response
+{
+  "modules": [
+    { "code": "ADM", "name": "Administração", "active": true, "plan": "Core" },
+    { "code": "SIS", "name": "Sistema", "active": true, "plan": "Core" },
+    { "code": "FIN", "name": "Financeiro", "active": true, "plan": "Professional" },
+    { "code": "EST", "name": "Estoque", "active": false, "plan": null }
+  ]
+}
+
+// Middleware de verificação
+public class ModuleAccessMiddleware
+{
+    public async Task InvokeAsync(HttpContext context, IModuleService moduleService)
+    {
+        var moduleCode = ExtractModuleFromRoute(context.Request.Path);
+        var orgId = context.User.GetOrganizationId();
+        
+        if (!await moduleService.IsModuleActiveAsync(orgId, moduleCode))
+        {
+            context.Response.StatusCode = 403;
+            await context.Response.WriteAsJsonAsync(new { 
+                error = "MODULE_NOT_ACTIVE",
+                message = $"Módulo {moduleCode} não está ativo para esta organização"
+            });
+            return;
+        }
+        
+        await _next(context);
+    }
+}</code></pre>
+            
+            <h3>3. Integração Entre Módulos</h3>
+            <pre><code>// Exemplo: Financeiro consumindo dados de Compras
+public class ProcessarContasPagarHandler : IRequestHandler&lt;ProcessarContasPagarCommand&gt;
+{
+    private readonly ISupplierModuleClient _supplierClient;
+    private readonly IAccountsPayableRepository _apRepository;
+    
+    public async Task Handle(ProcessarContasPagarCommand cmd, CancellationToken ct)
+    {
+        // Buscar pedido do módulo SUP (Compras)
+        var pedido = await _supplierClient.GetPurchaseOrderAsync(cmd.PedidoId);
+        
+        // Criar conta a pagar no módulo FIN
+        var contaPagar = new ContaPagar(
+            fornecedorId: pedido.FornecedorId,
+            valor: pedido.ValorTotal,
+            vencimento: pedido.CondicaoPagamento.CalcularVencimento()
+        );
+        
+        await _apRepository.AddAsync(contaPagar, ct);
+    }
+}</code></pre>
+            
+            <h3>4. Checklist de Implementação de Módulo</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Etapa</th>
+                        <th>Descrição</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Definir entidades</td>
+                        <td>Criar agregados, entities e value objects</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Criar migrations</td>
+                        <td>Tabelas específicas do módulo no schema</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Implementar repositórios</td>
+                        <td>Interfaces e implementações EF Core</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Criar commands/queries</td>
+                        <td>Handlers MediatR para operações</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Expor endpoints</td>
+                        <td>Controllers com autorização por módulo</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Testes unitários</td>
+                        <td>Cobertura mínima de 80%</td>
+                        <td>⬜</td>
+                    </tr>
+                    <tr>
+                        <td>Documentar API</td>
+                        <td>Swagger/OpenAPI com exemplos</td>
+                        <td>⬜</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>📚 Referência</h2>
+            <h3 id="adm">🔐 (ADM) Administração</h3>
+            <div class="module-card">
+                <span class="status-badge status-dev">Em Desenvolvimento</span>
+                <span class="badge badge-tbg">Core Module</span>
+                
+                <p><strong>Módulo central responsável pela gestão de organizações, usuários, segurança e configurações globais do sistema.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Gestão de Organizações (Multi-Tenant)</strong>
+                        <ul>
+                            <li>Cadastro, edição e exclusão de organizações/empresas</li>
+                            <li>Ativação/desativação de módulos por organização</li>
+                            <li>Configuração de planos (Free, Basic, Professional, Enterprise)</li>
+                            <li>Limites de uso (usuários, armazenamento, transações)</li>
+                            <li>Customização de domínio e branding</li>
+                        </ul>
+                    </li>
+                    <li><strong>Gestão de Usuários</strong>
+                        <ul>
+                            <li>Cadastro, edição e exclusão de usuários</li>
+                            <li>Autenticação JWT com Refresh Token</li>
+                            <li>Autenticação multifator (2FA via TOTP)</li>
+                            <li>Recuperação de senha via email</li>
+                            <li>Bloqueio automático após tentativas falhas</li>
+                            <li>Gestão de sessões ativas</li>
+                        </ul>
+                    </li>
+                    <li><strong>Perfis e Autorizações</strong>
+                        <ul>
+                            <li>Criação de perfis de acesso personalizados</li>
+                            <li>Matriz de autorizações granular (999+ permissões)</li>
+                            <li>Herança de perfis (perfil pai → filho)</li>
+                            <li>Autorizações por módulo, tela e ação (Criar, Ler, Atualizar, Excluir)</li>
+                            <li>Autorizações especiais (Aprovar, Cancelar, Exportar, etc)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Auditoria Completa</strong>
+                        <ul>
+                            <li>Log de todas as operações CRUD</li>
+                            <li>Rastreamento de alterações (change tracking) - before/after</li>
+                            <li>Histórico de acessos ao sistema</li>
+                            <li>Registro de ações críticas (exportações, exclusões, aprovações)</li>
+                            <li>Compliance com LGPD (exportação de dados pessoais)</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>Entidades Principais</h3>
+                <div class="code-block">- Organizacao (TenantId, Nome, CNPJ, PlanoId, ModulosAtivos, Status)
+- Usuario (Id, TenantId, Email, SenhaHash, PerfilId, Ativo, UltimoAcesso)
+- Perfil (Id, TenantId, Nome, Descricao, PerfilPaiId)
+- Autorizacao (Codigo, Modulo, Descricao, Categoria, TipoAcao)
+- PerfilAutorizacao (PerfilId, AutorizacaoId, Permitir)
+- AuditoriaLog (Id, TenantId, UsuarioId, Entidade, Acao, ValoresAntigos, ValoresNovos, DataHora)</div>
+                
+                <h3>APIs Principais</h3>
+                <div class="api-endpoint"><span class="method post">POST</span>/api/v1/auth/login</div>
+                <div class="api-endpoint"><span class="method post">POST</span>/api/v1/auth/refresh-token</div>
+                <div class="api-endpoint"><span class="method post">POST</span>/api/v1/auth/logout</div>
+                <div class="api-endpoint"><span class="method get">GET</span>/api/v1/organizacoes</div>
+                <div class="api-endpoint"><span class="method post">POST</span>/api/v1/organizacoes</div>
+                <div class="api-endpoint"><span class="method get">GET</span>/api/v1/usuarios</div>
+                <div class="api-endpoint"><span class="method post">POST</span>/api/v1/usuarios</div>
+                <div class="api-endpoint"><span class="method put">PUT</span>/api/v1/usuarios/{id}</div>
+                <div class="api-endpoint"><span class="method delete">DELETE</span>/api/v1/usuarios/{id}</div>
+                <div class="api-endpoint"><span class="method get">GET</span>/api/v1/perfis</div>
+                <div class="api-endpoint"><span class="method post">POST</span>/api/v1/perfis</div>
+                <div class="api-endpoint"><span class="method get">GET</span>/api/v1/autorizacoes</div>
+                <div class="api-endpoint"><span class="method get">GET</span>/api/v1/auditoria</div>
+            </div>
+            
+            <h3 id="sup">📦 (SUP) Suprimentos</h3>
+            <div class="module-card">
+                <span class="status-badge status-dev">Em Desenvolvimento</span>
+                
+                <p><strong>Gestão completa de fornecedores, compras, estoque e movimentações de materiais.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Cadastro de Fornecedores</strong> - Dados cadastrais, categorias, contatos</li>
+                    <li><strong>Produtos e Serviços</strong> - Catálogo com códigos, descrições, unidades</li>
+                    <li><strong>Cotações de Compra</strong> - Solicitação de cotações para múltiplos fornecedores</li>
+                    <li><strong>Pedidos de Compra</strong> - Geração, aprovação e controle de pedidos</li>
+                    <li><strong>Recebimento de Mercadorias</strong> - Conferência e entrada no estoque</li>
+                    <li><strong>Controle de Estoque</strong> - Saldo, movimentações, reservas</li>
+                    <li><strong>Inventário</strong> - Contagem física, ajustes de estoque</li>
+                </ul>
+                
+                <h3>Autorizações</h3>
+                <span class="badge badge-aut">SUP-AUT-001 a SUP-AUT-050</span>
+            </div>
+            
+            <h3 id="fin">💰 (FIN) Financeiro</h3>
+            <div class="module-card">
+                <span class="status-badge status-dev">Em Desenvolvimento</span>
+                
+                <p><strong>Gestão completa de contas a pagar/receber, fluxo de caixa e tesouraria.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Contas a Pagar</strong> - Registro, aprovação e pagamento de contas</li>
+                    <li><strong>Contas a Receber</strong> - Controle de recebimentos e cobranças</li>
+                    <li><strong>Fluxo de Caixa</strong> - Projeção e controle de entradas/saídas</li>
+                    <li><strong>Conciliação Bancária</strong> - Conciliação automática de extratos</li>
+                    <li><strong>Tesouraria</strong> - Gestão de saldos e movimentações</li>
+                    <li><strong>Formas de Pagamento</strong> - Boleto, TED, PIX, Cartão</li>
+                </ul>
+                
+                <h3>Autorizações</h3>
+                <span class="badge badge-aut">FIN-AUT-001</span> Formas de Pagamento
+            </div>
+            
+            <h3 id="com">🛒 (COM) Comercial</h3>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Gestão de clientes, propostas comerciais, pedidos de venda e faturamento.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Cadastro de Clientes</strong> - Dados cadastrais, categorias, contatos</li>
+                    <li><strong>Propostas Comerciais</strong> - Geração e acompanhamento de propostas</li>
+                    <li><strong>Pedidos de Venda</strong> - Criação, aprovação e controle</li>
+                    <li><strong>Faturamento</strong> - Emissão de notas fiscais</li>
+                    <li><strong>Tabelas de Preço</strong> - Gestão de preços por cliente/produto</li>
+                </ul>
+            </div>
+            
+            <h3 id="con">📊 (CON) Contabilidade</h3>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Plano de contas, lançamentos contábeis, conciliação e relatórios gerenciais.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Plano de Contas</strong> - Estrutura contábil hierárquica</li>
+                    <li><strong>Lançamentos Contábeis</strong> - Débito, crédito e partidas dobradas</li>
+                    <li><strong>Conciliação Contábil</strong> - Fechamento mensal</li>
+                    <li><strong>Relatórios Gerenciais</strong> - DRE, Balanço Patrimonial, Fluxo de Caixa</li>
+                </ul>
+            </div>
+            
+            <h3 id="fis">🧾 (FIS) Fiscal</h3>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Gestão de regimes tributários, natureza de operações fiscais e emissão de notas.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Regimes Tributários</strong> - Simples Nacional, Lucro Presumido, Lucro Real, MEI</li>
+                    <li><strong>Natureza de Operação</strong> - CFOP, CST, alíquotas</li>
+                    <li><strong>Emissão de NFe</strong> - Nota Fiscal Eletrônica</li>
+                    <li><strong>Emissão de NFSe</strong> - Nota Fiscal de Serviços</li>
+                    <li><strong>SPED Fiscal</strong> - Geração de arquivos SPED</li>
+                </ul>
+                
+                <h3>Autorizações</h3>
+                <span class="badge badge-aut">FIS-AUT-001</span> Regimes Tributários
+            </div>
+            
+            <h3 id="rhu">👥 (RHU) Recursos Humanos</h3>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Cadastro de funcionários, folha de pagamento, ponto, benefícios e férias.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Cadastro de Funcionários</strong> - Dados pessoais, contratuais e documentos</li>
+                    <li><strong>Folha de Pagamento</strong> - Cálculo de salários, descontos e encargos</li>
+                    <li><strong>Controle de Ponto</strong> - Registro de jornada e horas extras</li>
+                    <li><strong>Benefícios</strong> - Vale-transporte, vale-refeição, plano de saúde</li>
+                    <li><strong>Férias</strong> - Programação e cálculo de férias</li>
+                    <li><strong>SPED eSocial</strong> - Integração com eSocial</li>
+                </ul>
+            </div>
+            
+            <h3 id="crm">📞 (CRM) Customer Relationship Management</h3>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Gestão de leads, oportunidades, histórico de interações e campanhas.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Gestão de Leads</strong> - Captura, qualificação e conversão</li>
+                    <li><strong>Oportunidades de Venda</strong> - Funil de vendas e forecast</li>
+                    <li><strong>Histórico de Interações</strong> - E-mails, chamadas, reuniões</li>
+                    <li><strong>Campanhas de Marketing</strong> - E-mail marketing, automação</li>
+                    <li><strong>Dashboard de Vendas</strong> - Métricas e KPIs</li>
+                </ul>
+            </div>
+            
+            <h3 id="pro">📋 (PRO/PRJ) Projetos</h3>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Planejamento, controle de tarefas, alocação de recursos e gestão de custos.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Criação de Projetos</strong> - Escopo, prazos e objetivos</li>
+                    <li><strong>Tarefas e Atividades</strong> - Kanban, Gantt, dependências</li>
+                    <li><strong>Alocação de Recursos</strong> - Equipe, materiais, equipamentos</li>
+                    <li><strong>Controle de Custos</strong> - Orçamento vs. realizado</li>
+                    <li><strong>Timesheet</strong> - Apontamento de horas</li>
+                    <li><strong>Relatórios de Progresso</strong> - Status, entregas, desvios</li>
+                </ul>
+            </div>
+            
+            <h3 id="csu">🎫 (CSU) Central de Suporte</h3>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Abertura de tickets, atendimento ao cliente, base de conhecimento e SLA.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Gestão de Tickets</strong> - Abertura, atribuição, acompanhamento</li>
+                    <li><strong>SLA (Service Level Agreement)</strong> - Definição e monitoramento</li>
+                    <li><strong>Base de Conhecimento</strong> - Artigos, tutoriais, FAQs</li>
+                    <li><strong>Chat em Tempo Real</strong> - Atendimento instantâneo</li>
+                    <li><strong>Satisfação do Cliente</strong> - Pesquisas NPS, CSAT</li>
+                </ul>
+            </div>
+            
+            <h3 id="prd">🏭 (PRD) Produção</h3>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Gestão de processos produtivos, ordens de produção e controle de qualidade.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Ordens de Produção</strong> - Planejamento e execução</li>
+                    <li><strong>Lista de Materiais (BOM)</strong> - Estrutura de produtos</li>
+                    <li><strong>Controle de Processo</strong> - Etapas, recursos, tempos</li>
+                    <li><strong>Apontamento de Produção</strong> - Quantidade produzida, refugos</li>
+                </ul>
+            </div>
+            
+            <h3 id="qld">✅ (QLD) Qualidade</h3>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Gestão de não conformidades, auditorias e certificações.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Não Conformidades</strong> - Registro, análise de causa raiz, ações corretivas</li>
+                    <li><strong>Auditorias</strong> - Planejamento, execução, relatórios</li>
+                    <li><strong>Certificações</strong> - ISO 9001, ISO 14001, etc</li>
+                    <li><strong>Inspeção de Qualidade</strong> - Recebimento, produção, expedição</li>
+                </ul>
+            </div>
+            
+            <h2 id="man">🔧 (MAN) Manutenção</h2>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Gestão de manutenção preventiva, corretiva e preditiva de equipamentos.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Cadastro de Equipamentos</strong> - Dados técnicos, histórico</li>
+                    <li><strong>Ordens de Manutenção</strong> - Preventiva, corretiva, preditiva</li>
+                    <li><strong>Plano de Manutenção</strong> - Calendário, checklist</li>
+                    <li><strong>Controle de Peças</strong> - Estoque de sobressalentes</li>
+                </ul>
+            </div>
+            
+            <h2 id="trn">🚚 (TRN) Transportes</h2>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Gestão de frotas, rotas, entregas e rastreamento.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Gestão de Frotas</strong> - Veículos, motoristas, documentos</li>
+                    <li><strong>Roteirização</strong> - Otimização de rotas</li>
+                    <li><strong>Controle de Entregas</strong> - Status, comprovantes, ocorrências</li>
+                    <li><strong>Rastreamento</strong> - Integração com GPS</li>
+                </ul>
+            </div>
+            
+            <h2 id="rel">📈 (REL) Relatórios e BI</h2>
+            <div class="module-card">
+                <span class="status-badge status-planned">Planejado</span>
+                
+                <p><strong>Dashboards, relatórios gerenciais e business intelligence.</strong></p>
+                
+                <h3>Funcionalidades Principais</h3>
+                <ul>
+                    <li><strong>Dashboards Interativos</strong> - Gráficos, indicadores, drill-down</li>
+                    <li><strong>Relatórios Padrão</strong> - Vendas, financeiro, estoque, RH</li>
+                    <li><strong>Relatórios Customizados</strong> - Designer de relatórios</li>
+                    <li><strong>Exportação</strong> - PDF, Excel, CSV</li>
+                    <li><strong>Agendamento</strong> - Envio automático por e-mail</li>
+                </ul>
+            </div>
+            
+            <h2>🔧 (SIS) Sistema - Inicialização de Dados</h2>
+            <div class="module-card">
+                <span class="status-badge status-dev">Em Desenvolvimento</span>
+                <span class="badge badge-tbg">Infrastructure Module</span>
+                
+                <p><strong>Módulo de infraestrutura responsável pela inicialização automática de dados globais.</strong></p>
+                
+                <p>Ver documentação completa em: <a href="sistema-sis.html">Sistema (SIS)</a></p>
+                
+                <h3>Tabelas Globais Gerenciadas</h3>
+                <ul>
+                    <li>Países (194 países)</li>
+                    <li>Estados/UF (27 estados brasileiros)</li>
+                    <li>Cidades/Municípios (5.570 municípios)</li>
+                    <li>Unidades de Medida</li>
+                    <li>Moedas (ISO 4217)</li>
+                    <li>Idiomas (ISO 639)</li>
+                    <li>Tipos de Documento</li>
+                    <li>Regimes Tributários</li>
+                    <li>Categorias de Fornecedores</li>
+                    <li>Formas de Pagamento</li>
+                </ul>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../index.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+<script src="../js/section-nav.js" defer></script>
+<script src="../js/nav-active.js" defer></script>
+</body>
+</html>

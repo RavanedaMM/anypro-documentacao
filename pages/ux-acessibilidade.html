@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX & Acessibilidade - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>♿ UX & Acessibilidade</h1>
+            <div class="subtitle">Heurísticas de Usabilidade e WCAG 2.2</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>UX & Acessibilidade</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <div class="info-box">
+                <p>Diretrizes de UX e acessibilidade aplicadas ao ANYPRO, com foco em produtividade, clareza e inclusão.</p>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <h3>✅ Checklist de Acessibilidade WCAG 2.2 AA</h3>
+            <div class="warning-box">
+                <h4>Perceptível</h4>
+                <ul>
+                    <li>☐ Texto alternativo em imagens (<code>alt=""</code>)</li>
+                    <li>☐ Contraste mínimo 4.5:1 para texto normal</li>
+                    <li>☐ Contraste mínimo 3:1 para texto grande (≥18pt)</li>
+                    <li>☐ Legendas em vídeos</li>
+                    <li>☐ Conteúdo não depende apenas de cor</li>
+                </ul>
+                
+                <h4>Operável</h4>
+                <ul>
+                    <li>☐ Toda funcionalidade acessível por teclado</li>
+                    <li>☐ Foco visível em elementos interativos</li>
+                    <li>☐ Ordem de tabulação lógica</li>
+                    <li>☐ Skip links para conteúdo principal</li>
+                    <li>☐ Sem armadilhas de teclado</li>
+                </ul>
+                
+                <h4>Compreensível</h4>
+                <ul>
+                    <li>☐ Idioma da página declarado (<code>lang="pt-BR"</code>)</li>
+                    <li>☐ Labels associados a inputs</li>
+                    <li>☐ Mensagens de erro claras e próximas ao campo</li>
+                    <li>☐ Ajuda contextual disponível</li>
+                </ul>
+                
+                <h4>Robusto</h4>
+                <ul>
+                    <li>☐ HTML válido e semântico</li>
+                    <li>☐ ARIA usado corretamente quando necessário</li>
+                    <li>☐ Compatível com leitores de tela</li>
+                </ul>
+            </div>
+
+            <h3>🎹 Implementar Navegação por Teclado</h3>
+            <div class="code-block">/* CSS - Foco visível */
+:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Não remova o outline! */
+:focus {
+  /* outline: none; ❌ NUNCA FAÇA ISSO */
+}</div>
+
+            <h3>🏷️ ARIA: Quando e Como Usar</h3>
+            <div class="code-block">&lt;!-- Botão com estado --&gt;
+&lt;button aria-pressed="false" onclick="toggle(this)"&gt;
+  Favoritar
+&lt;/button&gt;
+
+&lt;!-- Modal acessível --&gt;
+&lt;div role="dialog" aria-modal="true" aria-labelledby="modal-title"&gt;
+  &lt;h2 id="modal-title"&gt;Confirmar exclusão&lt;/h2&gt;
+  &lt;p&gt;Deseja realmente excluir este item?&lt;/p&gt;
+  &lt;button&gt;Cancelar&lt;/button&gt;
+  &lt;button&gt;Confirmar&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Mensagem de status (live region) --&gt;
+&lt;div role="status" aria-live="polite"&gt;
+  Item salvo com sucesso!
+&lt;/div&gt;</div>
+
+            <h3>🔍 Ferramentas de Teste</h3>
+            <div class="info-box">
+                <ul>
+                    <li><strong>axe DevTools:</strong> Extensão Chrome para auditoria automática</li>
+                    <li><strong>WAVE:</strong> Avaliador visual de acessibilidade</li>
+                    <li><strong>Lighthouse:</strong> Auditoria integrada ao Chrome DevTools</li>
+                    <li><strong>NVDA / VoiceOver:</strong> Testar com leitores de tela reais</li>
+                    <li><strong>Contrast Checker:</strong> Validar ratios de contraste</li>
+                </ul>
+            </div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+            
+            <h2>📚 Referência</h2>
+            <h3>🔟 Heurísticas de Nielsen</h3>
+            <ul>
+                <li>Visibilidade do status do sistema</li>
+                <li>Correspondência com o mundo real</li>
+                <li>Controle e liberdade do usuário</li>
+                <li>Consistência e padrões</li>
+                <li>Prevenção de erros</li>
+                <li>Reconhecimento vs. memorização</li>
+                <li>Flexibilidade e eficiência</li>
+                <li>Design estético e minimalista</li>
+                <li>Ajuda a reconhecer, diagnosticar e recuperar erros</li>
+                <li>Ajuda e documentação</li>
+            </ul>
+            
+            <h3>♿ WCAG 2.2 AA</h3>
+            <ul>
+                <li>Contraste: mínimo 4.5:1 (texto), 3:1 (grande)</li>
+                <li>Navegabilidade por teclado e ordem lógica</li>
+                <li>Foco visível e estados consistentes</li>
+                <li>Rótulos, instruções e erros claros</li>
+                <li>Sem dependência exclusiva de cor</li>
+            </ul>
+            
+            <h2>🧪 Exemplos</h2>
+            <div class="info-box">
+                <p>Exemplos de componentes acessíveis (botões, inputs, tabelas), padrões de foco e mensagens de erro.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+    <script src="../js/section-nav.js" defer></script>
+</body>
+</html>

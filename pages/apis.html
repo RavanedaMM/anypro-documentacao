@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APIs REST - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 APIs REST</h1>
+            <div class="subtitle">Endpoints e Documentação da API</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>APIs REST</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <h3>📡 Visão Geral da API</h3>
+            <div class="info-box">
+                <p>A API do ANYPRO segue os padrões <strong>RESTful</strong> e está documentada com <strong>Swagger/OpenAPI 3.0</strong>.</p>
+                
+                <p><strong>Características:</strong></p>
+                <ul>
+                    <li>✅ <strong>Base URL:</strong> <code>https://api.anypro.com.br/v1</code></li>
+                    <li>✅ <strong>Autenticação:</strong> Bearer Token (JWT)</li>
+                    <li>✅ <strong>Formato:</strong> JSON (application/json)</li>
+                    <li>✅ <strong>Versionamento:</strong> Via URL (<code>/v1</code>, <code>/v2</code>)</li>
+                    <li>✅ <strong>Rate Limiting:</strong> 1000 requests/min por tenant</li>
+                    <li>✅ <strong>CORS:</strong> Configurado para domínios autorizados</li>
+                </ul>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <h3>🔐 Autenticar e Usar a API</h3>
+            <div class="info-box">
+                <ol>
+                    <li>Faça login via <code>POST /v1/auth/login</code></li>
+                    <li>Copie o <code>accessToken</code> retornado</li>
+                    <li>Inclua o header <code>Authorization: Bearer {token}</code> em todas as requests</li>
+                    <li>Quando expirar, use <code>POST /v1/auth/refresh</code> com o refreshToken</li>
+                </ol>
+            </div>
+
+            <h3>📄 Exemplo com cURL</h3>
+            <div class="code-block"># 1. Login
+curl -X POST https://api.anypro.com.br/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "usuario@empresa.com", "senha": "Senha123!"}'
+
+# 2. Usar token nas requisições
+curl -X GET https://api.anypro.com.br/v1/produtos \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+
+# 3. Paginação
+curl -X GET "https://api.anypro.com.br/v1/produtos?page=1&pageSize=20" \
+  -H "Authorization: Bearer {token}"
+
+# 4. Filtros
+curl -X GET "https://api.anypro.com.br/v1/produtos?nome=Camisa&ativo=true" \
+  -H "Authorization: Bearer {token}"</div>
+
+            <h3>📦 Exemplo com JavaScript/Fetch</h3>
+            <div class="code-block">// Login e armazenar token
+const login = async (email, senha) => {
+  const res = await fetch('/v1/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, senha })
+  });
+  const { accessToken, refreshToken } = await res.json();
+  localStorage.setItem('token', accessToken);
+  return accessToken;
+};
+
+// Requisição autenticada
+const getProdutos = async () => {
+  const token = localStorage.getItem('token');
+  const res = await fetch('/v1/produtos', {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  return res.json();
+};</div>
+
+            <h3>📊 Padrão de Resposta</h3>
+            <div class="code-block">// Sucesso (200, 201)
+{
+  "success": true,
+  "data": { ... },
+  "message": "Operação realizada com sucesso"
+}
+
+// Erro de validação (400)
+{
+  "success": false,
+  "errors": [
+    { "field": "email", "message": "Email inválido" }
+  ]
+}
+
+// Paginado (200)
+{
+  "success": true,
+  "data": [...],
+  "pagination": {
+    "page": 1,
+    "pageSize": 20,
+    "totalItems": 150,
+    "totalPages": 8
+  }
+}</div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+
+            <h2>📚 Referência</h2>
+            <h3>🔐 Autenticação e Autorização</h3>
+            
+            <h3>POST /v1/auth/login</h3>
+            <div class="api-endpoint">
+                <div class="method method-post">POST</div>
+                <code>/v1/auth/login</code>
+            </div>
+            <p><strong>Descrição:</strong> Autenticar usuário e obter token JWT</p>
+            
+            <h4>Request Body:</h4>
+            <div class="code-block">{
+  "email": "usuario@empresa.com.br",
+  "senha": "SenhaSegura@123"
+}</div>
+            
+            <h4>Response 200 OK:</h4>
+            <div class="code-block">{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refreshToken": "def502003b3f4...",
+  "expiresIn": 3600,
+  "usuario": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "nomeCompleto": "João da Silva",
+    "email": "usuario@empresa.com.br",
+    "perfilId": "admin",
+    "organizacaoId": "org-123"
+  }
+}</div>
+            
+            <h3>POST /v1/auth/refresh</h3>
+            <div class="api-endpoint">
+                <div class="method method-post">POST</div>
+                <code>/v1/auth/refresh</code>
+            </div>
+            <p><strong>Descrição:</strong> Renovar token JWT usando refresh token</p>
+            
+            <h4>Request Body:</h4>
+            <div class="code-block">{
+  "refreshToken": "def502003b3f4..."
+}</div>
+            
+            <h4>Response 200 OK:</h4>
+            <div class="code-block">{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refreshToken": "ghi789xyz...",
+  "expiresIn": 3600
+}</div>
+            
+            <h3>👤 Módulo ADM - Usuários</h3>
+            
+            <h3>GET /v1/usuarios</h3>
+            <div class="api-endpoint">
+                <div class="method method-get">GET</div>
+                <code>/v1/usuarios?page=1&size=20&search=joao</code>
+            </div>
+            <p><strong>Descrição:</strong> Listar usuários com paginação e busca</p>
+            <p><strong>Autorização:</strong> <span class="badge badge-aut">ADM.USU.LISTAR</span></p>
+            
+            <h4>Query Parameters:</h4>
+            <ul>
+                <li><code>page</code> (int): Página atual (padrão: 1)</li>
+                <li><code>size</code> (int): Tamanho da página (padrão: 20, máx: 100)</li>
+                <li><code>search</code> (string): Busca por nome ou email</li>
+                <li><code>ativo</code> (bool): Filtrar por status</li>
+            </ul>
+            
+            <h4>Response 200 OK:</h4>
+            <div class="code-block">{
+  "data": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nomeCompleto": "João da Silva",
+      "email": "joao@empresa.com.br",
+      "telefone": "(11) 98765-4321",
+      "perfilId": "admin",
+      "perfilNome": "Administrador",
+      "ativo": true,
+      "ultimoAcesso": "2025-06-15T10:30:00Z"
+    }
+  ],
+  "page": 1,
+  "size": 20,
+  "total": 150,
+  "totalPages": 8
+}</div>
+            
+            <h3>POST /v1/usuarios</h3>
+            <div class="api-endpoint">
+                <div class="method method-post">POST</div>
+                <code>/v1/usuarios</code>
+            </div>
+            <p><strong>Descrição:</strong> Criar novo usuário</p>
+            <p><strong>Autorização:</strong> <span class="badge badge-aut">ADM.USU.CRIAR</span></p>
+            
+            <h4>Request Body:</h4>
+            <div class="code-block">{
+  "nomeCompleto": "Maria Oliveira",
+  "email": "maria@empresa.com.br",
+  "telefone": "(11) 91234-5678",
+  "senha": "SenhaForte@2025",
+  "perfilId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}</div>
+            
+            <h4>Response 201 Created:</h4>
+            <div class="code-block">{
+  "id": "7bc21e58-2941-4f1a-b3fc-8d4f9a1c2b3d",
+  "nomeCompleto": "Maria Oliveira",
+  "email": "maria@empresa.com.br",
+  "ativo": true,
+  "criadoEm": "2025-06-15T14:22:00Z"
+}</div>
+            
+            <h3>PUT /v1/usuarios/{id}</h3>
+            <div class="api-endpoint">
+                <div class="method method-put">PUT</div>
+                <code>/v1/usuarios/{id}</code>
+            </div>
+            <p><strong>Descrição:</strong> Atualizar usuário existente</p>
+            <p><strong>Autorização:</strong> <span class="badge badge-aut">ADM.USU.EDITAR</span></p>
+            
+            <h3>DELETE /v1/usuarios/{id}</h3>
+            <div class="api-endpoint">
+                <div class="method method-delete">DELETE</div>
+                <code>/v1/usuarios/{id}</code>
+            </div>
+            <p><strong>Descrição:</strong> Excluir usuário (soft delete)</p>
+            <p><strong>Autorização:</strong> <span class="badge badge-aut">ADM.USU.EXCLUIR</span></p>
+            
+            <h3>📦 Módulo SUP - Produtos</h3>
+            
+            <h3>GET /v1/produtos</h3>
+            <div class="api-endpoint">
+                <div class="method method-get">GET</div>
+                <code>/v1/produtos?categoria=eletronicos&ativo=true</code>
+            </div>
+            <p><strong>Descrição:</strong> Listar produtos com filtros</p>
+            <p><strong>Autorização:</strong> <span class="badge badge-aut">SUP.PRO.LISTAR</span></p>
+            
+            <h4>Response 200 OK:</h4>
+            <div class="code-block">{
+  "data": [
+    {
+      "id": "prod-001",
+      "codigo": "PROD-00123",
+      "nome": "Notebook Dell Inspiron 15",
+      "descricao": "Notebook i5, 8GB RAM, 256GB SSD",
+      "categoria": "Eletrônicos",
+      "unidadeMedida": "UN",
+      "precoVenda": 3499.90,
+      "precoCusto": 2800.00,
+      "estoque": 15,
+      "ativo": true
+    }
+  ],
+  "total": 1250
+}</div>
+            
+            <h3>🛒 Módulo COM - Vendas</h3>
+            
+            <h3>POST /v1/pedidos</h3>
+            <div class="api-endpoint">
+                <div class="method method-post">POST</div>
+                <code>/v1/pedidos</code>
+            </div>
+            <p><strong>Descrição:</strong> Criar novo pedido de venda</p>
+            <p><strong>Autorização:</strong> <span class="badge badge-aut">COM.VEN.CRIAR</span></p>
+            
+            <h4>Request Body:</h4>
+            <div class="code-block">{
+  "clienteId": "cli-456",
+  "dataEmissao": "2025-06-15",
+  "condicaoPagamento": "30_60_90",
+  "itens": [
+    {
+      "produtoId": "prod-001",
+      "quantidade": 2,
+      "precoUnitario": 3499.90,
+      "desconto": 0
+    },
+    {
+      "produtoId": "prod-002",
+      "quantidade": 1,
+      "precoUnitario": 899.00,
+      "desconto": 50.00
+    }
+  ],
+  "observacoes": "Cliente solicita entrega urgente"
+}</div>
+            
+            <h3>📊 HTTP Status Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Significado</th>
+                        <th>Quando usar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-row-success">
+                        <td><strong>200 OK</strong></td>
+                        <td>Sucesso</td>
+                        <td>GET, PUT bem-sucedidos</td>
+                    </tr>
+                    <tr class="table-row-success">
+                        <td><strong>201 Created</strong></td>
+                        <td>Recurso criado</td>
+                        <td>POST bem-sucedido</td>
+                    </tr>
+                    <tr class="table-row-success">
+                        <td><strong>204 No Content</strong></td>
+                        <td>Sucesso sem retorno</td>
+                        <td>DELETE bem-sucedido</td>
+                    </tr>
+                    <tr>
+                        <td><strong>400 Bad Request</strong></td>
+                        <td>Requisição inválida</td>
+                        <td>Validação de campos falhou</td>
+                    </tr>
+                    <tr>
+                        <td><strong>401 Unauthorized</strong></td>
+                        <td>Não autenticado</td>
+                        <td>Token ausente ou inválido</td>
+                    </tr>
+                    <tr>
+                        <td><strong>403 Forbidden</strong></td>
+                        <td>Sem permissão</td>
+                        <td>Usuário não tem autorização</td>
+                    </tr>
+                    <tr>
+                        <td><strong>404 Not Found</strong></td>
+                        <td>Recurso não encontrado</td>
+                        <td>ID inválido ou deletado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>409 Conflict</strong></td>
+                        <td>Conflito</td>
+                        <td>Email/código já existente</td>
+                    </tr>
+                    <tr>
+                        <td><strong>422 Unprocessable Entity</strong></td>
+                        <td>Entidade não processável</td>
+                        <td>Regra de negócio violada</td>
+                    </tr>
+                    <tr>
+                        <td><strong>500 Internal Server Error</strong></td>
+                        <td>Erro do servidor</td>
+                        <td>Erro inesperado</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>🧪 Exemplos</h2>
+            <h3>❌ Padrão de Erro</h3>
+            <div class="code-block">{
+  "type": "https://api.anypro.com.br/errors/validation-error",
+  "title": "Erro de Validação",
+  "status": 400,
+  "detail": "Um ou mais campos são inválidos",
+  "instance": "/v1/usuarios",
+  "errors": {
+    "email": ["O email é obrigatório", "Formato de email inválido"],
+    "senha": ["A senha deve ter no mínimo 8 caracteres"]
+  },
+  "traceId": "0HN7GKAV5J1F2:00000001"
+}</div>
+            
+            <h3>📖 Documentação Interativa</h3>
+            <div class="info-box">
+                <p><strong>Swagger UI:</strong> <a href="https://api.anypro.com.br/swagger" target="_blank" rel="noopener">https://api.anypro.com.br/swagger</a></p>
+                <p><strong>OpenAPI Spec:</strong> <a href="https://api.anypro.com.br/swagger/v1/swagger.json" target="_blank" rel="noopener">swagger.json</a></p>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+<script src="../js/section-nav.js" defer></script>
+<script src="../js/nav-active.js" defer></script>
+</body>
+</html>

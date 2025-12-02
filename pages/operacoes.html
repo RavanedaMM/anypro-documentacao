@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operações - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛠️ Operações</h1>
+            <div class="subtitle">Deploy, Observabilidade, Backup/Restore</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Operações</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <div class="info-box">
+                <p>Guia operacional do ANYPRO: ambientes, deploy, observabilidade, políticas de backup e rotinas de manutenção.</p>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <h3>🐳 Deploy com Docker Compose</h3>
+            <div class="code-block"># docker-compose.yml
+version: '3.8'
+services:
+  api:
+    build: ./src/Anypro.API
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Database=anypro;Username=postgres;Password=${DB_PASSWORD}
+    depends_on:
+      - db
+      - redis
+  
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+  
+  db:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+  
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:</div>
+
+            <h3>☸️ Deploy com Kubernetes</h3>
+            <div class="code-block"># k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anypro-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: anypro-api
+  template:
+    metadata:
+      labels:
+        app: anypro-api
+    spec:
+      containers:
+      - name: api
+        image: anypro/api:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: anypro-secrets
+              key: db-connection
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"</div>
+
+            <h3>🔄 CI/CD Pipeline</h3>
+            <div class="code-block"># .github/workflows/deploy.yml
+name: Deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build Docker Image
+        run: docker build -t anypro/api:${{ github.sha }} ./src/Anypro.API
+      
+      - name: Push to Registry
+        run: |
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker push anypro/api:${{ github.sha }}
+      
+      - name: Deploy to Kubernetes
+        uses: azure/k8s-deploy@v4
+        with:
+          manifests: k8s/
+          images: anypro/api:${{ github.sha }}</div>
+
+            <h3>📊 Configurar Observabilidade</h3>
+            <div class="code-block">// Program.cs - Configurar Serilog + OpenTelemetry
+builder.Host.UseSerilog((context, config) =>
+{
+    config
+        .ReadFrom.Configuration(context.Configuration)
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://elasticsearch:9200"))
+        {
+            AutoRegisterTemplate = true,
+            IndexFormat = "anypro-logs-{0:yyyy.MM.dd}"
+        });
+});
+
+// OpenTelemetry para tracing
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing =>
+    {
+        tracing
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddEntityFrameworkCoreInstrumentation()
+            .AddOtlpExporter(opt => opt.Endpoint = new Uri("http://jaeger:4317"));
+    });</div>
+
+            <h3>💾 Backup & Restore</h3>
+            <div class="code-block"># Backup do PostgreSQL
+pg_dump -h localhost -U postgres -d anypro -F c -f backup_$(date +%Y%m%d).dump
+
+# Restore
+pg_restore -h localhost -U postgres -d anypro -c backup_20241201.dump
+
+# Script automatizado (cron)
+# 0 2 * * * /opt/scripts/backup.sh >> /var/log/backup.log 2>&1</div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+            
+            <h2>📚 Referência</h2>
+            <h3>🚀 Deploy</h3>
+            <ul>
+                <li>Ambientes: dev, staging, prod</li>
+                <li>Infra: Docker Compose, Kubernetes</li>
+                <li>Segredos e configuração</li>
+            </ul>
+            
+            <h3>📈 Observabilidade</h3>
+            <ul>
+                <li>Logs: Serilog (estruturados), correlação</li>
+                <li>Métricas: Prometheus/Grafana</li>
+                <li>Alertas: thresholds e canais</li>
+            </ul>
+            
+            <h3>💾 Backup & Restore</h3>
+            <ul>
+                <li>Backup por tenant (schemas PostgreSQL)</li>
+                <li>Janela de manutenção e retenção</li>
+                <li>Testes de restore</li>
+            </ul>
+            
+            <h2>🧪 Exemplos</h2>
+            <div class="info-box">
+                <p>Exemplos de workflows de CI/CD, manifestos Kubernetes e scripts de backup/restore.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+    <script src="../js/section-nav.js" defer></script>
+</body>
+</html>

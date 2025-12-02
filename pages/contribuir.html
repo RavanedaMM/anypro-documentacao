@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como Contribuir - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤝 Como Contribuir</h1>
+            <div class="subtitle">Guia para Contribuidores do Projeto</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Como Contribuir</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <h3>🎯 Bem-vindo ao ANYPRO!</h3>
+            <div class="info-box">
+                <p>Agradecemos seu interesse em contribuir para o projeto ANYPRO! Este guia irá orientá-lo sobre como participar do desenvolvimento, reportar bugs, sugerir funcionalidades e enviar pull requests.</p>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <h3>📝 Código de Conduta</h3>
+            <div class="warning-box">
+                <p>Ao contribuir com este projeto, você concorda em seguir nosso <strong>Código de Conduta</strong>:</p>
+                <ul>
+                    <li>✅ Seja respeitoso e inclusivo com todos os membros da comunidade</li>
+                    <li>✅ Aceite críticas construtivas de forma profissional</li>
+                    <li>✅ Foque no que é melhor para o projeto e a comunidade</li>
+                    <li>❌ Não tolere assédio, discriminação ou comportamento inadequado</li>
+                    <li>❌ Não compartilhe informações confidenciais de clientes ou do projeto</li>
+                </ul>
+            </div>
+            
+            <h3>🐛 Reportando Bugs</h3>
+            <div class="info-box">
+                <h4>Antes de reportar um bug:</h4>
+                <ul>
+                    <li>Verifique se o bug já não foi reportado nas <a href="https://github.com/anypro/issues" target="_blank" rel="noopener">Issues existentes</a></li>
+                    <li>Certifique-se de estar usando a versão mais recente do código</li>
+                    <li>Tente reproduzir o bug em um ambiente limpo</li>
+                </ul>
+                
+                <h4>Template de Bug Report:</h4>
+                <div class="code-block">**Descrição do Bug**
+Descrição clara e concisa do problema.
+
+**Passos para Reproduzir**
+1. Vá para '...'
+2. Clique em '...'
+3. Veja o erro
+
+**Comportamento Esperado**
+O que você esperava que acontecesse.
+
+**Screenshots**
+Se aplicável, adicione screenshots para ajudar a explicar o problema.
+
+**Ambiente**
+- OS: [ex: Windows 11, Ubuntu 22.04]
+- Browser: [ex: Chrome 120, Firefox 115]
+- Versão do ANYPRO: [ex: v1.2.3]
+
+**Informações Adicionais**
+Qualquer contexto adicional sobre o problema.</div>
+            </div>
+            
+            <h3>💡 Sugerindo Funcionalidades</h3>
+            <div class="info-box">
+                <h4>Template de Feature Request:</h4>
+                <div class="code-block">**Problema que a funcionalidade resolve**
+Descreva o problema ou necessidade que esta funcionalidade atende.
+
+**Solução Proposta**
+Descrição clara da funcionalidade desejada.
+
+**Alternativas Consideradas**
+Outras abordagens que você considerou.
+
+**Impacto**
+- Módulo(s) afetado(s): [ADM, SUP, COM, etc]
+- Prioridade sugerida: [Alta, Média, Baixa]
+- Estimativa de esforço: [Pequeno, Médio, Grande]
+
+**Informações Adicionais**
+Mockups, exemplos de outros sistemas, referências, etc.</div>
+            </div>
+            
+            <h3>🔧 Configurando o Ambiente de Desenvolvimento</h3>
+            
+            <h4>1. Pré-requisitos</h4>
+            <div class="code-block"># Backend
+- .NET 8.0 SDK
+- PostgreSQL 16+
+- Redis 7+
+- Docker e Docker Compose
+
+# Frontend
+- Node.js 18+ (recomendado: 20 LTS)
+- npm ou yarn
+
+# Ferramentas
+- Git
+- Visual Studio 2022 ou VS Code
+- Postman ou Insomnia (testes de API)</div>
+            
+            <h4>2. Clone o Repositório</h4>
+            <div class="code-block">git clone https://github.com/anypro/anypro.git
+cd anypro</div>
+            
+            <h4>3. Backend Setup</h4>
+            <div class="code-block"># Restaurar dependências
+cd src/Anypro.API
+dotnet restore
+
+# Configurar connection string
+# Edite appsettings.Development.json com suas credenciais PostgreSQL
+
+# Executar migrations
+dotnet ef database update
+
+# Executar seeders (dados globais)
+dotnet run -- seed
+
+# Executar a API
+dotnet run</div>
+            
+            <h4>4. Frontend Setup</h4>
+            <div class="code-block">cd frontend
+npm install
+npm run dev
+
+# Acessar em http://localhost:5173</div>
+            
+            <h4>5. Docker (Opcional)</h4>
+            <div class="code-block">docker-compose up -d</div>
+            
+            <h3>🌿 Processo de Contribuição (Git Flow)</h3>
+            
+            <h4>Estrutura de Branches</h4>
+            <ul>
+                <li><strong>main:</strong> Branch principal, código em produção (protegida)</li>
+                <li><strong>develop:</strong> Branch de desenvolvimento ativo</li>
+                <li><strong>feature/{nome}:</strong> Novas funcionalidades</li>
+                <li><strong>bugfix/{nome}:</strong> Correções de bugs</li>
+                <li><strong>hotfix/{nome}:</strong> Correções urgentes em produção</li>
+                <li><strong>release/{versao}:</strong> Preparação para nova versão</li>
+            </ul>
+            
+            <h4>Workflow de Contribuição</h4>
+            <div class="code-block"># 1. Criar branch a partir de develop
+git checkout develop
+git pull origin develop
+git checkout -b feature/minha-funcionalidade
+
+# 2. Fazer alterações e commits
+git add .
+git commit -m "feat: adiciona CRUD de produtos"
+
+# 3. Manter branch atualizada
+git fetch origin
+git rebase origin/develop
+
+# 4. Push para o repositório remoto
+git push origin feature/minha-funcionalidade
+
+# 5. Abrir Pull Request no GitHub</div>
+            
+            <h3>📝 Convenções de Commit (Conventional Commits)</h3>
+            <div class="info-box">
+                <p>Usamos o padrão <strong>Conventional Commits</strong> para mensagens de commit:</p>
+                
+                <div class="code-block">tipo(escopo): descrição curta
+
+[corpo opcional]
+
+[rodapé opcional]</div>
+                
+                <h4>Tipos de Commit:</h4>
+                <ul>
+                    <li><code>feat:</code> Nova funcionalidade</li>
+                    <li><code>fix:</code> Correção de bug</li>
+                    <li><code>docs:</code> Apenas documentação</li>
+                    <li><code>style:</code> Formatação, falta de ponto e vírgula (sem mudança de código)</li>
+                    <li><code>refactor:</code> Refatoração de código (sem adicionar funcionalidade ou corrigir bug)</li>
+                    <li><code>perf:</code> Melhoria de performance</li>
+                    <li><code>test:</code> Adição ou correção de testes</li>
+                    <li><code>chore:</code> Tarefas de manutenção (build, configs, etc)</li>
+                </ul>
+                
+                <h4>Exemplos:</h4>
+                <div class="code-block">feat(adm): adiciona CRUD de usuários
+fix(sup): corrige cálculo de estoque
+docs(readme): atualiza instruções de instalação
+refactor(fin): simplifica lógica de cálculo de juros
+test(com): adiciona testes unitários para validação de pedidos
+chore(deps): atualiza Entity Framework Core para 8.0.1</div>
+            </div>
+            
+            <h2>🧪 Testes</h2>
+            <div class="warning-box">
+                <p><strong>⚠️ Importante:</strong> Todo código novo deve incluir testes!</p>
+                
+                <h4>Executar testes antes de submeter PR:</h4>
+                <div class="code-block"># Backend
+dotnet test
+
+# Frontend
+npm test
+
+# Cobertura de código
+dotnet test /p:CollectCoverage=true
+npm test -- --coverage</div>
+                
+                <h4>Cobertura mínima exigida:</h4>
+                <ul>
+                    <li>Domain Layer: ≥ 90%</li>
+                    <li>Application Layer: ≥ 85%</li>
+                    <li>Controllers: ≥ 75%</li>
+                </ul>
+            </div>
+            
+            <h2>✅ Checklist de Pull Request</h2>
+            <div class="info-box">
+                <p>Antes de abrir um Pull Request, certifique-se de que:</p>
+                
+                <ul>
+                    <li>☐ O código segue os padrões do projeto (Clean Architecture, DDD)</li>
+                    <li>☐ Todos os testes passam (<code>dotnet test</code> e <code>npm test</code>)</li>
+                    <li>☐ Novos testes foram adicionados para cobrir as mudanças</li>
+                    <li>☐ A documentação foi atualizada (se necessário)</li>
+                    <li>☐ Commits seguem o padrão Conventional Commits</li>
+                    <li>☐ Não há conflitos com a branch <code>develop</code></li>
+                    <li>☐ O código foi revisado por você mesmo antes de submeter</li>
+                    <li>☐ Mensagens de commit são claras e descritivas</li>
+                </ul>
+            </div>
+            
+            <h2>📖 Convenções de Código</h2>
+            
+            <h3>Backend (.NET)</h3>
+            <div class="code-block">// ✅ BOM
+public class Usuario : TenantEntityBase
+{
+    public string NomeCompleto { get; private set; }
+    
+    public static Usuario Criar(string nome, string email)
+    {
+        // Validações
+        // Criação
+    }
+}
+
+// ❌ RUIM
+public class usuario 
+{
+    public string nome; // campo público
+}</div>
+            
+            <h3>Frontend (React/TypeScript)</h3>
+            <div class="code-block">// ✅ BOM
+interface UsuarioDTO {
+  id: string;
+  nomeCompleto: string;
+  email: string;
+}
+
+export const UsuarioCard: React.FC<{ usuario: UsuarioDTO }> = ({ usuario }) => {
+  return <div>{usuario.nomeCompleto}</div>;
+};
+
+// ❌ RUIM
+export const card = (props) => {
+  return <div>{props.name}</div>;
+};</div>
+            
+            <h2>👥 Equipe e Contato</h2>
+            <div class="info-box">
+                <ul>
+                    <li>📧 <strong>Email:</strong> dev@anypro.com.br</li>
+                    <li>💬 <strong>Slack:</strong> anypro-team.slack.com</li>
+                    <li>🐙 <strong>GitHub:</strong> https://github.com/anypro</li>
+                    <li>📅 <strong>Reuniões:</strong> Quintas-feiras, 14h (GMT-3)</li>
+                </ul>
+            </div>
+            
+            <h2>🎉 Agradecimentos</h2>
+            <div class="success-box">
+                <p>Obrigado por contribuir para o ANYPRO! Cada contribuição, por menor que seja, faz diferença. Juntos estamos construindo um ERP moderno, escalável e de alta qualidade.</p>
+                
+                <p><strong>Principais contribuidores serão reconhecidos em:</strong></p>
+                <ul>
+                    <li>README.md do projeto</li>
+                    <li>Página "Sobre" da aplicação</li>
+                    <li>Notas de release</li>
+                </ul>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+<script src="../js/section-nav.js" defer></script>
+<script src="../js/nav-active.js" defer></script>
+</body>
+</html>

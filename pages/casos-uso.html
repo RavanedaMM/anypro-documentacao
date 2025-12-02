@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casos de Uso - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📑 Casos de Uso</h1>
+            <div class="subtitle">Fluxos, Atores e Critérios de Sucesso</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Casos de Uso</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <div class="info-box">
+                <p>Mapa de casos de uso por módulo com atores, pré-condições, fluxos principais e alternativos, e critérios de sucesso.</p>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <h3>📝 Template Padrão de Caso de Uso</h3>
+            <div class="code-block">┌─────────────────────────────────────────────────┐
+│ CASO DE USO: [UC-XXX] Nome do Caso de Uso       │
+├─────────────────────────────────────────────────┤
+│ Módulo: [ADM/COM/FIN/SUP/EST...]                │
+│ Ator Principal: [Papel do usuário]              │
+│ Atores Secundários: [Outros envolvidos]         │
+├─────────────────────────────────────────────────┤
+│ PRÉ-CONDIÇÕES:                                  │
+│ • Usuário autenticado com permissão X           │
+│ • Entidade Y cadastrada e ativa                 │
+├─────────────────────────────────────────────────┤
+│ FLUXO PRINCIPAL:                                │
+│ 1. Ator acessa a tela de...                     │
+│ 2. Sistema exibe...                             │
+│ 3. Ator informa dados...                        │
+│ 4. Sistema valida e salva...                    │
+├─────────────────────────────────────────────────┤
+│ FLUXOS ALTERNATIVOS:                            │
+│ 3a. Dados inválidos: exibe mensagem de erro     │
+│ 4a. Registro duplicado: sugere edição           │
+├─────────────────────────────────────────────────┤
+│ PÓS-CONDIÇÕES:                                  │
+│ • Registro criado no banco                      │
+│ • Log de auditoria gerado                       │
+├─────────────────────────────────────────────────┤
+│ CRITÉRIOS DE ACEITAÇÃO:                         │
+│ ☐ Dado X, quando Y, então Z                     │
+│ ☐ Validação de campos obrigatórios              │
+│ ☐ Mensagens de sucesso/erro apropriadas         │
+└─────────────────────────────────────────────────┘</div>
+
+            <h3>🎯 Identificar Atores do Sistema</h3>
+            <div class="info-box">
+                <table>
+                    <thead>
+                        <tr><th>Ator</th><th>Descrição</th><th>Módulos</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Administrador</td><td>Acesso total ao sistema</td><td>Todos</td></tr>
+                        <tr><td>Vendedor</td><td>Gestão de vendas e clientes</td><td>COM, CRM</td></tr>
+                        <tr><td>Comprador</td><td>Gestão de compras e fornecedores</td><td>SUP</td></tr>
+                        <tr><td>Financeiro</td><td>Contas, pagamentos, recebimentos</td><td>FIN</td></tr>
+                        <tr><td>Estoquista</td><td>Movimentações de estoque</td><td>EST</td></tr>
+                        <tr><td>RH</td><td>Gestão de funcionários</td><td>RHU</td></tr>
+                        <tr><td>Cliente</td><td>Portal de autoatendimento</td><td>COM, CSU</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>✅ Checklist de Documentação</h3>
+            <div class="warning-box">
+                <ul>
+                    <li>☐ Identificador único (UC-001, UC-002...)</li>
+                    <li>☐ Nome claro e objetivo</li>
+                    <li>☐ Ator principal identificado</li>
+                    <li>☐ Pré-condições listadas</li>
+                    <li>☐ Fluxo principal passo a passo</li>
+                    <li>☐ Fluxos alternativos documentados</li>
+                    <li>☐ Critérios de aceitação testáveis</li>
+                    <li>☐ Diagrama UML (opcional)</li>
+                </ul>
+            </div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+            
+            <h2>📚 Referência</h2>
+            <h3>🛒 Comercial (COM) – Pedido de Venda</h3>
+            <div class="code-block">Caso de Uso: Criar Pedido de Venda
+Atores: Vendedor, Cliente
+Pré-condições: Cliente cadastrado, tabela de preços ativa
+Fluxo principal:
+1. Vendedor busca cliente e seleciona condições
+2. Adiciona itens, aplica descontos válidos
+3. Solicita aprovação (se necessário)
+4. Emite faturamento
+Fluxos alternativos: estoque insuficiente, crédito bloqueado
+Critérios de sucesso: pedido aprovado e faturado</div>
+            
+            <h3>📦 Suprimentos (SUP) – Pedido de Compra</h3>
+            <div class="code-block">Caso de Uso: Criar Pedido de Compra
+Atores: Comprador, Fornecedor
+Pré-condições: Fornecedor homologado
+Fluxo principal: cotação → aprovação → pedido → recebimento
+Critérios de sucesso: recebimento e baixa no estoque</div>
+            
+            <h2>🧪 Exemplos</h2>
+            <div class="info-box">
+                <p>Inclua diagramas UML de casos de uso por módulo (imagens SVG/PNG) e links para fluxos detalhados.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+    <script src="../js/section-nav.js" defer></script>
+</body>
+</html>

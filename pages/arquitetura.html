@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arquitetura - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ Arquitetura do Sistema</h1>
+            <div class="subtitle">Clean Architecture, DDD e CQRS</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Arquitetura</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <h3>🎯 Visão Geral da Arquitetura</h3>
+            <div class="info-box">
+                <p>O ANYPRO foi desenvolvido seguindo os princípios da <strong>Clean Architecture</strong> (Arquitetura Limpa) proposta por Robert C. Martin (Uncle Bob), combinada com <strong>Domain-Driven Design (DDD)</strong> e o padrão <strong>CQRS (Command Query Responsibility Segregation)</strong>.</p>
+                
+                <p>Esta abordagem garante:</p>
+                <ul>
+                    <li>✅ <strong>Independência de Frameworks:</strong> A lógica de negócio não depende de bibliotecas externas</li>
+                    <li>✅ <strong>Testabilidade:</strong> Regras de negócio podem ser testadas sem UI, banco de dados ou frameworks</li>
+                    <li>✅ <strong>Independência de UI:</strong> A interface pode ser trocada sem alterar as regras de negócio</li>
+                    <li>✅ <strong>Independência de Banco de Dados:</strong> Possibilidade de trocar o banco de dados sem impacto no domínio</li>
+                    <li>✅ <strong>Manutenibilidade:</strong> Código organizado em camadas com responsabilidades bem definidas</li>
+                </ul>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <h3>📁 Estrutura de Pastas Recomendada</h3>
+            <div class="code-block">src/
+├── Anypro.Domain/           # Entidades, Value Objects, Interfaces
+│   ├── Entities/
+│   ├── ValueObjects/
+│   ├── Interfaces/
+│   └── Services/
+├── Anypro.Application/      # Casos de uso, Commands, Queries
+│   ├── Commands/
+│   ├── Queries/
+│   ├── DTOs/
+│   └── Validators/
+├── Anypro.Infrastructure/   # Repositórios, EF Core, Serviços externos
+│   ├── Persistence/
+│   ├── Repositories/
+│   └── Services/
+└── Anypro.API/              # Controllers, Middlewares, Configurações
+    ├── Controllers/
+    ├── Middlewares/
+    └── Extensions/</div>
+
+            <h3>📝 Passo a Passo: Criar uma Nova Feature</h3>
+            <div class="info-box">
+                <ol>
+                    <li><strong>Domain:</strong> Crie a Entidade em <code>Domain/Entities/</code></li>
+                    <li><strong>Application:</strong> Crie Command/Query em <code>Application/Commands/</code></li>
+                    <li><strong>Validator:</strong> Adicione validações com FluentValidation</li>
+                    <li><strong>Handler:</strong> Implemente o handler com MediatR</li>
+                    <li><strong>Repository:</strong> Crie interface no Domain e implementação na Infrastructure</li>
+                    <li><strong>Controller:</strong> Exponha via API em <code>API/Controllers/</code></li>
+                </ol>
+            </div>
+
+            <h3>💻 Exemplo: Command com MediatR</h3>
+            <div class="code-block">// Application/Commands/CreateUsuarioCommand.cs
+public record CreateUsuarioCommand(string Nome, string Email) : IRequest&lt;Guid&gt;;
+
+public class CreateUsuarioCommandHandler : IRequestHandler&lt;CreateUsuarioCommand, Guid&gt;
+{
+    private readonly IUsuarioRepository _repository;
+    
+    public CreateUsuarioCommandHandler(IUsuarioRepository repository)
+    {
+        _repository = repository;
+    }
+    
+    public async Task&lt;Guid&gt; Handle(CreateUsuarioCommand request, CancellationToken ct)
+    {
+        var usuario = new Usuario(request.Nome, request.Email);
+        await _repository.AddAsync(usuario, ct);
+        return usuario.Id;
+    }
+}</div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+
+            <h2>📚 Referência</h2>
+            <h3>📐 Diagrama de Clean Architecture</h3>
+            <div class="diagram-container">
+                <div class="layer-box layer-1">
+                    <strong>Presentation Layer</strong>
+                    <p>API Controllers, Middlewares, Filters</p>
+                </div>
+                <div class="layer-box layer-2">
+                    <strong>Application Layer</strong>
+                    <p>Use Cases, DTOs, Commands, Queries, Validators</p>
+                </div>
+                <div class="layer-box layer-3">
+                    <strong>Domain Layer</strong>
+                    <p>Entities, Value Objects, Domain Services, Interfaces</p>
+                </div>
+                <div class="layer-box layer-4">
+                    <strong>Infrastructure Layer</strong>
+                    <p>Repositories, EF Core, External Services, File Storage</p>
+                </div>
+            </div>
+            
+            <h3>🧱 Camadas da Aplicação</h3>
+            
+            <h3>1. Domain Layer (Núcleo)</h3>
+            <div class="info-box">
+                <p><strong>Responsabilidade:</strong> Contém as entidades do domínio, value objects, interfaces de repositórios e regras de negócio fundamentais.</p>
+                
+                <p><strong>Principais Componentes:</strong></p>
+                <ul>
+                    <li><code>Entities/</code> - Entidades do domínio (Usuario, Produto, NotaFiscal, etc)</li>
+                    <li><code>ValueObjects/</code> - Objetos de valor (Email, CPF, CNPJ, Dinheiro, etc)</li>
+                    <li><code>Interfaces/</code> - Contratos de repositórios e serviços</li>
+                    <li><code>Events/</code> - Eventos de domínio</li>
+                    <li><code>Exceptions/</code> - Exceções de domínio customizadas</li>
+                </ul>
+                
+                <ul class="folder-tree">
+                    <li>
+                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Domain</span></div>
+                        <ul class="tree-children">
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Entities</span></div>
+                                <ul class="tree-children">
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Base</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">EntityBase.cs</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">TenantEntityBase.cs</span></div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">ADM</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Usuario.cs</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Perfil.cs</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Autorizacao.cs</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Organizacao.cs</span></div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">SUP</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Produto.cs</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Fornecedor.cs</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">PedidoCompra.cs</span></div></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">ValueObjects</span></div>
+                                <ul class="tree-children">
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Email.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">CPF.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">CNPJ.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Dinheiro.cs</span></div></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Interfaces</span></div>
+                                <ul class="tree-children">
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">IRepository.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">IUnitOfWork.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">ITenantProvider.cs</span></div></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Events</span></div>
+                                <ul class="tree-children">
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">DomainEvent.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">IDomainEventHandler.cs</span></div></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <h3>2. Application Layer</h3>
+            <div class="info-box">
+                <p><strong>Responsabilidade:</strong> Implementa os casos de uso da aplicação, orquestra o fluxo de dados e coordena a execução das regras de negócio.</p>
+                
+                <p><strong>Principais Componentes:</strong></p>
+                <ul>
+                    <li><code>Commands/</code> - Comandos CQRS (Criar, Atualizar, Excluir)</li>
+                    <li><code>Queries/</code> - Consultas CQRS (Listar, Buscar, Obter)</li>
+                    <li><code>DTOs/</code> - Data Transfer Objects</li>
+                    <li><code>Validators/</code> - Validações com FluentValidation</li>
+                    <li><code>Mappers/</code> - Mapeamentos com AutoMapper</li>
+                </ul>
+                
+                <ul class="folder-tree">
+                    <li>
+                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Application</span></div>
+                        <ul class="tree-children">
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Commands</span></div>
+                                <ul class="tree-children">
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Usuarios</span></div>
+                                        <ul class="tree-children">
+                                            <li>
+                                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">CriarUsuario</span></div>
+                                                <ul class="tree-children">
+                                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">CriarUsuarioCommand.cs</span></div></li>
+                                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">CriarUsuarioCommandHandler.cs</span></div></li>
+                                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">CriarUsuarioCommandValidator.cs</span></div></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">AtualizarUsuario</span></div>
+                                                <ul class="tree-children">
+                                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">AtualizarUsuarioCommand.cs</span></div></li>
+                                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">AtualizarUsuarioCommandHandler.cs</span></div></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Queries</span></div>
+                                <ul class="tree-children">
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Usuarios</span></div>
+                                        <ul class="tree-children">
+                                            <li>
+                                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">ListarUsuarios</span></div>
+                                                <ul class="tree-children">
+                                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">ListarUsuariosQuery.cs</span></div></li>
+                                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">ListarUsuariosQueryHandler.cs</span></div></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">ObterUsuarioPorId</span></div>
+                                                <ul class="tree-children">
+                                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">ObterUsuarioPorIdQuery.cs</span></div></li>
+                                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">ObterUsuarioPorIdQueryHandler.cs</span></div></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">DTOs</span></div>
+                                <ul class="tree-children">
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">UsuarioDTO.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">PerfilDTO.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">ProdutoDTO.cs</span></div></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Mappers</span></div>
+                                <ul class="tree-children">
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">MappingProfile.cs</span></div></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <h3>3. Infrastructure Layer</h3>
+            <div class="info-box">
+                <p><strong>Responsabilidade:</strong> Implementa as interfaces definidas no Domain Layer, contém o acesso a dados, serviços externos e configurações de infraestrutura.</p>
+                
+                <p><strong>Principais Componentes:</strong></p>
+                <ul>
+                    <li><code>Persistence/</code> - Entity Framework Core, DbContext, Migrations</li>
+                    <li><code>Repositories/</code> - Implementação dos repositórios</li>
+                    <li><code>Services/</code> - Serviços de infraestrutura (Email, Storage, etc)</li>
+                    <li><code>Cache/</code> - Redis cache provider</li>
+                </ul>
+                
+                <ul class="folder-tree">
+                    <li>
+                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Infrastructure</span></div>
+                        <ul class="tree-children">
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Persistence</span></div>
+                                <ul class="tree-children">
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Configurations</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">UsuarioConfiguration.cs</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">ProdutoConfiguration.cs</span></div></li>
+                                        </ul>
+                                    </li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Migrations</span></div></li>
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Seeders</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">PaisSeeder.cs</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">AutorizacaoSeeder.cs</span></div></li>
+                                        </ul>
+                                    </li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">AppDbContext.cs</span></div></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Repositories</span></div>
+                                <ul class="tree-children">
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">UsuarioRepository.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">ProdutoRepository.cs</span></div></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Services</span></div>
+                                <ul class="tree-children">
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">EmailService.cs</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">FileStorageService.cs</span></div></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Cache</span></div>
+                                <ul class="tree-children">
+                                    <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">RedisCacheService.cs</span></div></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <h3>4. Presentation Layer (API)</h3>
+            <div class="info-box">
+                <p><strong>Responsabilidade:</strong> Expõe a aplicação via RESTful API, contém os controllers, middlewares, filters e configurações do ASP.NET Core.</p>
+                
+                <p><strong>Principais Componentes:</strong></p>
+                <ul>
+                    <li><code>Controllers/</code> - Endpoints da API REST</li>
+                    <li><code>Middlewares/</code> - Middleware de autenticação, logging, exception handling</li>
+                    <li><code>Filters/</code> - Action filters, validation filters</li>
+                </ul>
+                
+                <div class="code-block">Anypro.API/
+├── Controllers/
+│   ├── V1/
+│   │   ├── UsuariosController.cs
+│   │   ├── ProdutosController.cs
+│   │   └── AuthController.cs
+├── Middlewares/
+│   ├── TenantResolverMiddleware.cs
+│   ├── ExceptionHandlingMiddleware.cs
+│   └── RequestLoggingMiddleware.cs
+├── Filters/
+│   ├── ValidateModelFilter.cs
+│   └── AuthorizationFilter.cs
+└── Program.cs</div>
+            </div>
+            
+            <h3>🔄 CQRS Pattern</h3>
+            <div class="warning-box">
+                <h4>Command Query Responsibility Segregation</h4>
+                <p>Separação entre operações de <strong>escrita</strong> (Commands) e <strong>leitura</strong> (Queries).</p>
+                
+                <p><strong>Commands (Escrita):</strong></p>
+                <ul>
+                    <li>Modificam o estado da aplicação</li>
+                    <li>Validações complexas com FluentValidation</li>
+                    <li>Utilizam EF Core para persistência</li>
+                    <li>Retornam apenas sucesso/erro (não retornam dados)</li>
+                </ul>
+                
+                <p><strong>Queries (Leitura):</strong></p>
+                <ul>
+                    <li>Apenas consultam dados (sem alterações)</li>
+                    <li>Podem usar Dapper para performance</li>
+                    <li>Podem usar cache (Redis)</li>
+                    <li>Retornam DTOs otimizados</li>
+                </ul>
+            </div>
+            
+            <h3>📦 Padrões de Projeto Utilizados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Padrão</th>
+                        <th>Descrição</th>
+                        <th>Onde é usado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Repository Pattern</strong></td>
+                        <td>Abstração do acesso a dados</td>
+                        <td>Camada Infrastructure</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Unit of Work</strong></td>
+                        <td>Gerenciamento de transações</td>
+                        <td>EF Core DbContext</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dependency Injection</strong></td>
+                        <td>Injeção de dependências nativa do .NET</td>
+                        <td>Todas as camadas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Factory Pattern</strong></td>
+                        <td>Criação de entidades complexas</td>
+                        <td>Domain Layer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Specification Pattern</strong></td>
+                        <td>Encapsulamento de regras de negócio em consultas</td>
+                        <td>Repository + LINQ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Strategy Pattern</strong></td>
+                        <td>Cálculos de impostos, regras de negócio variáveis</td>
+                        <td>Domain Services</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Observer Pattern</strong></td>
+                        <td>Domain Events (MediatR)</td>
+                        <td>Application Layer</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>🔐 Multi-Tenancy Strategy</h3>
+            <div class="info-box">
+                <p><strong>Abordagem Híbrida: Database Per Tenant com Schema Isolation</strong></p>
+                
+                <p><strong>Implementação:</strong></p>
+                <ul>
+                    <li>✅ Banco PostgreSQL compartilhado</li>
+                    <li>✅ Schema <code>global</code> para tabelas TBG (Pais, Moeda, Autorizacao, etc)</li>
+                    <li>✅ Schema <code>tenant_{tenantId}</code> para tabelas TBP (Usuario, Produto, NotaFiscal, etc)</li>
+                    <li>✅ Middleware <code>TenantResolverMiddleware</code> extrai TenantId do JWT</li>
+                    <li>✅ Global Query Filter no EF Core adiciona <code>WHERE TenantId = @currentTenantId</code> automaticamente</li>
+                </ul>
+                
+                <div class="code-block">// TenantResolverMiddleware.cs
+public class TenantResolverMiddleware
+{
+    public async Task InvokeAsync(HttpContext context, ITenantProvider tenantProvider)
+    {
+        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        if (token != null)
+        {
+            var tenantId = ExtractTenantIdFromToken(token);
+            tenantProvider.SetTenantId(tenantId);
+        }
+        
+        await _next(context);
+    }
+}
+
+// AppDbContext.cs
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    // Global Query Filter para entidades multi-tenant
+    modelBuilder.Entity<Usuario>().HasQueryFilter(u => u.TenantId == _tenantProvider.GetTenantId());
+    modelBuilder.Entity<Produto>().HasQueryFilter(p => p.TenantId == _tenantProvider.GetTenantId());
+    </div>
+    <h2>🧪 Exemplos</h2>
+    <div class="info-box">
+        <p>Inclua exemplos concretos: snippets de casos de uso, estrutura mínima de projetos, e variações de implementação.</p>
+    </div>
+                        </div>
+            
+                </div>
+        
+                <div class="footer">
+                        <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+                        <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+                </div>
+        </div>
+        <script>
+        (function() {
+      const trees = document.querySelectorAll('.folder-tree');
+      trees.forEach(tree => {
+        tree.querySelectorAll('li').forEach(li => {
+          const children = li.querySelector(':scope > .tree-children');
+          const item = li.querySelector(':scope > .tree-item');
+          if (children && item) {
+            item.classList.add('expandable');
+            // Insert caret if missing
+            if (!item.querySelector('.caret')) {
+              const caret = document.createElement('span');
+              caret.className = 'caret';
+              caret.textContent = '▸';
+              item.insertBefore(caret, item.firstChild);
+            }
+            // Default expanded
+            item.setAttribute('data-expanded', 'true');
+            children.hidden = false;
+          }
+        });
+        tree.addEventListener('click', function(e) {
+          const item = e.target.closest('.tree-item.expandable');
+          if (!item) return;
+          const li = item.parentElement;
+          const children = li.querySelector(':scope > .tree-children');
+          if (!children) return;
+          const expanded = item.getAttribute('data-expanded') === 'true';
+          item.setAttribute('data-expanded', expanded ? 'false' : 'true');
+          children.hidden = expanded;
+        });
+      });
+    })();
+    </script>
+        <script src="../js/toc.js" defer></script>
+        <script src="../js/section-nav.js" defer></script>
+        <script src="../js/nav-active.js" defer></script>
+</body>
+</html>

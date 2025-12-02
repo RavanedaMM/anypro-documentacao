@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de Dados - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗄️ Banco de Dados</h1>
+            <div class="subtitle">Modelo de Dados, Multi-Tenant e Convenções</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Banco de Dados</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <h3>📐 Convenções de Nomenclatura</h3>
+            <div class="info-box">
+                <ul>
+                    <li><strong>Tabelas:</strong> PascalCase, singular (ex: <code>Usuario</code>, <code>Fornecedor</code>, <code>NotaFiscal</code>)</li>
+                    <li><strong>Colunas:</strong> PascalCase (ex: <code>NomeCompleto</code>, <code>DataNascimento</code>, <code>EmailPrincipal</code>)</li>
+                    <li><strong>Chaves Primárias:</strong> <code>Id</code> (tipo: <code>uuid/GUID</code>)</li>
+                    <li><strong>Chaves Estrangeiras:</strong> <code>{Entidade}Id</code> (ex: <code>UsuarioId</code>, <code>OrganizacaoId</code>)</li>
+                    <li><strong>Campos de Auditoria:</strong> <code>CriadoEm</code>, <code>CriadoPor</code>, <code>AtualizadoEm</code>, <code>AtualizadoPor</code></li>
+                    <li><strong>Soft Delete:</strong> <code>ExcluidoEm</code>, <code>ExcluidoPor</code></li>
+                    <li><strong>Índices:</strong> Prefixo <code>IX_</code> + NomeTabela + NomeCampo (ex: <code>IX_Usuario_Email</code>)</li>
+                    <li><strong>Foreign Keys:</strong> Prefixo <code>FK_</code> + TabelaOrigem + TabelaDestino (ex: <code>FK_Usuario_Organizacao</code>)</li>
+                </ul>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <h3>🔧 Configurar Conexão com PostgreSQL</h3>
+            <div class="code-block">// appsettings.json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Database=anypro;Username=postgres;Password=senha123"
+  }
+}</div>
+
+            <h3>📦 Criar uma Migration</h3>
+            <div class="code-block"># Criar nova migration
+dotnet ef migrations add CriarTabelaUsuario -p src/Anypro.Infrastructure -s src/Anypro.API
+
+# Aplicar migrations
+dotnet ef database update -p src/Anypro.Infrastructure -s src/Anypro.API
+
+# Reverter última migration
+dotnet ef migrations remove -p src/Anypro.Infrastructure -s src/Anypro.API</div>
+
+            <h3>🏢 Configurar Multi-Tenant por Schema</h3>
+            <div class="code-block">// Infrastructure/Persistence/TenantDbContext.cs
+public class TenantDbContext : DbContext
+{
+    private readonly ITenantProvider _tenantProvider;
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Aplica schema do tenant atual
+        var tenantId = _tenantProvider.GetTenantId();
+        modelBuilder.HasDefaultSchema($"tenant_{tenantId}");
+        
+        // Global Query Filter para isolamento
+        modelBuilder.Entity&lt;Usuario&gt;()
+            .HasQueryFilter(u => u.TenantId == tenantId);
+    }
+}</div>
+
+            <h3>✅ Checklist de Criação de Tabela</h3>
+            <div class="warning-box">
+                <ul>
+                    <li>☐ Nome em PascalCase e singular</li>
+                    <li>☐ Id como GUID/UUID</li>
+                    <li>☐ Campos de auditoria (CriadoEm, CriadoPor, etc.)</li>
+                    <li>☐ TenantId para tabelas multi-tenant</li>
+                    <li>☐ Índices para campos de busca frequente</li>
+                    <li>☐ Constraint de FK com naming convention</li>
+                </ul>
+            </div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+
+            <h2>📚 Referência</h2>
+            <h3 id="multi-tenant">🏢 Tabelas Multi-Tenant vs Globais</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Característica</th>
+                        <th>Exemplos</th>
+                        <th>Sigla</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>TBG (Global)</strong></td>
+                        <td>Sem coluna <code>TenantId</code>, dados compartilhados entre todas organizações</td>
+                        <td>Pais, Estado, Cidade, Moeda, UnidadeMedida, Idioma</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>TBP (Privada)</strong></td>
+                        <td>Com coluna <code>TenantId</code>, dados isolados por organização</td>
+                        <td>Usuario, Fornecedor, Produto, NotaFiscal, Pedido</td>
+                        <td><span class="badge badge-tbp">TBP</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>🧱 Entidades Base</h3>
+            
+            <h3>EntityBase - Entidade Global</h3>
+            <div class="info-box">
+                <p>Classe base para todas as entidades que <strong>não são multi-tenant</strong> (TBG).</p>
+            </div>
+            
+            <div class="code-block">public abstract class EntityBase
+{
+    public Guid Id { get; protected set; }
+    public DateTime CriadoEm { get; protected set; }
+    public Guid CriadoPor { get; protected set; }
+    public DateTime? AtualizadoEm { get; protected set; }
+    public Guid? AtualizadoPor { get; protected set; }
+    public DateTime? ExcluidoEm { get; protected set; }
+    public Guid? ExcluidoPor { get; protected set; }
+    public bool Ativo { get; protected set; } = true;
+    
+    // Soft delete
+    public bool IsDeleted => ExcluidoEm.HasValue;
+    
+    // Métodos de auditoria
+    public void MarkAsCreated(Guid userId)
+    {
+        CriadoEm = DateTime.UtcNow;
+        CriadoPor = userId;
+    }
+    
+    public void MarkAsUpdated(Guid userId)
+    {
+        AtualizadoEm = DateTime.UtcNow;
+        AtualizadoPor = userId;
+    }
+    
+    public void MarkAsDeleted(Guid userId)
+    {
+        ExcluidoEm = DateTime.UtcNow;
+        ExcluidoPor = userId;
+        Ativo = false;
+    }
+}</div>
+            
+            <h3>TenantEntityBase - Entidade Multi-Tenant</h3>
+            <div class="info-box">
+                <p>Classe base para todas as entidades que <strong>são multi-tenant</strong> (TBP). Herda de <code>EntityBase</code> e adiciona a propriedade <code>TenantId</code>.</p>
+            </div>
+            
+            <div class="code-block">public abstract class TenantEntityBase : EntityBase
+{
+    public Guid TenantId { get; protected set; }
+    
+    // Construtor protegido
+    protected TenantEntityBase(Guid tenantId)
+    {
+        TenantId = tenantId;
+    }
+}</div>
+            
+            <h3>💼 Exemplo de Entidade Completa</h3>
+            <div class="code-block">public class Usuario : TenantEntityBase
+{
+    // Propriedades básicas
+    public string NomeCompleto { get; private set; }
+    public string Email { get; private set; }
+    public string SenhaHash { get; private set; }
+    public string? Telefone { get; private set; }
+    public string? Avatar { get; private set; }
+    
+    // Relacionamentos
+    public Guid PerfilId { get; private set; }
+    public virtual Perfil Perfil { get; private set; }
+    
+    // Propriedades de controle
+    public DateTime? UltimoAcesso { get; private set; }
+    public bool EmailVerificado { get; private set; }
+    public bool Bloqueado { get; private set; }
+    public int TentativasLogin { get; private set; }
+    
+    // Construtor privado para EF Core
+    private Usuario() { }
+    
+    // Factory method
+    public static Usuario Criar(
+        Guid tenantId,
+        string nomeCompleto,
+        string email,
+        string senhaHash,
+        Guid perfilId,
+        Guid criadoPor)
+    {
+        var usuario = new Usuario
+        {
+            Id = Guid.NewGuid(),
+            TenantId = tenantId,
+            NomeCompleto = nomeCompleto,
+            Email = email.ToLowerInvariant(),
+            SenhaHash = senhaHash,
+            PerfilId = perfilId,
+            EmailVerificado = false,
+            Bloqueado = false,
+            TentativasLogin = 0
+        };
+        
+        usuario.MarkAsCreated(criadoPor);
+        return usuario;
+    }
+    
+    // Métodos de negócio
+    public void AtualizarPerfil(string nomeCompleto, string? telefone)
+    {
+        NomeCompleto = nomeCompleto;
+        Telefone = telefone;
+    }
+    
+    public void RegistrarAcesso()
+    {
+        UltimoAcesso = DateTime.UtcNow;
+        TentativasLogin = 0;
+    }
+    
+    public void IncrementarTentativasLogin()
+    {
+        TentativasLogin++;
+        if (TentativasLogin >= 5)
+        {
+            Bloqueado = true;
+        }
+    }
+}</div>
+            
+            <h3>🔒 Estratégias de Isolamento Multi-Tenant</h3>
+            <div class="warning-box">
+                <h4>Estratégia Adotada: Schema Per Tenant (Híbrida)</h4>
+                <ul>
+                    <li>✅ <strong>Banco compartilhado</strong> para dados globais (TBG) - Schema <code>global</code></li>
+                    <li>✅ <strong>Schema isolado</strong> por organização para dados privados (TBP) - Schema <code>tenant_{tenantId}</code></li>
+                    <li>✅ <strong>Global Query Filter</strong> no EF Core para garantir isolamento automático</li>
+                    <li>✅ <strong>Tenant Resolver Middleware</strong> identifica TenantId do token JWT</li>
+                </ul>
+                
+                <p><strong>Vantagens:</strong></p>
+                <ul>
+                    <li>✅ Isolamento forte entre organizações</li>
+                    <li>✅ Backup e restore por tenant</li>
+                    <li>✅ Escalabilidade horizontal (sharding futuro)</li>
+                    <li>✅ Conformidade com LGPD e GDPR</li>
+                    <li>✅ Proteção contra data leakage entre tenants</li>
+                </ul>
+                
+                <p><strong>Desvantagens:</strong></p>
+                <ul>
+                    <li>⚠️ Maior complexidade na gestão de schemas</li>
+                    <li>⚠️ Migrations precisam ser aplicadas em múltiplos schemas</li>
+                    <li>⚠️ Queries cross-tenant mais complexas</li>
+                </ul>
+            </div>
+            
+            <h3>🔧 Configuração EF Core</h3>
+            
+            <h3>AppDbContext - Configuração Multi-Tenant</h3>
+            <div class="code-block">public class AppDbContext : DbContext
+{
+    private readonly ITenantProvider _tenantProvider;
+    
+    public AppDbContext(
+        DbContextOptions<AppDbContext> options,
+        ITenantProvider tenantProvider) : base(options)
+    {
+        _tenantProvider = tenantProvider;
+    }
+    
+    public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<Perfil> Perfis { get; set; }
+    public DbSet<Produto> Produtos { get; set; }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        
+        // Aplicar configurações
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        
+        // Global Query Filter para Multi-Tenant
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (typeof(TenantEntityBase).IsAssignableFrom(entityType.ClrType))
+            {
+                var method = SetGlobalQueryMethod.MakeGenericMethod(entityType.ClrType);
+                method.Invoke(this, new object[] { modelBuilder });
+            }
+        }
+    }
+    
+    private static readonly MethodInfo SetGlobalQueryMethod = 
+        typeof(AppDbContext).GetMethod(nameof(SetGlobalQuery), 
+        BindingFlags.NonPublic | BindingFlags.Static);
+    
+    private static void SetGlobalQuery<T>(ModelBuilder builder) where T : TenantEntityBase
+    {
+        builder.Entity<T>().HasQueryFilter(e => e.TenantId == _tenantProvider.GetTenantId());
+    }
+    
+    public override int SaveChanges()
+    {
+        ApplyTenantId();
+        return base.SaveChanges();
+    }
+    
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        ApplyTenantId();
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+    
+    private void ApplyTenantId()
+    {
+        var tenantId = _tenantProvider.GetTenantId();
+        
+        foreach (var entry in ChangeTracker.Entries<TenantEntityBase>())
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.TenantId = tenantId;
+            }
+        }
+    }
+}</div>
+            
+            <h3>Entity Configuration Example</h3>
+            <div class="code-block">public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
+{
+    public void Configure(EntityTypeBuilder<Usuario> builder)
+    {
+        builder.ToTable("Usuarios");
+        
+        builder.HasKey(u => u.Id);
+        
+        builder.Property(u => u.NomeCompleto)
+            .IsRequired()
+            .HasMaxLength(200);
+        
+        builder.Property(u => u.Email)
+            .IsRequired()
+            .HasMaxLength(256);
+        
+        builder.Property(u => u.SenhaHash)
+            .IsRequired()
+            .HasMaxLength(500);
+        
+        builder.Property(u => u.Telefone)
+            .HasMaxLength(20);
+        
+        builder.Property(u => u.TenantId)
+            .IsRequired();
+        
+        // Índices
+        builder.HasIndex(u => new { u.TenantId, u.Email })
+            .IsUnique()
+            .HasDatabaseName("IX_Usuario_TenantId_Email");
+        
+        builder.HasIndex(u => u.TenantId)
+            .HasDatabaseName("IX_Usuario_TenantId");
+        
+        // Relacionamentos
+        builder.HasOne(u => u.Perfil)
+            .WithMany()
+            .HasForeignKey(u => u.PerfilId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        // Soft Delete Filter
+        builder.HasQueryFilter(u => u.ExcluidoEm == null);
+    }
+}</div>
+            
+            <h3>📊 Migrations</h3>
+            <div class="info-box">
+                <h4>Estratégia de Migrations Multi-Tenant</h4>
+                <ul>
+                    <li>✅ Migrations são criadas normalmente via <code>dotnet ef migrations add</code></li>
+                    <li>✅ No deploy, migrations são aplicadas no schema <code>global</code> primeiro</li>
+                    <li>✅ Em seguida, migrations são replicadas para cada schema <code>tenant_{tenantId}</code></li>
+                    <li>✅ Script customizado percorre todos os tenants ativos e aplica migrations</li>
+                </ul>
+            </div>
+            
+            <div class="code-block">// Script de migração multi-tenant
+public class MultiTenantMigrator
+{
+    public async Task MigrateAllTenantsAsync()
+    {
+        // 1. Aplicar migrations no schema global
+        await ApplyGlobalMigrationsAsync();
+        
+        // 2. Buscar todos os tenants ativos
+        var tenants = await GetActiveTenantsAsync();
+        
+        // 3. Aplicar migrations em cada tenant
+        foreach (var tenant in tenants)
+        {
+            await ApplyTenantMigrationsAsync(tenant.Id);
+        }
+    }
+    
+    private async Task ApplyTenantMigrationsAsync(Guid tenantId)
+    {
+        var connectionString = $"Host=localhost;Database=anypro;SearchPath=tenant_{tenantId}";
+        
+        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+        optionsBuilder.UseNpgsql(connectionString);
+        
+        using var context = new AppDbContext(optionsBuilder.Options, null);
+        await context.Database.MigrateAsync();
+    }
+}</div>
+            
+            <h2>🧪 Exemplos</h2>
+            <div class="info-box">
+                <p>Inclua exemplos SQL, scripts de migração e consultas comuns.</p>
+            </div>
+
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../index.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+<script src="../js/section-nav.js" defer></script>
+<script src="../js/nav-active.js" defer></script>
+</body>
+</html>

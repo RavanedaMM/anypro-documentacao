@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Dados - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗄️ Modelo de Dados</h1>
+            <div class="subtitle">Convenções, Estruturas e Relacionamentos</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Modelo de Dados</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <h3>📋 Convenções de Nomenclatura</h3>
+            <div class="info-box">
+                <ul>
+                    <li><strong>Tabelas:</strong> PascalCase, singular (ex: <code>Usuario</code>, <code>Fornecedor</code>, <code>NotaFiscal</code>)</li>
+                    <li><strong>Colunas:</strong> PascalCase (ex: <code>NomeCompleto</code>, <code>DataNascimento</code>, <code>EmailPrincipal</code>)</li>
+                    <li><strong>Chaves Primárias:</strong> <code>Id</code> (tipo: <code>uuid/GUID</code>)</li>
+                    <li><strong>Chaves Estrangeiras:</strong> <code>{Entidade}Id</code> (ex: <code>UsuarioId</code>, <code>OrganizacaoId</code>)</li>
+                    <li><strong>Campos de Auditoria:</strong> <code>CriadoEm</code>, <code>CriadoPor</code>, <code>AtualizadoEm</code>, <code>AtualizadoPor</code></li>
+                    <li><strong>Soft Delete:</strong> <code>ExcluidoEm</code>, <code>ExcluidoPor</code></li>
+                    <li><strong>Índices:</strong> Prefixo <code>IX_</code> + NomeTabela + NomeCampo (ex: <code>IX_Usuario_Email</code>)</li>
+                    <li><strong>Foreign Keys:</strong> Prefixo <code>FK_</code> + TabelaOrigem + TabelaDestino (ex: <code>FK_Usuario_Organizacao</code>)</li>
+                </ul>
+            </div>
+            
+            <h2>🛠️ Como Fazer</h2>
+            <div class="info-box">
+                <p>Guia prático para criação de entidades, configuração de migrations e estratégias de isolamento multi-tenant. Preencha com passos do seu projeto.</p>
+            </div>
+
+            <h2>📚 Referência</h2>
+            <h3>🏢 Tabelas Multi-Tenant vs Globais</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Característica</th>
+                        <th>Exemplos</th>
+                        <th>Sigla</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>TBG (Global)</strong></td>
+                        <td>Sem coluna <code>TenantId</code>, dados compartilhados entre todas organizações</td>
+                        <td>Pais, Estado, Cidade, Moeda, UnidadeMedida, Idioma</td>
+                        <td><span class="badge badge-tbg">TBG</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>TBP (Privada)</strong></td>
+                        <td>Com coluna <code>TenantId</code>, dados isolados por organização</td>
+                        <td>Usuario, Fornecedor, Produto, NotaFiscal, Pedido</td>
+                        <td><span class="badge badge-tbp">TBP</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>🧱 Entidades Base (Entity Base Classes)</h3>
+            
+            <h4>EntityBase - Entidade Global</h4>
+            <div class="code-block">public abstract class EntityBase
+{
+    public Guid Id { get; protected set; }
+    public DateTime CriadoEm { get; protected set; }
+    public Guid CriadoPor { get; protected set; }
+    public DateTime? AtualizadoEm { get; protected set; }
+    public Guid? AtualizadoPor { get; protected set; }
+    public DateTime? ExcluidoEm { get; protected set; }
+    public Guid? ExcluidoPor { get; protected set; }
+    public bool Ativo { get; protected set; } = true;
+    
+    // Soft delete
+    public bool IsDeleted => ExcluidoEm.HasValue;
+    
+    // Métodos de auditoria
+    public void MarkAsCreated(Guid userId)
+    {
+        CriadoEm = DateTime.UtcNow;
+        CriadoPor = userId;
+    }
+    
+    public void MarkAsUpdated(Guid userId)
+    {
+        AtualizadoEm = DateTime.UtcNow;
+        AtualizadoPor = userId;
+    }
+    
+    public void MarkAsDeleted(Guid userId)
+    {
+        ExcluidoEm = DateTime.UtcNow;
+        ExcluidoPor = userId;
+        Ativo = false;
+    }
+}</div>
+            
+            <h4>TenantEntityBase - Entidade Multi-Tenant</h4>
+            <div class="code-block">public abstract class TenantEntityBase : EntityBase
+{
+    public Guid TenantId { get; protected set; }
+    
+    // Construtor protegido
+    protected TenantEntityBase(Guid tenantId)
+    {
+        TenantId = tenantId;
+    }
+}</div>
+            
+            <h2>🧪 Exemplos</h2>
+            <h3>📝 Exemplo de Entidade Completa</h3>
+            <div class="code-block">public class Usuario : TenantEntityBase
+{
+    // Propriedades básicas
+    public string NomeCompleto { get; private set; }
+    public string Email { get; private set; }
+    public string SenhaHash { get; private set; }
+    public string? Telefone { get; private set; }
+    public string? Avatar { get; private set; }
+    
+    // Relacionamentos
+    public Guid PerfilId { get; private set; }
+    public virtual Perfil Perfil { get; private set; }
+    
+    // Propriedades de controle
+    public DateTime? UltimoAcesso { get; private set; }
+    public bool EmailVerificado { get; private set; }
+    public bool Bloqueado { get; private set; }
+    public int TentativasLogin { get; private set; }
+    
+    // Construtor privado para EF Core
+    private Usuario() { }
+    
+    // Factory method
+    public static Usuario Criar(
+        Guid tenantId,
+        string nomeCompleto,
+        string email,
+        string senhaHash,
+        Guid perfilId,
+        Guid criadoPor)
+    {
+        var usuario = new Usuario
+        {
+            Id = Guid.NewGuid(),
+            TenantId = tenantId,
+            NomeCompleto = nomeCompleto,
+            Email = email.ToLowerInvariant(),
+            SenhaHash = senhaHash,
+            PerfilId = perfilId,
+            EmailVerificado = false,
+            Bloqueado = false,
+            TentativasLogin = 0
+        };
+        
+        usuario.MarkAsCreated(criadoPor);
+        return usuario;
+    }
+    
+    // Métodos de negócio
+    public void AtualizarPerfil(string nomeCompleto, string? telefone)
+    {
+        NomeCompleto = nomeCompleto;
+        Telefone = telefone;
+    }
+    
+    public void RegistrarAcesso()
+    {
+        UltimoAcesso = DateTime.UtcNow;
+        TentativasLogin = 0;
+    }
+    
+    public void IncrementarTentativasLogin()
+    {
+        TentativasLogin++;
+        if (TentativasLogin >= 5)
+        {
+            Bloqueado = true;
+        }
+    }
+}</div>
+            
+            <h3>🔐 Estratégias de Isolamento Multi-Tenant</h3>
+            <div class="warning-box">
+                <h4>Estratégia Adotada: Database Per Tenant (Híbrida)</h4>
+                <ul>
+                    <li>✅ <strong>Banco compartilhado</strong> para dados globais (TBG) - Schema <code>global</code></li>
+                    <li>✅ <strong>Schema isolado</strong> por organização para dados privados (TBP) - Schema <code>tenant_{tenantId}</code></li>
+                    <li>✅ <strong>Global Query Filter</strong> no EF Core para garantir isolamento automático</li>
+                    <li>✅ <strong>Tenant Resolver Middleware</strong> identifica TenantId do token JWT</li>
+                </ul>
+                
+                <p><strong>Vantagens:</strong></p>
+                <ul>
+                    <li>Isolamento forte entre organizações</li>
+                    <li>Backup e restore por tenant</li>
+                    <li>Escalabilidade horizontal (sharding futuro)</li>
+                    <li>Conformidade com LGPD e GDPR</li>
+                </ul>
+            </div>
+            
+            <h3>📊 Tabelas Globais (TBG)</h3>
+            <div class="module-card">
+                <h4>Localização</h4>
+                <ul>
+                    <li><strong>Pais</strong> - Países do mundo (ISO 3166)</li>
+                    <li><strong>Estado</strong> - Estados/Províncias por país</li>
+                    <li><strong>Cidade</strong> - Municípios/Cidades</li>
+                </ul>
+            </div>
+            
+            <div class="module-card">
+                <h4>Configurações</h4>
+                <ul>
+                    <li><strong>Moeda</strong> - Moedas mundiais (ISO 4217)</li>
+                    <li><strong>Idioma</strong> - Idiomas suportados (ISO 639)</li>
+                    <li><strong>UnidadeMedida</strong> - Unidades de medida (kg, L, m, etc)</li>
+                    <li><strong>TipoDocumento</strong> - Tipos de documentos (CPF, CNPJ, RG, etc)</li>
+                </ul>
+            </div>
+            
+            <div class="module-card">
+                <h4>Fiscal</h4>
+                <ul>
+                    <li><strong>RegimeTributario</strong> - Regimes tributários (Simples, Lucro Real, etc)</li>
+                    <li><strong>NaturezaOperacao</strong> - Naturezas de operação fiscal (CFOP)</li>
+                </ul>
+            </div>
+            
+            <h3>🏗️ Diagrama ER Simplificado</h3>
+            <div class="info-box">
+                <div class="code-block">Organizacao (TBP)
+    └── Usuario (TBP)
+        └── Perfil (TBP)
+            └── PerfilAutorizacao (TBP)
+                └── Autorizacao (TBG)
+
+Organizacao (TBP)
+    └── Fornecedor (TBP)
+        └── PedidoCompra (TBP)
+            └── ItemPedidoCompra (TBP)
+                └── Produto (TBP)
+                    └── UnidadeMedida (TBG)
+
+NotaFiscal (TBP)
+    ├── NaturezaOperacao (TBG)
+    ├── RegimeTributario (TBG)
+    └── ItemNotaFiscal (TBP)
+        └── Produto (TBP)</div>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+<script src="../js/section-nav.js" defer></script>
+<script src="../js/nav-active.js" defer></script>
+</body>
+</html>

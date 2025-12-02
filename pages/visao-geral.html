@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visão Geral - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Visão Geral do Projeto</h1>
+            <div class="subtitle">Sistema ERP Modular Multi-Tenant</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Visão Geral</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">-35
+            <a id="top"></a>
+            <h2>📘 Introdução</h2>
+            <h3>🎯 Sobre o ANYPRO</h3>
+            <div class="info-box">
+                <p>O <strong>ANYPRO</strong> é um sistema ERP (Enterprise Resource Planning) modular e multi-tenant desenvolvido em <strong>.NET 8.0</strong> com <strong>React 18+</strong>, projetado para atender micro, pequenas e médias empresas que necessitam de uma solução completa, escalável e de fácil implementação.</p>
+                
+                <p>Desenvolvido seguindo os princípios de <strong>Clean Architecture</strong>, <strong>Domain-Driven Design (DDD)</strong> e <strong>CQRS</strong>, o sistema oferece alta modularidade, permitindo a ativação/desativação de funcionalidades conforme a necessidade do cliente.</p>
+            </div>
+            <h3>✨ Características Principais</h3>
+            <div class="module-grid">
+                <div class="module-card">
+                    <h4>🏢 Multi-Tenant</h4>
+                    <p>Suporte completo para múltiplas empresas com isolamento total de dados por schema PostgreSQL</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>🧩 Modular</h4>
+                    <p>9 módulos independentes que podem ser ativados/desativados conforme necessidades do negócio</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>🔐 Seguro</h4>
+                    <p>Autenticação JWT, autorização granular, criptografia de dados sensíveis e auditoria completa</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>📊 Escalável</h4>
+                    <p>Arquitetura preparada para crescimento horizontal com Kubernetes e cache distribuído Redis</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>🌐 API-First</h4>
+                    <p>RESTful API documentada com Swagger/OpenAPI, pronta para integrações externas</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>📱 Responsivo</h4>
+                    <p>Interface moderna em Material-UI totalmente responsiva para desktop, tablet e mobile</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>🔄 CQRS</h4>
+                    <p>Separação de comandos e consultas para melhor performance e escalabilidade</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>📈 Observabilidade</h4>
+                    <p>Monitoramento com logs centralizados com ELK Stack e rastreamento distribuído</p>
+                </div>
+            </div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+
+            <h2>🚀 Como Fazer</h2>
+            <h3>🚀 Início Rápido</h3>
+            <div class="warning-box">
+                <h4>Pré-requisitos</h4>
+                <ul>
+                    <li>.NET 8.0 SDK</li>
+                    <li>Node.js 18+ e npm/yarn</li>
+                    <li>Docker e Docker Compose</li>
+                    <li>PostgreSQL 16+ (ou via Docker)</li>
+                </ul>
+                
+                <h4>Executar com Docker</h4>
+                <div class="code-block">docker-compose up -d</div>
+                
+                <h4>Executar Localmente</h4>
+                <div class="code-block"># Backend
+cd src/Anypro.API
+dotnet restore
+dotnet ef database update
+dotnet run
+
+# Frontend
+cd frontend
+npm install
+npm run dev</div>
+            </div>
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+
+            <h2>📚 Referência</h2>
+            <h3>🎨 Módulos do Sistema</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sigla</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ADM</strong></td>
+                        <td>Administração</td>
+                        <td>Gestão de usuários, autorizações, organizações, empresas e configurações privadas e globais</td>
+                        <td><span class="badge badge-dev">Desenvolvimento</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>SUP</strong></td>
+                        <td>Suprimentos</td>
+                        <td>Gestão de fornecedores, produtos, estoque, compras, cotações de preços e requisições</td>
+                        <td><span class="badge badge-planned">Planejado</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>COM</strong></td>
+                        <td>Comercial</td>
+                        <td>Gestão de clientes, vendas, propostas, contratos e comissões</td>
+                        <td><span class="badge badge-planned">Planejado</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>FIN</strong></td>
+                        <td>Financeiro</td>
+                        <td>Contas a pagar/receber, fluxo de caixa, conciliação bancária e DRE</td>
+                        <td><span class="badge badge-planned">Planejado</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>CON</strong></td>
+                        <td>Contabilidade</td>
+                        <td>Plano de contas, lançamentos contábeis, balancetes e livros fiscais</td>
+                        <td><span class="badge badge-planned">Planejado</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RHU</strong></td>
+                        <td>Recursos Humanos</td>
+                        <td>Colaboradores, folha de pagamento, férias, ponto eletrônico e benefícios</td>
+                        <td><span class="badge badge-planned">Planejado</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>PRO</strong></td>
+                        <td>Produção</td>
+                        <td>Ordens de produção, BOM (Bill of Materials), controle de qualidade e rastreabilidade</td>
+                        <td><span class="badge badge-planned">Planejado</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>CRM</strong></td>
+                        <td>Customer Relationship</td>
+                        <td>Gestão de relacionamento com clientes, tickets de suporte e automação de marketing</td>
+                        <td><span class="badge badge-planned">Planejado</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>CSU</strong></td>
+                        <td>Central de Suporte</td>
+                        <td>Help desk, base de conhecimento, SLA e gestão de incidentes/problemas</td>
+                        <td><span class="badge badge-planned">Planejado</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>🛠️ Stack Tecnológica</h3>
+            
+            <h4>Backend (.NET 8.0)</h4>
+            <div class="code-block">✅ ASP.NET Core Web API 8.0
+✅ Entity Framework Core 8.0 (ORM)
+✅ PostgreSQL 16+ (Banco de Dados Principal)
+✅ Redis 7+ (Cache Distribuído)
+✅ Hangfire (Background Jobs)
+✅ Dapper (Consultas de Alta Performance)
+✅ MediatR (CQRS Pattern)
+✅ FluentValidation (Validação de Dados)
+✅ AutoMapper (Mapeamento de Objetos)
+✅ Serilog (Logging Estruturado)
+✅ Polly (Resiliência e Retry Policies)
+✅ IdentityServer4/Duende (Autenticação OAuth2/OpenID Connect)
+✅ Swagger/OpenAPI (Documentação de API)</div>
+            
+            <h4>Frontend (React 18+)</h4>
+            <div class="code-block">✅ React 18+ com TypeScript
+✅ Material-UI (MUI v5) - Componentes UI
+✅ Redux Toolkit - Gerenciamento de Estado
+✅ React Query (TanStack Query) - Cache e Sincronização de Dados
+✅ React Router v6 - Roteamento
+✅ Vite - Build Tool e Dev Server
+✅ Formik + Yup - Formulários e Validação
+✅ Axios - Cliente HTTP
+✅ Day.js - Manipulação de Datas
+✅ Chart.js / Recharts - Gráficos e Dashboards
+✅ i18next - Internacionalização (PT-BR, EN, ES)</div>
+            
+            <h4>DevOps & Infraestrutura</h4>
+            <div class="code-block">✅ Docker + Docker Compose (Containerização)
+✅ Kubernetes (Orquestração)
+✅ NGINX (Reverse Proxy e Load Balancer)
+✅ GitHub Actions (CI/CD)
+✅ SonarQube (Análise de Código)
+✅ Prometheus + Grafana (Monitoramento)
+✅ ELK Stack (Elasticsearch, Logstash, Kibana) - Logs
+✅ Jaeger (Distributed Tracing)
+✅ MinIO (Armazenamento de Arquivos S3-Compatible)</div>
+            
+            <h3>📦 Estrutura do Projeto</h3>
+            <ul class="folder-tree" id="project-structure">
+                <li>
+                    <div class="tree-item expandable" data-expanded="true"><span class="caret">▸</span><span class="tree-icon tree-folder">📁</span><span class="tree-name">anypro</span></div>
+                    <ul class="tree-children">
+                        <li>
+                            <div class="tree-item expandable" data-expanded="true"><span class="caret">▸</span><span class="tree-icon tree-folder">📁</span><span class="tree-name">src</span></div>
+                            <ul class="tree-children">
+                                <li><div class="tree-item expandable" data-expanded="false"><span class="caret">▸</span><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Domain</span><span class="tree-note">— Domínio (Entidades, VOs, Interfaces)</span></div>
+                                    <ul class="tree-children" hidden>
+                                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Entities</span></div></li>
+                                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">ValueObjects</span></div></li>
+                                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Interfaces</span></div></li>
+                                    </ul>
+                                </li>
+                                <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Application</span><span class="tree-note">— Aplicação (Use Cases, DTOs, CQRS)</span></div></li>
+                                <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Infrastructure</span><span class="tree-note">— Infraestrutura (Repositórios, EF Core)</span></div></li>
+                                <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.API</span><span class="tree-note">— Apresentação (Controllers, Middlewares)</span></div></li>
+                                <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Shared</span><span class="tree-note">— Compartilhado (Helpers, Extensions)</span></div></li>
+                                <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Tests</span><span class="tree-note">— Testes (Unit, Integration, E2E)</span></div></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <div class="tree-item expandable" data-expanded="false"><span class="caret">▸</span><span class="tree-icon tree-folder">📁</span><span class="tree-name">frontend</span></div>
+                            <ul class="tree-children">
+                                <li>
+                                    <div class="tree-item expandable" data-expanded="false"><span class="caret">▸</span><span class="tree-icon tree-folder">📁</span><span class="tree-name">src</span></div>
+                                    <ul class="tree-children">
+                                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">components</span><span class="tree-note">— Componentes React</span></div></li>
+                                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">pages</span><span class="tree-note">— Páginas/Rotas</span></div></li>
+                                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">store</span><span class="tree-note">— Redux Store</span></div></li>
+                                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">services</span><span class="tree-note">— API Services</span></div></li>
+                                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">hooks</span><span class="tree-note">— Custom Hooks</span></div></li>
+                                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">utils</span><span class="tree-note">— Utilitários</span></div></li>
+                                    </ul>
+                                </li>
+                                <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">public</span><span class="tree-note">— Arquivos públicos</span></div></li>
+                            </ul>
+                        </li>
+                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">docs</span><span class="tree-note">— Documentação do projeto</span></div></li>
+                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">docker</span><span class="tree-note">— Dockerfiles e compose</span></div></li>
+                        <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">k8s</span><span class="tree-note">— Manifests Kubernetes</span></div></li>
+                        <li><div class="tree-item"><span class="tree-icon tree-config">⚙️</span><span class="tree-name">scripts</span><span class="tree-note">— Scripts de automação</span></div></li>
+                    </ul>
+                </li>
+            </ul>
+
+                        <script>
+                        (function() {
+                            const trees = document.querySelectorAll('.folder-tree');
+                            trees.forEach(tree => {
+                                tree.addEventListener('click', function(e) {
+                                    const item = e.target.closest('.tree-item.expandable');
+                                    if (!item) return;
+                                    const li = item.parentElement; // the <li>
+                                    const children = li.querySelector(':scope > .tree-children');
+                                    if (!children) return;
+                                    const expanded = item.getAttribute('data-expanded') === 'true';
+                                    item.setAttribute('data-expanded', expanded ? 'false' : 'true');
+                                    children.hidden = expanded;
+                                });
+                            });
+                        })();
+                        </script>
+            
+            <a class="back-to-top" href="#top">↑ Voltar ao topo</a>
+            
+            <h2>📞 Contato e Suporte</h2>
+            <div class="info-box">
+                <ul>
+                    <li>📧 <strong>Email:</strong> suporte@anypro.com.br</li>
+                    <li>🌐 <strong>Site:</strong> https://www.anypro.com.br</li>
+                    <li>📚 <strong>Documentação:</strong> https://docs.anypro.com.br</li>
+                    <li>💬 <strong>Slack:</strong> anypro-team.slack.com</li>
+                </ul>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+    <script src="../js/section-nav.js" defer></script>
+    <script src="../js/nav-active.js" defer></script>
+</body>
+</html>

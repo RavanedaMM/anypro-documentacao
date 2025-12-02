@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANYPRO - Documentação do Projeto 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        
+        .header .version {
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .nav {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            border-bottom: 3px solid #667eea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        section {
+            margin-bottom: 60px;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h3 {
+            color: #764ba2;
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 1.4em;
+            margin: 25px 0 12px 0;
+        }
+        
+        h5 {
+            color: #666;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        
+        .badge-tbg { background: #e3f2fd; color: #1976d2; }
+        .badge-tbp { background: #f3e5f5; color: #7b1fa2; }
+        .badge-aut { background: #fff3e0; color: #e65100; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #f57c00;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #388e3c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .module-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s;
+        }
+        
+        .module-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .module-card h4 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .status-dev { background: #fff3e0; color: #e65100; }
+        .status-ok { background: #e8f5e9; color: #388e3c; }
+        .status-complete { background: #e8f5e9; color: #2e7d32; }
+        .status-planned { background: #f3e5f5; color: #6a1b9a; }
+        
+        .progress-section {
+            background: #f8f9fa;
+            padding: 30px 40px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .progress-item strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-fill.green { background: #4caf50; }
+        .progress-fill.orange { background: #ff9800; }
+        .progress-fill.blue { background: #2196f3; }
+        
+        .api-endpoint {
+            background: #f5f5f5;
+            border-left: 3px solid #667eea;
+            padding: 10px 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .api-endpoint .method {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.85em;
+        }
+        
+        .method.get { background: #4caf50; color: white; }
+        .method.post { background: #2196f3; color: white; }
+        .method.put { background: #ff9800; color: white; }
+        .method.delete { background: #f44336; color: white; }
+        
+        .glossary-term {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .glossary-term strong {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        .mermaid {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        h6 {
+            color: #777;
+            font-size: 1em;
+            margin: 15px 0 8px 0;
+        }
+        
+        .progress-heading {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .progress-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .diagram-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .diagram-inner {
+            display: inline-block;
+            text-align: left;
+        }
+        
+        .layer-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 5px;
+            color: white;
+        }
+        
+        .layer-presentation { background: #667eea; }
+        .layer-application { background: #764ba2; }
+        .layer-domain { background: #2196f3; }
+        .layer-infrastructure { background: #ff9800; }
+        
+        .layer-indent {
+            margin-left: 30px;
+        }
+        
+        .layer-note {
+            margin-top: 15px;
+        }
+        
+        .test-pyramid {
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        
+        .pyramid-level {
+            padding: 15px;
+            margin: 10px auto;
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+        
+        .pyramid-level p {
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        .footer-note {
+            margin-top: 10px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2em; }
+            .content { padding: 20px; }
+            .nav { padding: 15px 20px; }
+            table { font-size: 0.85em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🚀 ANYPRO</h1>
+            <div class="subtitle">Sistema ERP Modular Multi-Tenant</div>
+            <div class="version">Projeto 2026 | Última Atualização: Novembro 2025</div>
+        </div>
+        
+        <!-- NAVIGATION -->
+        <nav class="nav">
+            <ul class="nav-links">
+                <li><a href="#visao-geral">📋 Visão Geral</a></li>
+                <li><a href="#arquitetura">🏗️ Arquitetura</a></li>
+                <li><a href="#sis">🔧 Sistema (SIS)</a></li>
+                <li><a href="#modelo-dados">🗄️ Modelo de Dados</a></li>
+                <li><a href="#modulos">📦 Módulos</a></li>
+                <li><a href="#roadmap">🗓️ Roadmap</a></li>
+                <li><a href="#apis">🔌 APIs</a></li>
+                <li><a href="#testes">🧪 Testes</a></li>
+                <li><a href="#glossario">📖 Glossário</a></li>
+                <li><a href="#referencias">📚 Referências</a></li>
+            </ul>
+        </nav>
+        
+        <!-- PROGRESS SECTION -->
+        <div class="progress-section">
+            <h3 class="progress-heading">📊 Progresso do Projeto</h3>
+            <div class="progress-grid">
+                <div class="progress-item">
+                    <strong>📝 Documentação</strong>
+                    <div class="progress-bar">
+                        <div class="progress-fill green" data-width="70"></div>
+                    </div>
+                    <span class="progress-label">70% completo</span>
+                </div>
+                <div class="progress-item">
+                    <strong>💻 Desenvolvimento Backend</strong>
+                    <div class="progress-bar">
+                        <div class="progress-fill orange" data-width="20"></div>
+                    </div>
+                    <span class="progress-label">20% completo</span>
+                </div>
+                <div class="progress-item">
+                    <strong>🎨 Desenvolvimento Frontend</strong>
+                    <div class="progress-bar">
+                        <div class="progress-fill orange" data-width="15"></div>
+                    </div>
+                    <span class="progress-label">15% completo</span>
+                </div>
+                <div class="progress-item">
+                    <strong>🧪 Testes</strong>
+                    <div class="progress-bar">
+                        <div class="progress-fill blue" data-width="10"></div>
+                    </div>
+                    <span class="progress-label">10% completo</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CONTENT -->
+        <div class="content">
+            
+            <!-- VISÃO GERAL -->
+            <section id="visao-geral">
+                <h2>🎯 Visão Geral</h2>
+                <p>O sistema tem como objetivo apresentar uma nova experiência aos usuários utilizando recursos de tecnologia e experiência de negócios. Composto pelos módulos de <strong>suprimentos</strong>, <strong>comercial</strong>, <strong>CRM</strong>, <strong>contabilidade</strong>, <strong>financeiro</strong>, <strong>recursos humanos</strong>, <strong>projetos</strong> e <strong>central de chamados</strong>, integra todas as áreas de forma prática e inteligente.</p>
+                
+                <h3>Características Principais</h3>
+                <div class="info-box">
+                    <ul>
+                        <li>🏢 <strong>Multi-Tenant</strong>: Suporta múltiplas organizações em uma única instância</li>
+                        <li>🔧 <strong>Modular</strong>: Módulos podem ser ativados/desativados por organização</li>
+                        <li>🌐 <strong>SaaS</strong>: Comercializado no modelo Software as a Service</li>
+                        <li>🐘 <strong>PostgreSQL</strong>: Banco de dados robusto e escalável</li>
+                        <li>🐳 <strong>Docker</strong>: Containerizado para fácil deploy</li>
+                        <li>🔐 <strong>Segurança</strong>: Sistema completo de autorizações e auditoria</li>
+                    </ul>
+                </div>
+                
+                <h3>📊 Menu da Área de Trabalho (MAT)</h3>
+                <p>Ao acessar o sistema o usuário tem acesso direto a área de trabalho. Nesta área o usuário possui informações em dashboards específicos que são apresentados de acordo com as autorizações concedidas para cada usuário através dos perfis de acesso.</p>
+                
+                <h3>⚙️ Menu da Área de Configuração (MAC)</h3>
+                <p>Os usuários com autorização para configurações podem acessar esta área para definir parâmetros de negócio para o sistema. As configurações são apresentadas por áreas de negócio.</p>
+            </section>
+            
+            <!-- ARQUITETURA -->
+            <section id="arquitetura">
+                <h2>🏗️ Arquitetura do Sistema</h2>
+                
+                <h3>Stack Tecnológico</h3>
+                
+                <div class="module-card">
+                    <h4>💻 Backend</h4>
+                    <ul>
+                        <li><strong>.NET 8.0</strong> - Framework principal</li>
+                        <li><strong>ASP.NET Core Web API</strong> - Camada de APIs RESTful</li>
+                        <li><strong>Entity Framework Core 8.0</strong> - ORM (Object-Relational Mapping)</li>
+                        <li><strong>PostgreSQL 16+</strong> - Banco de dados relacional principal</li>
+                        <li><strong>Redis</strong> - Cache distribuído e gerenciamento de sessões</li>
+                        <li><strong>Dapper</strong> - Micro-ORM para queries de alta performance</li>
+                        <li><strong>MediatR</strong> - Implementação de CQRS e mediator pattern</li>
+                        <li><strong>FluentValidation</strong> - Validação de dados de entrada</li>
+                        <li><strong>Serilog</strong> - Logging estruturado</li>
+                        <li><strong>Hangfire</strong> - Processamento de tarefas em background</li>
+                    </ul>
+                </div>
+                
+                <div class="module-card">
+                    <h4>🎨 Frontend</h4>
+                    <ul>
+                        <li><strong>React 18+</strong> com TypeScript - Biblioteca UI moderna</li>
+                        <li><strong>Material-UI (MUI)</strong> - Biblioteca de componentes UI</li>
+                        <li><strong>Redux Toolkit</strong> - Gerenciamento de estado global</li>
+                        <li><strong>React Query (TanStack Query)</strong> - Gerenciamento de dados assíncronos</li>
+                        <li><strong>React Router v6</strong> - Roteamento de páginas</li>
+                        <li><strong>Formik + Yup</strong> - Gerenciamento e validação de formulários</li>
+                        <li><strong>Axios</strong> - Cliente HTTP</li>
+                        <li><strong>Chart.js / Recharts</strong> - Gráficos e dashboards</li>
+                        <li><strong>Vite</strong> - Build tool e dev server</li>
+                    </ul>
+                </div>
+                
+                <div class="module-card">
+                    <h4>🐳 Infraestrutura & DevOps</h4>
+                    <ul>
+                        <li><strong>Docker & Docker Compose</strong> - Containerização de aplicações</li>
+                        <li><strong>Kubernetes (K8s)</strong> - Orquestração de containers (produção)</li>
+                        <li><strong>NGINX</strong> - Reverse proxy, load balancer e servidor web</li>
+                        <li><strong>Azure / AWS</strong> - Cloud hosting e serviços gerenciados</li>
+                        <li><strong>GitHub Actions</strong> - CI/CD pipelines</li>
+                        <li><strong>SonarQube</strong> - Análise de qualidade de código</li>
+                        <li><strong>Prometheus + Grafana</strong> - Monitoramento e métricas</li>
+                        <li><strong>ELK Stack</strong> - Logging centralizado (Elasticsearch, Logstash, Kibana)</li>
+                    </ul>
+                </div>
+                
+                <h3>Padrões de Arquitetura</h3>
+                <div class="info-box">
+                    <ul>
+                        <li>✅ <strong>Clean Architecture</strong> - Separação clara de camadas (Domain, Application, Infrastructure, Presentation)</li>
+                        <li>✅ <strong>DDD (Domain-Driven Design)</strong> - Modelagem orientada ao domínio de negócio</li>
+                        <li>✅ <strong>CQRS (Command Query Responsibility Segregation)</strong> - Separação de comandos (escrita) e queries (leitura)</li>
+                        <li>✅ <strong>Repository Pattern</strong> - Abstração da camada de acesso a dados</li>
+                        <li>✅ <strong>Unit of Work</strong> - Gerenciamento consistente de transações</li>
+                        <li>✅ <strong>Dependency Injection</strong> - Inversão de controle e baixo acoplamento</li>
+                        <li>✅ <strong>Event Sourcing</strong> - Armazenamento de eventos de domínio para auditoria</li>
+                        <li>✅ <strong>API Gateway Pattern</strong> - Ponto único de entrada para microserviços</li>
+                    </ul>
+                </div>
+                
+                <h3>Estrutura de Pastas do Backend</h3>
+                <ul class="folder-tree">
+                    <li>
+                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Backend</span></div>
+                        <ul class="tree-children">
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">src</span></div>
+                                <ul class="tree-children">
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Domain</span><span class="tree-note">— Camada de domínio</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Entities</span><span class="tree-note">— Entidades do domínio</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">ValueObjects</span><span class="tree-note">— Objetos de valor</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Enums</span><span class="tree-note">— Enumerações</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Events</span><span class="tree-note">— Eventos de domínio</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Interfaces</span><span class="tree-note">— Interfaces do domínio</span></div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Application</span><span class="tree-note">— Casos de uso e lógica</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Commands</span><span class="tree-note">— Comandos CQRS</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Queries</span><span class="tree-note">— Consultas CQRS</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">DTOs</span><span class="tree-note">— Data Transfer Objects</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Validators</span><span class="tree-note">— FluentValidation</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Mappings</span><span class="tree-note">— AutoMapper profiles</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Interfaces</span><span class="tree-note">— Interfaces de serviços</span></div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Infrastructure</span><span class="tree-note">— Infraestrutura</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Data</span><span class="tree-note">— Contexto EF Core</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Repositories</span><span class="tree-note">— Repositórios</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Services</span><span class="tree-note">— Serviços externos</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Seeders</span><span class="tree-note">— Dados iniciais (SIS)</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Migrations</span><span class="tree-note">— EF Core Migrations</span></div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.WebAPI</span><span class="tree-note">— API RESTful</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Controllers</span><span class="tree-note">— Endpoints da API</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Middleware</span><span class="tree-note">— Middlewares</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Filters</span><span class="tree-note">— Action filters</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Extensions</span><span class="tree-note">— Extension methods</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">Program.cs</span><span class="tree-note">— Startup</span></div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.Shared</span><span class="tree-note">— Código compartilhado</span></div>
+                                        <ul class="tree-children">
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Constants</span><span class="tree-note">— Constantes globais</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Helpers</span><span class="tree-note">— Classes auxiliares</span></div></li>
+                                            <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Extensions</span><span class="tree-note">— Extension methods</span></div></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">tests</span></div>
+                                <ul class="tree-children">
+                                    <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.UnitTests</span><span class="tree-note">— Testes unitários</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.IntegrationTests</span><span class="tree-note">— Testes de integração</span></div></li>
+                                    <li><div class="tree-item"><span class="tree-icon tree-folder">📁</span><span class="tree-name">Anypro.E2ETests</span><span class="tree-note">— Testes end-to-end</span></div></li>
+                                </ul>
+                            </li>
+                            <li><div class="tree-item"><span class="tree-icon tree-config">⚙️</span><span class="tree-name">docker-compose.yml</span><span class="tree-note">— Orquestração de containers</span></div></li>
+                            <li><div class="tree-item"><span class="tree-icon tree-config">⚙️</span><span class="tree-name">Dockerfile</span><span class="tree-note">— Imagem Docker</span></div></li>
+                            <li><div class="tree-item"><span class="tree-icon tree-file">📄</span><span class="tree-name">README.md</span><span class="tree-note">— Documentação</span></div></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>Diagrama de Camadas (Clean Architecture)</h3>
+                <div class="info-box">
+                    <div class="diagram-container">
+                        <div class="diagram-inner">
+                            <div class="layer-box layer-presentation">📱 <strong>Presentation Layer</strong> (WebAPI, Controllers)</div>
+                            <div class="layer-indent">
+                                <div class="layer-box layer-application">⚙️ <strong>Application Layer</strong> (Use Cases, DTOs, CQRS)</div>
+                                <div class="layer-indent">
+                                    <div class="layer-box layer-domain">💼 <strong>Domain Layer</strong> (Entities, Value Objects, Business Rules)</div>
+                                </div>
+                                <div class="layer-box layer-infrastructure">🔧 <strong>Infrastructure Layer</strong> (EF Core, Repositories, External Services)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="layer-note"><strong>Regra de Dependência:</strong> Camadas externas dependem de camadas internas, nunca o contrário. O Domain não conhece nenhuma outra camada.</p>
+                </div>
+            </section>
+            
+            <!-- SISTEMA (SIS) -->
+            <section id="sis">
+                <h2>🔧 (SIS) Sistema - Inicialização de Dados</h2>
+                
+                <div class="success-box">
+                    <h4>Sistema de Inicialização de Dados (SIS)</h4>
+                    <p>O Sistema de Inicialização de Dados (SIS) é responsável por garantir que todas as tabelas essenciais do Anypro estejam populadas com dados globais e parâmetros necessários para o funcionamento do sistema. Este processo deve ocorrer <strong>automaticamente</strong> durante a inicialização da aplicação, sem intervenção manual.</p>
+                </div>
+                
+                <h3>Características do SIS</h3>
+                <ul>
+                    <li>✅ <strong>Automático</strong>: Executa sem intervenção humana durante o startup</li>
+                    <li>✅ <strong>Idempotente</strong>: Pode ser executado múltiplas vezes sem causar duplicação</li>
+                    <li>✅ <strong>Versionado</strong>: Controla versões de dados para permitir atualizações</li>
+                    <li>✅ <strong>Multi-instância</strong>: Suporta execução em ambientes com múltiplas instâncias</li>
+                    <li>✅ <strong>Seguro</strong>: Utiliza mecanismos de lock para evitar conflitos</li>
+                    <li>✅ <strong>Auditável</strong>: Registra todas as operações realizadas</li>
+                </ul>
+                
+                <h3>Ordem de Execução</h3>
+                <div class="info-box">
+                    <ol>
+                        <li>Idiomas (sem dependências)</li>
+                        <li>Países (sem dependências)</li>
+                        <li>Moedas (dependência: Países)</li>
+                        <li>Estados (dependência: Países)</li>
+                        <li>Cidades (dependência: Estados)</li>
+                        <li>Unidades de Medida (sem dependências)</li>
+                        <li>Tipos de Documento (sem dependências)</li>
+                        <li>Regimes Tributários (dependência: Países)</li>
+                        <li>Naturezas de Operação Fiscal (dependência: Regimes Tributários)</li>
+                        <li>Categorias de Fornecedores (sem dependências)</li>
+                        <li>Formas de Pagamento (sem dependências)</li>
+                    </ol>
+                </div>
+                
+                <h3>Tabelas Globais</h3>
+                
+                <!-- PAÍSES -->
+                <div class="module-card">
+                    <h4>🌎 1. PAÍSES</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-002</span>
+                    <p><strong>Campos principais:</strong> Id, Nome, NomeOficial, CodigoISO2, CodigoISO3, CodigoNumerico, DDI, Continente, IdiomaOficial, Ativo</p>
+                    <p><strong>Fonte:</strong> API do IBGE: <code>https://servicodados.ibge.gov.br/api/v1/localidades/paises</code></p>
+                    <p><strong>Dados obrigatórios:</strong> Brasil (BRA) + 193 países membros da ONU</p>
+                </div>
+                
+                <!-- ESTADOS -->
+                <div class="module-card">
+                    <h4>📍 2. ESTADOS/UF</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-003</span>
+                    <p><strong>Campos principais:</strong> Id, PaisId, Nome, Sigla, CodigoIBGE, RegiaoGeografica, Ativo</p>
+                    <p><strong>Fonte:</strong> API do IBGE: <code>https://servicodados.ibge.gov.br/api/v1/localidades/estados</code></p>
+                    <p><strong>Dados obrigatórios:</strong> 26 Estados brasileiros + Distrito Federal</p>
+                </div>
+                
+                <!-- CIDADES -->
+                <div class="module-card">
+                    <h4>🏙️ 3. CIDADES/MUNICÍPIOS</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-004</span>
+                    <p><strong>Campos principais:</strong> Id, EstadoId, Nome, CodigoIBGE, CapitalEstadual, Ativo</p>
+                    <p><strong>Volume:</strong> 5.570 municípios do Brasil (2024)</p>
+                    <div class="warning-box">
+                        <strong>⚠️ Estratégia recomendada:</strong> Carregar sob demanda quando usuário seleciona o estado
+                    </div>
+                </div>
+                
+                <!-- UNIDADES DE MEDIDA -->
+                <div class="module-card">
+                    <h4>📏 4. UNIDADES DE MEDIDA</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-005</span>
+                    <p><strong>Tipos:</strong> Massa/Peso, Comprimento, Volume, Área, Quantidade, Tempo</p>
+                    <p><strong>Exemplos:</strong></p>
+                    <ul>
+                        <li><strong>Massa:</strong> kg (Base), g, t, lb, oz</li>
+                        <li><strong>Comprimento:</strong> m (Base), cm, km, mm, in, ft</li>
+                        <li><strong>Volume:</strong> L (Base), mL, m³, gal</li>
+                        <li><strong>Quantidade:</strong> UN (Base), DZ (12), CT (100), MI (1000)</li>
+                    </ul>
+                </div>
+                
+                <!-- MOEDAS -->
+                <div class="module-card">
+                    <h4>💰 5. MOEDAS</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-006</span>
+                    <p><strong>Padrão:</strong> ISO 4217</p>
+                    <p><strong>Moedas principais (10):</strong></p>
+                    <ul>
+                        <li>BRL (986) - Real Brasileiro - R$ - 2 casas</li>
+                        <li>USD (840) - Dólar Americano - $ - 2 casas</li>
+                        <li>EUR (978) - Euro - € - 2 casas</li>
+                        <li>GBP (826) - Libra Esterlina - £ - 2 casas</li>
+                        <li>JPY (392) - Iene - ¥ - 0 casas</li>
+                    </ul>
+                    <p><strong>Total inicial:</strong> 30-40 moedas mais relevantes</p>
+                </div>
+                
+                <!-- IDIOMAS -->
+                <div class="module-card">
+                    <h4>🌐 6. IDIOMAS</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-007</span>
+                    <p><strong>Padrão:</strong> ISO 639</p>
+                    <p><strong>Idiomas obrigatórios (7):</strong> pt (Português - padrão), en (English), es (Español), fr (Français), de (Deutsch), it (Italiano), zh (中文)</p>
+                </div>
+                
+                <!-- TIPOS DE DOCUMENTO -->
+                <div class="module-card">
+                    <h4>📄 7. TIPOS DE DOCUMENTO (Brasil)</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">ADM-AUT-008</span>
+                    <p><strong>Pessoa Física:</strong> CPF (validação), RG, CNH, Passaporte</p>
+                    <p><strong>Pessoa Jurídica:</strong> CNPJ (validação), IE, IM</p>
+                </div>
+                
+                <!-- REGIMES TRIBUTÁRIOS -->
+                <div class="module-card">
+                    <h4>💼 8. REGIMES TRIBUTÁRIOS (Brasil)</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">FIS-AUT-001</span>
+                    <p><strong>Regimes obrigatórios:</strong> Simples Nacional, Lucro Presumido, Lucro Real, MEI, Pessoa Física</p>
+                </div>
+                
+                <!-- CATEGORIAS DE FORNECEDORES -->
+                <div class="module-card">
+                    <h4>🏭 9. CATEGORIAS DE FORNECEDORES</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">SUP-AUT-001</span>
+                    <p><strong>Categorias (10):</strong> MAT (Materiais), SRV (Serviços), TRP (Transportadora), AUT (Autônomo), PUB (Órgão Público), IMP (Importação), EXP (Exportação), TEC (Tecnologia), CON (Consultoria), INF (Infraestrutura)</p>
+                </div>
+                
+                <!-- FORMAS DE PAGAMENTO -->
+                <div class="module-card">
+                    <h4>💳 10. FORMAS DE PAGAMENTO</h4>
+                    <span class="badge badge-tbg">TBG - Global</span>
+                    <span class="badge badge-aut">FIN-AUT-001</span>
+                    <p><strong>Formas (10):</strong> BOL (Boleto), TED, PIX, DEB (Débito Automático), CAR (Cartão), DIN (Dinheiro), CHE (Cheque), CRE (Crediário), DOC, ADI (Adiantamento)</p>
+                </div>
+                
+                <h3>Checklist de Implementação</h3>
+                <div class="info-box">
+                    <h4>Fase 1 - Infraestrutura Base</h4>
+                    <ul>
+                        <li>☐ Criar interface ISeeder</li>
+                        <li>☐ Criar classe abstrata BaseSeeder&lt;T&gt;</li>
+                        <li>☐ Criar classe SeederManager</li>
+                        <li>☐ Implementar mecanismo de lock distribuído</li>
+                        <li>☐ Integrar com startup da aplicação</li>
+                    </ul>
+                    
+                    <h4>Fase 2 - Seeders Básicos</h4>
+                    <ul>
+                        <li>☐ IdiomaSeeder v1.0.0</li>
+                        <li>☐ PaisSeeder v1.0.0</li>
+                        <li>☐ UnidadeMedidaSeeder v1.0.0</li>
+                        <li>☐ TipoDocumentoSeeder v1.0.0</li>
+                    </ul>
+                    
+                    <h4>Fase 3 - Seeders com Dependências</h4>
+                    <ul>
+                        <li>☐ MoedaSeeder v1.0.0 (Depende: Países)</li>
+                        <li>☐ EstadoSeeder v1.0.0 (Depende: Países)</li>
+                        <li>☐ RegimeTributarioSeeder v1.0.0 (Depende: Países)</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- MODELO DE DADOS -->
+            <section id="modelo-dados">
+                <h2>🗄️ Modelo de Dados</h2>
+                
+                <h3>Convenções de Nomenclatura</h3>
+                <div class="info-box">
+                    <ul>
+                        <li><strong>Tabelas:</strong> PascalCase, singular (ex: <code>Usuario</code>, <code>Fornecedor</code>, <code>NotaFiscal</code>)</li>
+                        <li><strong>Colunas:</strong> PascalCase (ex: <code>NomeCompleto</code>, <code>DataNascimento</code>, <code>EmailPrincipal</code>)</li>
+                        <li><strong>Chaves Primárias:</strong> <code>Id</code> (tipo: <code>uuid/GUID</code>)</li>
+                        <li><strong>Chaves Estrangeiras:</strong> <code>{Entidade}Id</code> (ex: <code>UsuarioId</code>, <code>OrganizacaoId</code>)</li>
+                        <li><strong>Campos de Auditoria:</strong> <code>CriadoEm</code>, <code>CriadoPor</code>, <code>AtualizadoEm</code>, <code>AtualizadoPor</code></li>
+                        <li><strong>Soft Delete:</strong> <code>ExcluidoEm</code>, <code>ExcluidoPor</code></li>
+                        <li><strong>Índices:</strong> Prefixo <code>IX_</code> + NomeTabela + NomeCampo (ex: <code>IX_Usuario_Email</code>)</li>
+                        <li><strong>Foreign Keys:</strong> Prefixo <code>FK_</code> + TabelaOrigem + TabelaDestino (ex: <code>FK_Usuario_Organizacao</code>)</li>
+                    </ul>
+                </div>
+                
+                <h3>Tabelas Multi-Tenant vs Globais</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Característica</th>
+                            <th>Exemplos</th>
+                            <th>Sigla</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>TBG (Global)</strong></td>
+                            <td>Sem coluna <code>TenantId</code>, dados compartilhados entre todas organizações</td>
+                            <td>Pais, Estado, Cidade, Moeda, UnidadeMedida, Idioma</td>
+                            <td><span class="badge badge-tbg">TBG</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>TBP (Privada)</strong></td>
+                            <td>Com coluna <code>TenantId</code>, dados isolados por organização</td>
+                            <td>Usuario, Fornecedor, Produto, NotaFiscal, Pedido</td>
+                            <td><span class="badge badge-tbp">TBP</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Entidades Base (Entity Base Classes)</h3>
+                
+                <h4>EntityBase - Entidade Global</h4>
+                <div class="code-block">public abstract class EntityBase
+{
+    public Guid Id { get; protected set; }
+    public DateTime CriadoEm { get; protected set; }
+    public Guid CriadoPor { get; protected set; }
+    public DateTime? AtualizadoEm { get; protected set; }
+    public Guid? AtualizadoPor { get; protected set; }
+    public DateTime? ExcluidoEm { get; protected set; }
+    public Guid? ExcluidoPor { get; protected set; }
+    public bool Ativo { get; protected set; } = true;
+    
+    // Soft delete
+    public bool IsDeleted => ExcluidoEm.HasValue;
+    
+    // Métodos de auditoria
+    public void MarkAsCreated(Guid userId)
+    {
+        CriadoEm = DateTime.UtcNow;
+        CriadoPor = userId;
+    }
+    
+    public void MarkAsUpdated(Guid userId)
+    {
+        AtualizadoEm = DateTime.UtcNow;
+        AtualizadoPor = userId;
+    }
+    
+    public void MarkAsDeleted(Guid userId)
+    {
+        ExcluidoEm = DateTime.UtcNow;
+        ExcluidoPor = userId;
+        Ativo = false;
+    }
+}</div>
+                
+                <h4>TenantEntityBase - Entidade Multi-Tenant</h4>
+                <div class="code-block">public abstract class TenantEntityBase : EntityBase
+{
+    public Guid TenantId { get; protected set; }
+    
+    // Construtor protegido
+    protected TenantEntityBase(Guid tenantId)
+    {
+        TenantId = tenantId;
+    }
+}</div>
+                
+                <h3>Exemplo de Entidade Completa</h3>
+                <div class="code-block">public class Usuario : TenantEntityBase
+{
+    // Propriedades básicas
+    public string NomeCompleto { get; private set; }
+    public string Email { get; private set; }
+    public string SenhaHash { get; private set; }
+    public string? Telefone { get; private set; }
+    public string? Avatar { get; private set; }
+    
+    // Relacionamentos
+    public Guid PerfilId { get; private set; }
+    public virtual Perfil Perfil { get; private set; }
+    
+    // Propriedades de controle
+    public DateTime? UltimoAcesso { get; private set; }
+    public bool EmailVerificado { get; private set; }
+    public bool Bloqueado { get; private set; }
+    public int TentativasLogin { get; private set; }
+    
+    // Construtor privado para EF Core
+    private Usuario() { }
+    
+    // Factory method
+    public static Usuario Criar(
+        Guid tenantId,
+        string nomeCompleto,
+        string email,
+        string senhaHash,
+        Guid perfilId,
+        Guid criadoPor)
+    {
+        var usuario = new Usuario
+        {
+            Id = Guid.NewGuid(),
+            TenantId = tenantId,
+            NomeCompleto = nomeCompleto,
+            Email = email.ToLowerInvariant(),
+            SenhaHash = senhaHash,
+            PerfilId = perfilId,
+            EmailVerificado = false,
+            Bloqueado = false,
+            TentativasLogin = 0
+        };
+        
+        usuario.MarkAsCreated(criadoPor);
+        return usuario;
+    }
+    
+    // Métodos de negócio
+    public void AtualizarPerfil(string nomeCompleto, string? telefone)
+    {
+        NomeCompleto = nomeCompleto;
+        Telefone = telefone;
+    }
+    
+    public void RegistrarAcesso()
+    {
+        UltimoAcesso = DateTime.UtcNow;
+        TentativasLogin = 0;
+    }
+    
+    public void IncrementarTentativasLogin()
+    {
+        TentativasLogin++;
+        if (TentativasLogin >= 5)
+        {
+            Bloqueado = true;
+        }
+    }
+}</div>
+                
+                <h3>Estratégias de Isolamento Multi-Tenant</h3>
+                <div class="warning-box">
+                    <h4>Estratégia Adotada: Database Per Tenant (Híbrida)</h4>
+                    <ul>
+                        <li>✅ <strong>Banco compartilhado</strong> para dados globais (TBG) - Schema <code>global</code></li>
+                        <li>✅ <strong>Schema isolado</strong> por organização para dados privados (TBP) - Schema <code>tenant_{tenantId}</code></li>
+                        <li>✅ <strong>Global Query Filter</strong> no EF Core para garantir isolamento automático</li>
+                        <li>✅ <strong>Tenant Resolver Middleware</strong> identifica TenantId do token JWT</li>
+                    </ul>
+                    
+                    <p><strong>Vantagens:</strong></p>
+                    <ul>
+                        <li>Isolamento forte entre organizações</li>
+                        <li>Backup e restore por tenant</li>
+                        <li>Escalabilidade horizontal (sharding futuro)</li>
+                        <li>Conformidade com LGPD e GDPR</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- MÓDULOS -->
+            <section id="modulos">
+                <h2>🏗️ Módulos do Sistema</h2>
+                
+                <!-- ADMINISTRAÇÃO EXPANDIDO -->
+                <div class="module-card">
+                    <h4>🔐 (ADM) Administração</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <span class="badge badge-tbg">Core Module</span>
+                    
+                    <p>Módulo central responsável pela gestão de organizações, usuários, segurança e configurações globais do sistema.</p>
+                    
+                    <h5>Funcionalidades Principais:</h5>
+                    <ul>
+                        <li><strong>Gestão de Organizações (Multi-Tenant)</strong>
+                            <ul>
+                                <li>Cadastro, edição e exclusão de organizações/empresas</li>
+                                <li>Ativação/desativação de módulos por organização</li>
+                                <li>Configuração de planos (Free, Basic, Professional, Enterprise)</li>
+                                <li>Limites de uso (usuários, armazenamento, transações)</li>
+                                <li>Customização de domínio e branding</li>
+                            </ul>
+                        </li>
+                        <li><strong>Gestão de Usuários</strong>
+                            <ul>
+                                <li>Cadastro, edição e exclusão de usuários</li>
+                                <li>Autenticação JWT com Refresh Token</li>
+                                <li>Autenticação multifator (2FA via TOTP)</li>
+                                <li>Recuperação de senha via email</li>
+                                <li>Bloqueio automático após tentativas falhas</li>
+                                <li>Gestão de sessões ativas</li>
+                            </ul>
+                        </li>
+                        <li><strong>Perfis e Autorizações</strong>
+                            <ul>
+                                <li>Criação de perfis de acesso personalizados</li>
+                                <li>Matriz de autorizações granular (999+ permissões)</li>
+                                <li>Herança de perfis (perfil pai → filho)</li>
+                                <li>Autorizações por módulo, tela e ação (Criar, Ler, Atualizar, Excluir)</li>
+                                <li>Autorizações especiais (Aprovar, Cancelar, Exportar, etc)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Auditoria Completa</strong>
+                            <ul>
+                                <li>Log de todas as operações CRUD</li>
+                                <li>Rastreamento de alterações (change tracking) - before/after</li>
+                                <li>Histórico de acessos ao sistema</li>
+                                <li>Registro de ações críticas (exportações, exclusões, aprovações)</li>
+                                <li>Compliance com LGPD (exportação de dados pessoais)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h5>Entidades Principais:</h5>
+                    <div class="code-block">- Organizacao (TenantId, Nome, CNPJ, PlanoId, ModulosAtivos, Status)
+- Usuario (Id, TenantId, Email, SenhaHash, PerfilId, Ativo, UltimoAcesso)
+- Perfil (Id, TenantId, Nome, Descricao, PerfilPaiId)
+- Autorizacao (Codigo, Modulo, Descricao, Categoria, TipoAcao)
+- PerfilAutorizacao (PerfilId, AutorizacaoId, Permitir)
+- AuditoriaLog (Id, TenantId, UsuarioId, Entidade, Acao, ValoresAntigos, ValoresNovos, DataHora)</div>
+                    
+                    <h5>APIs Principais:</h5>
+                    <div class="api-endpoint"><span class="method post">POST</span>/api/v1/auth/login</div>
+                    <div class="api-endpoint"><span class="method post">POST</span>/api/v1/auth/refresh-token</div>
+                    <div class="api-endpoint"><span class="method post">POST</span>/api/v1/auth/logout</div>
+                    <div class="api-endpoint"><span class="method get">GET</span>/api/v1/organizacoes</div>
+                    <div class="api-endpoint"><span class="method post">POST</span>/api/v1/organizacoes</div>
+                    <div class="api-endpoint"><span class="method get">GET</span>/api/v1/usuarios</div>
+                    <div class="api-endpoint"><span class="method post">POST</span>/api/v1/usuarios</div>
+                    <div class="api-endpoint"><span class="method put">PUT</span>/api/v1/usuarios/{id}</div>
+                    <div class="api-endpoint"><span class="method delete">DELETE</span>/api/v1/usuarios/{id}</div>
+                    <div class="api-endpoint"><span class="method get">GET</span>/api/v1/perfis</div>
+                    <div class="api-endpoint"><span class="method post">POST</span>/api/v1/perfis</div>
+                    <div class="api-endpoint"><span class="method get">GET</span>/api/v1/autorizacoes</div>
+                    <div class="api-endpoint"><span class="method get">GET</span>/api/v1/auditoria</div>
+                    
+                    <h5>Autorizações Necessárias:</h5>
+                    <div class="badge-group">
+                        <span class="badge badge-aut">ADM-AUT-001</span> Visualizar Organizações
+                        <span class="badge badge-aut">ADM-AUT-002</span> Criar Organizações
+                        <span class="badge badge-aut">ADM-AUT-010</span> Visualizar Usuários
+                        <span class="badge badge-aut">ADM-AUT-011</span> Criar Usuários
+                        <span class="badge badge-aut">ADM-AUT-020</span> Visualizar Perfis
+                        <span class="badge badge-aut">ADM-AUT-030</span> Visualizar Auditoria
+                    </div>
+                </div>
+                
+                <!-- SUPRIMENTOS EXPANDIDO -->
+                <div class="module-card">
+                    <h4>📦 (SUP) Suprimentos</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    
+                    <p>Gestão completa de fornecedores, compras, estoque e movimentações de materiais.</p>
+                    
+                    <h5>Funcionalidades Principais:</h5>
+                    <ul>
+                        <li><strong>Cadastro de Fornecedores</strong> - Dados cadastrais, categorias, contatos</li>
+                        <li><strong>Produtos e Serviços</strong> - Catálogo com códigos, descrições, unidades</li>
+                        <li><strong>Cotações de Compra</strong> - Solicitação de cotações para múltiplos fornecedores</li>
+                        <li><strong>Pedidos de Compra</strong> - Geração, aprovação e controle de pedidos</li>
+                        <li><strong>Recebimento de Mercadorias</strong> - Conferência e entrada no estoque</li>
+                        <li><strong>Controle de Estoque</strong> - Saldo, movimentações, reservas</li>
+                        <li><strong>Inventário</strong> - Contagem física, ajustes de estoque</li>
+                    </ul>
+                    
+                    <h5>Autorizações:</h5>
+                    <span class="badge badge-aut">SUP-AUT-001 a SUP-AUT-050</span>
+                </div>
+                
+                <!-- Demais módulos de forma resumida -->\n                <div class="module-card">
+                    <h4>(COM) Comercial</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Gestão de clientes, propostas comerciais, pedidos de venda e faturamento.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(CON) Contabilidade</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Plano de contas, lançamentos contábeis, conciliação e relatórios gerenciais.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(FIN) Financeiro</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Contas a pagar/receber, fluxo de caixa, conciliação bancária e tesouraria.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(RHU) Recursos Humanos</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Cadastro de funcionários, folha de pagamento, ponto, benefícios e férias.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(PRO) Projetos</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Planejamento, controle de tarefas, alocação de recursos e gestão de custos.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(CRM) CRM</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Gestão de leads, oportunidades, histórico de interações e campanhas.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(CSU) Central de Suporte</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Abertura de tickets, atendimento ao cliente, base de conhecimento e SLA.</p>
+                </div>
+            </section>
+            
+            <!-- ROADMAP -->
+            <section id="roadmap">
+                <h2>🗓️ Roadmap de Desenvolvimento</h2>
+                
+                <h3>Q1 2026 (Jan-Mar) - MVP Foundation</h3>
+                <div class="module-card">
+                    <h4>✅ Infraestrutura Base</h4>
+                    <ul>
+                        <li class="status-complete">✅ Estrutura de projetos .NET 8</li>
+                        <li class="status-complete">✅ Configuração Docker e Docker Compose</li>
+                        <li class="status-dev">🔄 Pipeline CI/CD (GitHub Actions)</li>
+                        <li class="status-planned">📋 Configuração de ambientes (Dev, Staging, Prod)</li>
+                    </ul>
+                </div>
+                
+                <div class="module-card">
+                    <h4>🔄 Módulo ADM (Administração)</h4>
+                    <ul>
+                        <li class="status-dev">🔄 Autenticação JWT + Refresh Token</li>
+                        <li class="status-dev">🔄 Gestão de Organizações</li>
+                        <li class="status-dev">🔄 Gestão de Usuários</li>
+                        <li class="status-planned">📋 Sistema de Perfis e Autorizações</li>
+                        <li class="status-planned">📋 Auditoria Básica</li>
+                    </ul>
+                </div>
+                
+                <div class="module-card">
+                    <h4>🔄 Sistema SIS (Inicialização de Dados)</h4>
+                    <ul>
+                        <li class="status-dev">🔄 Seeders de tabelas globais</li>
+                        <li class="status-planned">📋 Integração com APIs externas (IBGE)</li>
+                    </ul>
+                </div>
+                
+                <h3>Q2 2026 (Abr-Jun) - Módulos Core</h3>
+                <div class="module-card">
+                    <ul>
+                        <li class="status-planned">📋 Módulo SUP (Suprimentos) - Fase 1</li>
+                        <li class="status-planned">📋 Módulo FIN (Financeiro) - Fase 1</li>
+                        <li class="status-planned">📋 Dashboard principal</li>
+                        <li class="status-planned">📋 Relatórios básicos</li>
+                    </ul>
+                </div>
+                
+                <h3>Q3 2026 (Jul-Set) - Expansão de Módulos</h3>
+                <div class="module-card">
+                    <ul>
+                        <li class="status-planned">📋 Módulo COM (Comercial)</li>
+                        <li class="status-planned">📋 Módulo CRM</li>
+                        <li class="status-planned">📋 Integração com gateway de pagamento</li>
+                        <li class="status-planned">📋 Emissão de NFe</li>
+                    </ul>
+                </div>
+                
+                <h3>Q4 2026 (Out-Dez) - Finalização MVP</h3>
+                <div class="module-card">
+                    <ul>
+                        <li class="status-planned">📋 Módulo RHU (Recursos Humanos)</li>
+                        <li class="status-planned">📋 Módulo PRO (Projetos)</li>
+                        <li class="status-planned">📋 App Mobile (React Native)</li>
+                        <li class="status-planned">📋 Documentação completa</li>
+                        <li class="status-planned">📋 Lançamento versão Beta</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- MÓDULOS -->
+            <section id="modulos-old">
+                <h2>🏗️ Módulos do Sistema (Visão Resumida)</h2>
+                
+                <div class="module-card">
+                    <h4>(ADM) Administração</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Gestão de organizações, empresas, usuários, perfis, autorizações e parâmetros globais.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(SUP) Suprimentos</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Cadastro de fornecedores, gestão de compras, controle de estoque, cotações e pedidos.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(COM) Comercial</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Gestão de clientes, propostas comerciais, pedidos de venda e faturamento.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(CON) Contabilidade</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Plano de contas, lançamentos contábeis, conciliação e relatórios gerenciais.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(FIN) Financeiro</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Contas a pagar/receber, fluxo de caixa, conciliação bancária e tesouraria.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(RHU) Recursos Humanos</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Cadastro de funcionários, folha de pagamento, ponto, benefícios e férias.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(PRO) Projetos</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Planejamento, controle de tarefas, alocação de recursos e gestão de custos.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(CRM) CRM</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Gestão de leads, oportunidades, histórico de interações e campanhas.</p>
+                </div>
+                
+                <div class="module-card">
+                    <h4>(CSU) Central de Suporte</h4>
+                    <span class="status-badge status-dev">Em Desenvolvimento</span>
+                    <p>Abertura de tickets, atendimento ao cliente, base de conhecimento e SLA.</p>
+                </div>
+            </section>
+            
+            <!-- REFERÊNCIAS -->
+            <section id="referencias">
+                <h2>📚 Referências Técnicas</h2>
+                
+                <h3>Convenções e Símbolos</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Símbolo</th>
+                            <th>Significado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>(-)</strong></td>
+                            <td>Item não relacionado a outras funcionalidades - pode ser estacionado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(+)</strong></td>
+                            <td>Item necessário para implementação imediata</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(p1-p5)</strong></td>
+                            <td>Fases para implementação por prioridade</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(DMAT)</strong></td>
+                            <td>Dados Mestres - Área de Trabalho</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(DMAC)</strong></td>
+                            <td>Dados Mestres - Área de Configuração</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(TBP/TBG)</strong></td>
+                            <td>Tabelas Privadas (com Tenant) ou Globais (sem Tenant)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(AUT-XXX-999)</strong></td>
+                            <td>Código de autorização necessária</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Fontes de Dados Externas</h3>
+                <ul>
+                    <li><strong>API IBGE:</strong> <a href="https://servicodados.ibge.gov.br/api/docs/localidades" target="_blank" rel="noopener">https://servicodados.ibge.gov.br/api/docs/localidades</a></li>
+                    <li><strong>ISO 3166 (Países):</strong> <a href="https://www.iso.org/iso-3166-country-codes.html" target="_blank" rel="noopener">https://www.iso.org/iso-3166-country-codes.html</a></li>
+                    <li><strong>ISO 4217 (Moedas):</strong> <a href="https://www.iso.org/iso-4217-currency-codes.html" target="_blank" rel="noopener">https://www.iso.org/iso-4217-currency-codes.html</a></li>
+                    <li><strong>ISO 639 (Idiomas):</strong> <a href="https://www.iso.org/iso-639-language-codes.html" target="_blank" rel="noopener">https://www.iso.org/iso-639-language-codes.html</a></li>
+                </ul>
+            </section>
+            
+            <!-- APIs -->
+            <section id="apis">
+                <h2>🔌 Documentação de APIs</h2>
+                
+                <div class="info-box">
+                    <p><strong>Base URL:</strong> <code>https://api.anypro.com.br</code></p>
+                    <p><strong>Autenticação:</strong> Bearer Token (JWT)</p>
+                    <p><strong>Formato:</strong> JSON (application/json)</p>
+                    <p><strong>Versionamento:</strong> URL Path (<code>/api/v1/</code>)</p>
+                </div>
+                
+                <h3>Autenticação</h3>
+                
+                <h4>POST /api/v1/auth/login</h4>
+                <div class="code-block">Request:
+{
+  "email": "usuario@empresa.com.br",
+  "senha": "SenhaSegura123!"
+}
+
+Response (200 OK):
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refreshToken": "550e8400-e29b-41d4-a716-446655440000",
+  "expiresIn": 3600,
+  "usuario": {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "nome": "João Silva",
+    "email": "usuario@empresa.com.br",
+    "perfil": "Administrador"
+  }
+}</div>
+                
+                <h4>POST /api/v1/auth/refresh-token</h4>
+                <div class="code-block">Request:
+{
+  "refreshToken": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+Response (200 OK):
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiresIn": 3600
+}</div>
+                
+                <h3>Usuários</h3>
+                
+                <h4>GET /api/v1/usuarios</h4>
+                <p><strong>Autorização:</strong> <span class="badge badge-aut">ADM-AUT-010</span></p>
+                <div class="code-block">Query Parameters:
+- page: int (default: 1)
+- pageSize: int (default: 20, max: 100)
+- search: string (busca por nome ou email)
+- ativo: boolean (filtro por status)
+
+Response (200 OK):
+{
+  "data": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "nomeCompleto": "João Silva",
+      "email": "joao.silva@empresa.com.br",
+      "perfilId": "perfil-uuid",
+      "perfilNome": "Administrador",
+      "ativo": true,
+      "ultimoAcesso": "2025-11-29T10:30:00Z",
+      "criadoEm": "2025-01-15T08:00:00Z"
+    }
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "pageSize": 20,
+    "totalItems": 150,
+    "totalPages": 8
+  }
+}</div>
+                
+                <h4>POST /api/v1/usuarios</h4>
+                <p><strong>Autorização:</strong> <span class="badge badge-aut">ADM-AUT-011</span></p>
+                <div class="code-block">Request:
+{
+  "nomeCompleto": "Maria Santos",
+  "email": "maria.santos@empresa.com.br",
+  "senha": "SenhaSegura123!",
+  "perfilId": "perfil-uuid",
+  "telefone": "+55 11 98765-4321"
+}
+
+Response (201 Created):
+{
+  "id": "new-user-uuid",
+  "nomeCompleto": "Maria Santos",
+  "email": "maria.santos@empresa.com.br",
+  "perfilId": "perfil-uuid",
+  "ativo": true,
+  "criadoEm": "2025-11-29T14:30:00Z"
+}</div>
+                
+                <h3>Códigos de Status HTTP</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Significado</th>
+                            <th>Uso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>200</strong></td>
+                            <td>OK</td>
+                            <td>Requisição bem-sucedida (GET, PUT)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>201</strong></td>
+                            <td>Created</td>
+                            <td>Recurso criado com sucesso (POST)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>204</strong></td>
+                            <td>No Content</td>
+                            <td>Sucesso sem retorno de dados (DELETE)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>400</strong></td>
+                            <td>Bad Request</td>
+                            <td>Erro de validação nos dados enviados</td>
+                        </tr>
+                        <tr>
+                            <td><strong>401</strong></td>
+                            <td>Unauthorized</td>
+                            <td>Autenticação necessária ou token inválido</td>
+                        </tr>
+                        <tr>
+                            <td><strong>403</strong></td>
+                            <td>Forbidden</td>
+                            <td>Usuário autenticado mas sem permissão</td>
+                        </tr>
+                        <tr>
+                            <td><strong>404</strong></td>
+                            <td>Not Found</td>
+                            <td>Recurso não encontrado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>409</strong></td>
+                            <td>Conflict</td>
+                            <td>Conflito (ex: email já cadastrado)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>500</strong></td>
+                            <td>Internal Server Error</td>
+                            <td>Erro não tratado no servidor</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- TESTES -->
+            <section id="testes">
+                <h2>🧪 Estratégia de Testes</h2>
+                
+                <h3>Pirâmide de Testes</h3>
+                <div class="info-box">
+                    <div class="test-pyramid">
+                        <div class="pyramid-level">
+                            <strong>🔺 E2E Tests (10%)</strong> - Testes de ponta a ponta
+                            <p>Selenium/Playwright - Cenários críticos de negócio</p>
+                        </div>
+                        <div class="pyramid-level">
+                            <strong>🔶 Integration Tests (30%)</strong> - Testes de integração
+                            <p>WebApplicationFactory - APIs, Banco de dados, Serviços externos</p>
+                        </div>
+                        <div class="pyramid-level">
+                            <strong>🔷 Unit Tests (60%)</strong> - Testes unitários
+                            <p>xUnit + Moq - Lógica de negócio, Validações, Casos de uso</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Ferramentas e Frameworks</h3>
+                <div class="module-card">
+                    <h4>Backend (.NET)</h4>
+                    <ul>
+                        <li><strong>xUnit</strong> - Framework de testes principal</li>
+                        <li><strong>Moq</strong> - Mocking de dependências</li>
+                        <li><strong>FluentAssertions</strong> - Assertions mais legíveis</li>
+                        <li><strong>Bogus</strong> - Geração de dados fake para testes</li>
+                        <li><strong>WebApplicationFactory</strong> - Testes de integração de APIs</li>
+                        <li><strong>Testcontainers</strong> - Containers Docker para testes (PostgreSQL, Redis)</li>
+                        <li><strong>Coverlet</strong> - Cobertura de código</li>
+                    </ul>
+                </div>
+                
+                <div class="module-card">
+                    <h4>Frontend (React)</h4>
+                    <ul>
+                        <li><strong>Jest</strong> - Framework de testes JavaScript</li>
+                        <li><strong>React Testing Library</strong> - Testes de componentes</li>
+                        <li><strong>MSW (Mock Service Worker)</strong> - Mock de APIs</li>
+                        <li><strong>Cypress</strong> - Testes E2E</li>
+                    </ul>
+                </div>
+                
+                <h3>Exemplo de Teste Unitário</h3>
+                <div class="code-block">public class CriarUsuarioCommandHandlerTests
+{
+    private readonly Mock<IUsuarioRepository> _usuarioRepositoryMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly CriarUsuarioCommandHandler _handler;
+    
+    public CriarUsuarioCommandHandlerTests()
+    {
+        _usuarioRepositoryMock = new Mock<IUsuarioRepository>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _handler = new CriarUsuarioCommandHandler(
+            _usuarioRepositoryMock.Object,
+            _unitOfWorkMock.Object
+        );
+    }
+    
+    [Fact]
+    public async Task Handle_DeveRetornarSucesso_QuandoDadosValidos()
+    {
+        // Arrange
+        var command = new CriarUsuarioCommand
+        {
+            TenantId = Guid.NewGuid(),
+            NomeCompleto = "João Silva",
+            Email = "joao@teste.com",
+            Senha = "Senha123!",
+            PerfilId = Guid.NewGuid()
+        };
+        
+        _usuarioRepositoryMock
+            .Setup(x => x.ExisteEmailAsync(command.Email, command.TenantId))
+            .ReturnsAsync(false);
+        
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+        
+        // Assert
+        result.Should().NotBeNull();
+        result.IsSuccess.Should().BeTrue();
+        _usuarioRepositoryMock.Verify(x => x.AdicionarAsync(It.IsAny<Usuario>()), Times.Once);
+        _unitOfWorkMock.Verify(x => x.CommitAsync(), Times.Once);
+    }
+    
+    [Fact]
+    public async Task Handle_DeveRetornarErro_QuandoEmailJaExiste()
+    {
+        // Arrange
+        var command = new CriarUsuarioCommand
+        {
+            Email = "joao@teste.com",
+            TenantId = Guid.NewGuid()
+        };
+        
+        _usuarioRepositoryMock
+            .Setup(x => x.ExisteEmailAsync(command.Email, command.TenantId))
+            .ReturnsAsync(true);
+        
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+        
+        // Assert
+        result.IsSuccess.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Message.Contains("já cadastrado"));
+    }
+}</div>
+                
+                <h3>Metas de Cobertura</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Camada</th>
+                            <th>Meta de Cobertura</th>
+                            <th>Prioridade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Domain Layer</strong></td>
+                            <td>90%+</td>
+                            <td>🔴 Crítica</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Application Layer</strong></td>
+                            <td>85%+</td>
+                            <td>🔴 Crítica</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Infrastructure Layer</strong></td>
+                            <td>70%+</td>
+                            <td>🟡 Alta</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Presentation Layer</strong></td>
+                            <td>60%+</td>
+                            <td>🟢 Média</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- GLOSSÁRIO -->
+            <section id="glossario">
+                <h2>📖 Glossário de Termos</h2>
+                
+                <div class="glossary-term">
+                    <strong>API (Application Programming Interface)</strong>
+                    <p>Interface de programação que permite a comunicação entre diferentes sistemas através de endpoints HTTP.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>Clean Architecture</strong>
+                    <p>Padrão arquitetural que separa o código em camadas com responsabilidades bem definidas, priorizando a independência de frameworks e facilitando testes.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>CQRS (Command Query Responsibility Segregation)</strong>
+                    <p>Padrão que separa operações de leitura (Queries) das operações de escrita (Commands), otimizando performance e escalabilidade.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>DDD (Domain-Driven Design)</strong>
+                    <p>Abordagem de desenvolvimento que foca na modelagem do domínio de negócio, utilizando linguagem ubíqua e agregados.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>DTO (Data Transfer Object)</strong>
+                    <p>Objeto usado para transferir dados entre camadas da aplicação ou entre cliente e servidor, sem lógica de negócio.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>EF Core (Entity Framework Core)</strong>
+                    <p>ORM (Object-Relational Mapper) moderno para .NET que permite trabalhar com bancos de dados usando objetos C#.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>JWT (JSON Web Token)</strong>
+                    <p>Padrão aberto para transmissão segura de informações entre partes como um objeto JSON, usado para autenticação.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>Multi-Tenant</strong>
+                    <p>Arquitetura onde uma única instância da aplicação serve múltiplas organizações (tenants), com isolamento de dados.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>ORM (Object-Relational Mapping)</strong>
+                    <p>Técnica de programação que converte dados entre sistemas relacionais e objetos, facilitando o acesso ao banco de dados.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>Repository Pattern</strong>
+                    <p>Padrão de design que abstrai o acesso a dados, separando a lógica de persistência da lógica de negócio.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>SaaS (Software as a Service)</strong>
+                    <p>Modelo de licenciamento onde o software é hospedado na nuvem e acessado via internet, geralmente por assinatura.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>Seeder</strong>
+                    <p>Classe responsável por popular o banco de dados com dados iniciais necessários para o funcionamento do sistema.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>Soft Delete</strong>
+                    <p>Técnica de "exclusão lógica" onde registros não são removidos fisicamente do banco, mas marcados como excluídos.</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>TBG (Tabela Global)</strong>
+                    <p>Tabela sem isolamento por tenant, compartilhada entre todas as organizações (ex: Países, Moedas).</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>TBP (Tabela Privada)</strong>
+                    <p>Tabela com isolamento por tenant, dados específicos de cada organização (ex: Usuários, Pedidos).</p>
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>Unit of Work</strong>
+                    <p>Padrão que mantém lista de objetos afetados por uma transação e coordena a gravação de mudanças.</p>
+                </div>
+            </section>
+            
+            <!-- REFERÊNCIAS ANTIGAS (manter para compatibilidade) -->
+            <section id="referencias">
+                <h2>📚 Referências Técnicas</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Símbolo</th>
+                            <th>Significado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>(-)</strong></td>
+                            <td>Item não relacionado a outras funcionalidades - pode ser estacionado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(+)</strong></td>
+                            <td>Item necessário para implementação imediata</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(p1-p5)</strong></td>
+                            <td>Fases para implementação por prioridade</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(DMAT)</strong></td>
+                            <td>Dados Mestres - Área de Trabalho</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(DMAC)</strong></td>
+                            <td>Dados Mestres - Área de Configuração</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(TBP/TBG)</strong></td>
+                            <td>Tabelas Privadas (com Tenant) ou Globais (sem Tenant)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>(AUT-XXX-999)</strong></td>
+                            <td>Código de autorização necessária</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Fontes de Dados Externas</h3>
+                <ul>
+                    <li><strong>API IBGE:</strong> <a href="https://servicodados.ibge.gov.br/api/docs/localidades" target="_blank" rel="noopener">https://servicodados.ibge.gov.br/api/docs/localidades</a></li>
+                    <li><strong>ISO 3166 (Países):</strong> <a href="https://www.iso.org/iso-3166-country-codes.html" target="_blank" rel="noopener">https://www.iso.org/iso-3166-country-codes.html</a></li>
+                    <li><strong>ISO 4217 (Moedas):</strong> <a href="https://www.iso.org/iso-4217-currency-codes.html" target="_blank" rel="noopener">https://www.iso.org/iso-4217-currency-codes.html</a></li>
+                    <li><strong>ISO 639 (Idiomas):</strong> <a href="https://www.iso.org/iso-639-language-codes.html" target="_blank" rel="noopener">https://www.iso.org/iso-639-language-codes.html</a></li>
+                </ul>
+            </section>
+            
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p>Projeto 2026 | Documentação Técnica</p>
+            <p class="footer-note">Última atualização: 29 de Novembro de 2025</p>
+        </div>
+    </div>
+    
+    <script>
+        // Anima as barras de progresso ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                if (width) {
+                    setTimeout(() => {
+                        bar.style.width = width + '%';
+                    }, 100);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

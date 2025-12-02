@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossário - ANYPRO</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 Glossário de Termos</h1>
+            <div class="subtitle">Definições e Conceitos Técnicos</div>
+        </div>
+        
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a>
+            <span>›</span>
+            <span>Glossário</span>
+        </div>
+        
+        <div class="nav">
+            <ul class="nav-links">
+                <li><a href="visao-geral.html">🎯 Visão Geral</a></li>
+                <li><a href="casos-uso.html">📋 Requisitos</a></li>
+                <li><a href="arquitetura.html">🏗️ Arquitetura</a></li>
+                <li><a href="banco-dados.html">🗄️ Banco de Dados</a></li>
+                <li><a href="autorizacoes.html">🔐 Segurança</a></li>
+                <li><a href="modulos.html">📦 Módulos</a></li>
+                <li><a href="apis.html">🔌 APIs</a></li>
+                <li><a href="ux-acessibilidade.html">♿ UX</a></li>
+                <li><a href="design-system.html">🎨 Design</a></li>
+                <li><a href="operacoes.html">⚙️ Operações</a></li>
+                <li><a href="testes.html">🧪 Testes</a></li>
+                <li><a href="sistema-sis.html">🔧 Bootstrap</a></li>
+                <li><a href="roadmap.html">🗓️ Roadmap</a></li>
+                <li><a href="contribuir.html">🤝 Contribuir</a></li>
+                <li><a href="referencias.html">📚 Referências</a></li>
+                <li><a href="glossario.html">📖 Glossário</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <h2>📘 Introdução</h2>
+            <div class="info-box">
+                <p>Este glossário contém definições de termos técnicos, siglas de módulos e conceitos utilizados no ANYPRO. Use-o como referência rápida para compreensão de arquitetura, desenvolvimento e padrões do sistema.</p>
+            </div>
+
+            <h2>📚 Referência</h2>
+            <h3>📖 Termos Técnicos</h3>
+            <div class="glossary-term">
+                <h3>API (Application Programming Interface)</h3>
+                <p>Interface de programação que permite a comunicação entre diferentes sistemas de software. No ANYPRO, a API RESTful expõe endpoints HTTP para que aplicações externas possam integrar-se ao sistema.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Clean Architecture</h3>
+                <p>Arquitetura de software proposta por Robert C. Martin (Uncle Bob) que organiza o código em camadas concêntricas, isolando a lógica de negócio de frameworks, banco de dados e UI. Garante testabilidade, manutenibilidade e independência de tecnologias externas.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>CQRS (Command Query Responsibility Segregation)</h3>
+                <p>Padrão arquitetural que separa operações de <strong>escrita</strong> (Commands) das operações de <strong>leitura</strong> (Queries). Commands modificam o estado do sistema, enquanto Queries apenas consultam dados. Permite otimizações específicas para cada tipo de operação.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>DDD (Domain-Driven Design)</h3>
+                <p>Abordagem de desenvolvimento de software que coloca o domínio do negócio no centro do projeto. Utiliza conceitos como Entidades, Value Objects, Aggregates, Repositories e Domain Services para modelar o problema de forma rica e expressiva.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>DTO (Data Transfer Object)</h3>
+                <p>Objeto simples usado para transferir dados entre camadas da aplicação ou através da rede (API). Não contém lógica de negócio, apenas propriedades para transporte de dados. Exemplo: <code>UsuarioDTO</code>, <code>ProdutoDTO</code>.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>ERP (Enterprise Resource Planning)</h3>
+                <p>Sistema integrado de gestão empresarial que centraliza informações de diversos departamentos (financeiro, comercial, estoque, RH, etc.) em uma única plataforma. O ANYPRO é um ERP modular multi-tenant.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>JWT (JSON Web Token)</h3>
+                <p>Padrão aberto (RFC 7519) para criação de tokens de acesso que permitem a autenticação e autorização de usuários em APIs. Contém claims (declarações) sobre o usuário codificadas em Base64 e assinadas digitalmente.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>MediatR</h3>
+                <p>Biblioteca .NET que implementa o padrão Mediator. Utilizada para desacoplar a comunicação entre componentes do sistema através de mensagens (Commands, Queries, Events). Facilita a implementação de CQRS e Domain Events.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Multi-Tenant</h3>
+                <p>Arquitetura de software onde uma única instância da aplicação atende múltiplos clientes (tenants/organizações), mantendo os dados de cada um isolados e seguros. O ANYPRO usa <strong>schema isolation</strong> no PostgreSQL para garantir isolamento total.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Repository Pattern</h3>
+                <p>Padrão de projeto que abstrai o acesso a dados, criando uma camada intermediária entre a lógica de negócio e a persistência. Permite trocar o mecanismo de armazenamento (banco de dados, arquivo, API) sem impactar o domínio.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Seeder</h3>
+                <p>Classe responsável por popular o banco de dados com dados iniciais necessários para o funcionamento do sistema. No ANYPRO, seeders carregam dados globais como países, moedas, autorizações, etc.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Soft Delete</h3>
+                <p>Estratégia de exclusão lógica onde registros não são fisicamente removidos do banco de dados. Em vez disso, uma flag (ex: <code>ExcluidoEm</code>) indica que o registro está "excluído", permitindo auditoria e recuperação de dados.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Swagger / OpenAPI</h3>
+                <p>Especificação padrão para documentação de APIs RESTful. O Swagger UI fornece uma interface interativa para testar endpoints diretamente no navegador. O ANYPRO expõe sua documentação em <code>/swagger</code>.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>TBG (Tabela Global)</h3>
+                <p>Tabela cujos dados são compartilhados entre todas as organizações (tenants). Exemplos: Pais, Moeda, Autorizacao. Não possui a coluna <code>TenantId</code>.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>TBP (Tabela Privada)</h3>
+                <p>Tabela cujos dados são isolados por organização (tenant). Possui a coluna <code>TenantId</code> que garante que cada organização acesse apenas seus próprios dados. Exemplos: Usuario, Produto, NotaFiscal.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Unit of Work</h3>
+                <p>Padrão de projeto que mantém uma lista de objetos afetados por uma transação e coordena a gravação de mudanças. No EF Core, o <code>DbContext</code> atua como Unit of Work, garantindo que todas as operações sejam executadas de forma atômica (tudo ou nada).</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Value Object</h3>
+                <p>Objeto do domínio que não possui identidade própria, sendo definido apenas por seus atributos. Dois Value Objects são iguais se todos os seus valores são iguais. Exemplos: Email, CPF, CNPJ, Dinheiro, Endereco.</p>
+            </div>
+            
+            <h3>🔗 Siglas de Módulos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sigla</th>
+                        <th>Nome Completo</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ADM</strong></td>
+                        <td>Administração</td>
+                        <td>Gestão de usuários, perfis, autorizações e configurações</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SUP</strong></td>
+                        <td>Suprimentos</td>
+                        <td>Fornecedores, produtos, estoque e compras</td>
+                    </tr>
+                    <tr>
+                        <td><strong>COM</strong></td>
+                        <td>Comercial</td>
+                        <td>Clientes, vendas, propostas e contratos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FIN</strong></td>
+                        <td>Financeiro</td>
+                        <td>Contas a pagar/receber, fluxo de caixa e DRE</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CON</strong></td>
+                        <td>Contabilidade</td>
+                        <td>Plano de contas, lançamentos e livros fiscais</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RHU</strong></td>
+                        <td>Recursos Humanos</td>
+                        <td>Colaboradores, folha de pagamento e ponto eletrônico</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PRO</strong></td>
+                        <td>Produção</td>
+                        <td>Ordens de produção, BOM e controle de qualidade</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CRM</strong></td>
+                        <td>Customer Relationship Management</td>
+                        <td>Gestão de relacionamento com clientes e marketing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CSU</strong></td>
+                        <td>Central de Suporte</td>
+                        <td>Help desk, tickets e base de conhecimento</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>🔧 Termos Técnicos de Desenvolvimento</h3>
+            <div class="glossary-term">
+                <h3>CI/CD (Continuous Integration / Continuous Deployment)</h3>
+                <p>Práticas de DevOps que automatizam a integração de código (CI) e o deploy em produção (CD). O ANYPRO utiliza GitHub Actions para executar testes automaticamente a cada commit e fazer deploy contínuo.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Docker</h3>
+                <p>Plataforma de containerização que empacota aplicações e suas dependências em containers isolados. Facilita o deploy e garante que a aplicação rode da mesma forma em qualquer ambiente (dev, staging, prod).</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Kubernetes (K8s)</h3>
+                <p>Plataforma de orquestração de containers que automatiza deployment, scaling e gerenciamento de aplicações containerizadas. O ANYPRO utiliza K8s para escalabilidade horizontal em produção.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>Redis</h3>
+                <p>Banco de dados em memória (in-memory) de alta performance usado como cache distribuído. Armazena dados frequentemente acessados para reduzir a carga no PostgreSQL e acelerar respostas da API.</p>
+            </div>
+            
+            <div class="glossary-term">
+                <h3>ORM (Object-Relational Mapping)</h3>
+                <p>Técnica de programação que mapeia objetos de domínio para tabelas de banco de dados relacional. O ANYPRO utiliza Entity Framework Core como ORM principal.</p>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>ANYPRO - Sistema ERP Modular Multi-Tenant</strong></p>
+            <p><a href="../home.html">Voltar ao Menu Principal</a></p>
+        </div>
+    </div>
+    <script src="../js/toc.js" defer></script>
+<script src="../js/section-nav.js" defer></script>
+<script src="../js/nav-active.js" defer></script>
+</body>
+</html>
