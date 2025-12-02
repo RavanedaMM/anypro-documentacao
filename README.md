@@ -4,7 +4,30 @@ Sistema ERP Modular Multi-Tenant desenvolvido em .NET 8 + React + PostgreSQL.
 
 ## 📋 Visão Geral
 
-O **ANYPRO** é um sistema ERP completo e modular que pode ser customizado de acordo com as necessidades de cada organização. Desenvolvido no modelo **SaaS (Software as a Service)** com arquitetura **Multi-Tenant**, permitindo que múltiplas organizações utilizem o mesmo sistema com total isolamento de dados.
+O **ANYPRO** é um sistema ERP completo e modular desenvolvido para atender empresas brasileiras no modelo **SaaS (Software as a Service)**. Com arquitetura **Multi-Tenant**, permite que múltiplas organizações utilizem o mesmo sistema com total isolamento e segurança de dados.
+
+### Principais Características
+
+✅ **Multi-Tenant Nativo** - Isolamento completo de dados por organização
+✅ **Modular** - 9 módulos ativáveis conforme necessidade
+✅ **Compliance Fiscal BR** - SPED, NF-e, eSocial e demais obrigações
+✅ **Clean Architecture** - Baseado em DDD, CQRS e Vertical Slice
+✅ **Escalável** - Preparado para crescimento horizontal
+✅ **Multi-Idioma/País** - Iniciando com PT-BR, expansível
+
+### Modelo Organizacional
+
+```
+Organização (Tenant)
+  ├─── Plano de Assinatura
+  ├─── Usuários
+  ├─── Empresa 1 (CNPJ)
+  │     ├─── Parâmetros Fiscais
+  │     └─── Movimentações
+  └─── Empresa N (CNPJ)
+```
+
+[Ver detalhes completos →](docs/01-introducao/visao-geral.md)
 
 ## 🎯 Módulos do Sistema
 
@@ -47,10 +70,17 @@ O **ANYPRO** é um sistema ERP completo e modular que pode ser customizado de ac
 
 - ✅ Clean Architecture
 - ✅ Domain-Driven Design (DDD)
+- ✅ Vertical Slice Architecture
 - ✅ CQRS (Command Query Responsibility Segregation)
+- ✅ Event-Driven Architecture
 - ✅ Repository Pattern
 - ✅ Unit of Work
 - ✅ Dependency Injection
+
+### Decisões Arquiteturais Importantes
+
+- [ADR-001: Estratégia Multi-Tenant](docs/04-arquitetura/decisoes-arquiteturais/ADR-001-estrategia-multi-tenant.md) - Shared DB + Shared Schema
+- [ADR-004: Vertical Slice Architecture](docs/04-arquitetura/decisoes-arquiteturais/ADR-004-vertical-slice.md) - Organização por features
 
 ## 📂 Estrutura do Projeto
 
@@ -125,23 +155,42 @@ dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
 ## 📚 Documentação
 
-A documentação completa do projeto está disponível em:
+A documentação completa do projeto foi reestruturada seguindo padrões internacionais (arc42 + C4 Model) e está disponível em:
 
-- **Arquivo HTML**: Abra `index.html` no navegador
-- **Live Server**: Use a extensão Live Server do VS Code para auto-reload
+### [📖 Documentação Completa (Markdown)](docs/INDEX.md)
 
-### Seções da Documentação
+**Nova Estrutura Organizada:**
 
-1. **Visão Geral** - Introdução e características
-2. **Arquitetura** - Stack, padrões e estrutura
-3. **Sistema (SIS)** - Inicialização de dados
-4. **Modelo de Dados** - Convenções e entidades
-5. **Módulos** - Detalhamento de cada módulo
-6. **Roadmap** - Planejamento de desenvolvimento
-7. **APIs** - Documentação de endpoints
-8. **Testes** - Estratégia e exemplos
-9. **Glossário** - Termos técnicos
-10. **Referências** - Links e fontes externas
+```
+docs/
+├── 01-introducao/               # Visão geral, objetivos, stakeholders
+├── 02-requisitos/               # Funcionais, não-funcionais, fiscais
+├── 03-modelo-negocio/           # SaaS, organizações, planos
+├── 04-arquitetura/              # ADRs, C4 diagrams, padrões
+├── 05-modelo-dados/             # Conceitual, tabelas, entidades
+├── 06-modulos/                  # 9 módulos detalhados
+├── 07-processos-negocio/        # Fluxos end-to-end
+├── 08-integracao-api/           # REST APIs, endpoints
+├── 09-interface-usuario/        # UX, navegação
+├── 10-seguranca-compliance/     # Segurança, LGPD, auditoria
+├── 11-qualidade/                # Atributos, critérios
+├── 12-glossario/                # Termos e acrônimos
+└── _templates/                  # Templates reutilizáveis
+```
+
+### 📝 Templates Disponíveis
+
+Use os templates para criar documentação padronizada:
+
+- [Requisito Funcional](docs/_templates/template-requisito-funcional.md)
+- [Caso de Uso](docs/_templates/template-caso-uso.md)
+- [ADR (Decisão Arquitetural)](docs/_templates/template-adr.md)
+- [Feature (Vertical Slice)](docs/_templates/template-feature.md)
+- [Entidade de Dados](docs/_templates/template-entidade.md)
+
+### 🌐 Documentação HTML (Legado)
+
+A documentação HTML anterior ainda está disponível em `index.html` e será migrada gradualmente
 
 ## 📊 Progresso do Projeto
 
@@ -150,28 +199,19 @@ A documentação completa do projeto está disponível em:
 - 🎨 Frontend: **15%**
 - 🧪 Testes: **10%**
 
-## 🗓️ Roadmap 2026
+## 📖 Compliance Fiscal Brasileiro
 
-### Q1 (Jan-Mar) - MVP Foundation
-- ✅ Estrutura de projetos
-- ✅ Docker setup
-- 🔄 Módulo ADM (Administração)
-- 🔄 Sistema SIS (Seeders)
+O sistema atende integralmente às exigências da Receita Federal:
 
-### Q2 (Abr-Jun) - Módulos Core
-- 📋 Módulo SUP (Suprimentos)
-- 📋 Módulo FIN (Financeiro)
-- 📋 Dashboard principal
+✅ **SPED Fiscal** - ICMS/IPI
+✅ **SPED Contábil** - ECD
+✅ **SPED Contribuições** - PIS/COFINS
+✅ **NF-e / NFC-e / NFS-e** - Notas Fiscais Eletrônicas
+✅ **CT-e** - Conhecimento de Transporte
+✅ **eSocial** - Escrituração Digital das Obrigações
+✅ **EFD-REINF** - Retenções e Informações Fiscais
 
-### Q3 (Jul-Set) - Expansão
-- 📋 Módulo COM (Comercial)
-- 📋 Módulo CRM
-- 📋 Integração NFe
-
-### Q4 (Out-Dez) - Finalização
-- 📋 Módulo RHU
-- 📋 App Mobile
-- 📋 Lançamento Beta
+[Ver requisitos fiscais completos →](docs/02-requisitos/requisitos-fiscais-brasil/)
 
 ## 🤝 Como Contribuir
 
